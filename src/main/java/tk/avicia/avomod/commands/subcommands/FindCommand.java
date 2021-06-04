@@ -14,21 +14,24 @@ import java.util.List;
 public class FindCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        String outputMessage = "";
-        if (params.length >= 1) {
-            String username = params[0];
-            PlayerData playerData = new PlayerData(username);
-            String playerWorld = playerData.getWorld();
+        Thread thread = new Thread(() -> {
+            String outputMessage = "";
+            if (params.length >= 1) {
+                String username = params[0];
+                PlayerData playerData = new PlayerData(username);
+                String playerWorld = playerData.getWorld();
 
-            if (playerWorld != "") {
-                outputMessage = TextFormatting.DARK_RED + playerData.getPlayerName() + TextFormatting.RED + " is on " + playerWorld;
-            } else {
-                outputMessage = TextFormatting.DARK_RED + playerData.getPlayerName() + TextFormatting.RED + " is not online";
+                if (!playerWorld.equals("")) {
+                    outputMessage = TextFormatting.DARK_RED + playerData.getPlayerName() + TextFormatting.RED + " is on " + playerWorld;
+                } else {
+                    outputMessage = TextFormatting.DARK_RED + playerData.getPlayerName() + TextFormatting.RED + " is not online";
+                }
             }
-        }
 
-        TextComponentString textComponent = new TextComponentString(outputMessage);
-        sender.sendMessage(textComponent);
+            TextComponentString textComponent = new TextComponentString(outputMessage);
+            sender.sendMessage(textComponent);
+        });
+        thread.start();
     }
 
     @Override

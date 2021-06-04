@@ -15,23 +15,26 @@ import java.util.List;
 public class PlayerGuildCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        String outputMessage = "";
-        if (params.length >= 1) {
-            String username = params[0];
-            PlayerData playerData = new PlayerData(username);
-            String playerGuild = playerData.getGuild();
-            String playerGuildRank = playerData.getGuildRank();
+        Thread thread = new Thread(() -> {
+            String outputMessage = "";
+            if (params.length >= 1) {
+                String username = params[0];
+                PlayerData playerData = new PlayerData(username);
+                String playerGuild = playerData.getGuild();
+                String playerGuildRank = playerData.getGuildRank();
 
-            if (playerGuild != null && playerGuildRank != null) {
-                outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is a " + TextFormatting.AQUA +
-                        Utils.firstLetterCapital(playerGuildRank) + TextFormatting.GRAY + " in the guild " + TextFormatting.AQUA + playerGuild;
-            } else {
-                outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is not in a guild.";
+                if (playerGuild != null && playerGuildRank != null) {
+                    outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is a " + TextFormatting.AQUA +
+                            Utils.firstLetterCapital(playerGuildRank) + TextFormatting.GRAY + " in the guild " + TextFormatting.AQUA + playerGuild;
+                } else {
+                    outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is not in a guild.";
+                }
             }
-        }
 
-        TextComponentString textComponent = new TextComponentString(outputMessage);
-        sender.sendMessage(textComponent);
+            TextComponentString textComponent = new TextComponentString(outputMessage);
+            sender.sendMessage(textComponent);
+        });
+        thread.start();
     }
 
     @Override

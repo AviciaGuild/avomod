@@ -26,6 +26,7 @@ public class Avomod {
         put("aliases", new AliasesCommand());
         put("find", new FindCommand());
         put("playerguild", new PlayerGuildCommand());
+        put("onlinemembers", new OnlineMembersCommand());
     }};
     public static Map<String, Command> aliases = new HashMap<String, Command>();
     private static boolean filterChat = true;
@@ -38,7 +39,7 @@ public class Avomod {
         filterChat = newValue;
     }
 
-    public static boolean filterChat() {
+    public static boolean isBankFiltered() {
         return filterChat;
     }
 

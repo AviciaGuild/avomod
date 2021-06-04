@@ -9,7 +9,7 @@ public class EventHandlerClass {
         String message = event.getMessage().getFormattedText();
         System.out.println(message);
         boolean bankMessage = message.startsWith("[INFO]") && message.contains("Guild Bank");
-        if (bankMessage && Avomod.filterChat()) {
+        if (bankMessage && Avomod.isBankFiltered()) {
             event.setCanceled(true);
         }
     }

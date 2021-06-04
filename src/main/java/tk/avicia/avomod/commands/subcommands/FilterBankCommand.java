@@ -20,11 +20,11 @@ public class FilterBankCommand extends Command {
                 Avomod.toggleFilter(false);
             }
         } else {
-            Avomod.toggleFilter(!Avomod.filterChat());
+            Avomod.toggleFilter(!Avomod.isBankFiltered());
         }
 
         String outputMessage;
-        if (Avomod.filterChat()) {
+        if (Avomod.isBankFiltered()) {
             outputMessage = "Bank messages filter is now enabled.";
         } else {
             outputMessage = "Bank messages filter is now disabled.";

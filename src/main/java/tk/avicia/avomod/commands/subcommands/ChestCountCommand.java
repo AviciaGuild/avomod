@@ -15,18 +15,22 @@ import java.util.List;
 public class ChestCountCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        PlayerData player;
-        if (params != null && params.length >= 1) {
-            player = new PlayerData(params[0]);
-        } else {
-            player = new PlayerData(Avomod.getMC().player.getName());
-        }
+        Thread thread = new Thread(() -> {
 
-        String outputMessage = TextFormatting.AQUA + player.getPlayerName() + TextFormatting.GRAY + " has found " +
-                TextFormatting.AQUA + player.getChestCount() + TextFormatting.GRAY + " chests!";
-        System.out.println(outputMessage);
-        TextComponentString textComponent = new TextComponentString(outputMessage);
-        sender.sendMessage(textComponent);
+            PlayerData player;
+            if (params != null && params.length >= 1) {
+                player = new PlayerData(params[0]);
+            } else {
+                player = new PlayerData(sender.getName());
+            }
+
+            String outputMessage = TextFormatting.AQUA + player.getPlayerName() + TextFormatting.GRAY + " has found " +
+                    TextFormatting.AQUA + player.getChestCount() + TextFormatting.GRAY + " chests!";
+            System.out.println(outputMessage);
+            TextComponentString textComponent = new TextComponentString(outputMessage);
+            sender.sendMessage(textComponent);
+        });
+        thread.start();
     }
 
     @Override
