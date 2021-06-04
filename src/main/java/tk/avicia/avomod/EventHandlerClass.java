@@ -4,13 +4,13 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EventHandlerClass {
-	@SubscribeEvent
-	public void onChatEvent(ClientChatReceivedEvent event) {
-		String message = event.getMessage().getFormattedText();
-		System.out.println(message);
-		boolean bankMessage = message.startsWith("[INFO]") && message.contains("Guild Bank");
-		if (bankMessage && AvoMod.filterChat()) {
-			event.setCanceled(true);
-		}
-	}
+    @SubscribeEvent
+    public void onChatEvent(ClientChatReceivedEvent event) {
+        String message = event.getMessage().getFormattedText();
+        System.out.println(message);
+        boolean bankMessage = message.startsWith("[INFO]") && message.contains("Guild Bank");
+        if (bankMessage && Avomod.filterChat()) {
+            event.setCanceled(true);
+        }
+    }
 }

@@ -6,45 +6,43 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.webapi.PlayerData;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-public class ChestCountCommand extends Command {
+public class HelpCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        PlayerData player;
-        if (params != null && params.length >= 1) {
-            player = new PlayerData(params[0]);
-        } else {
-            player = new PlayerData(Avomod.getMC().player.getName());
+        String outputMessage = TextFormatting.BLUE + "Help for AVOMod:";
+
+        for (Map.Entry<String, Command> command : Avomod.commands.entrySet()) {
+            if (!Avomod.aliases.keySet().contains(command)) {
+                outputMessage += "\n" + TextFormatting.GOLD + "/avomod " + command.getKey() + ": " + TextFormatting.GREEN + command.getValue().getDescription();
+            }
         }
 
-        String outputMessage = TextFormatting.AQUA + player.getPlayerName() + TextFormatting.GRAY + " has found " +
-                TextFormatting.AQUA + player.getChestCount() + TextFormatting.GRAY + " chests!";
-        System.out.println(outputMessage);
         TextComponentString textComponent = new TextComponentString(outputMessage);
         sender.sendMessage(textComponent);
     }
 
     @Override
     public String getName() {
-        return "chestcount";
+        return "help";
     }
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "chestcount <username>";
+        return "help <command>";
     }
 
     @Override
     public String getDescription() {
-        return "Shows the amount of chests the player has opened";
+        return "Shows help for commands with AVOMod";
     }
 
     @Override
     public List<String> getAliases() {
-        return Arrays.asList("cc");
+        return Arrays.asList("h");
     }
 }

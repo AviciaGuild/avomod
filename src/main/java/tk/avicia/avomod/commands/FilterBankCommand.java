@@ -1,27 +1,29 @@
 package tk.avicia.avomod.commands;
 
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
-import tk.avicia.avomod.AvoMod;
+import tk.avicia.avomod.Avomod;
 
-public class FilterCommand extends CommandBase {
+import java.util.Arrays;
+import java.util.List;
+
+public class FilterBankCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
         if (params != null && params.length > 0) {
             if (params[0].equals("enable")) {
-                AvoMod.toggleFilter(true);
+                Avomod.toggleFilter(true);
             } else if (params[0].equals("disable")) {
-                AvoMod.toggleFilter(false);
+                Avomod.toggleFilter(false);
             }
         } else {
-            AvoMod.toggleFilter(!AvoMod.filterChat());
+            Avomod.toggleFilter(!Avomod.filterChat());
         }
 
         String outputMessage;
-        if (AvoMod.filterChat()) {
+        if (Avomod.filterChat()) {
             outputMessage = "Bank messages filter is now enabled.";
         } else {
             outputMessage = "Bank messages filter is now disabled.";
@@ -29,7 +31,6 @@ public class FilterCommand extends CommandBase {
 
         TextComponentString textComponent = new TextComponentString(outputMessage);
         sender.sendMessage(textComponent);
-        System.out.println(outputMessage);
     }
 
     @Override
@@ -39,11 +40,16 @@ public class FilterCommand extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "/filterbank <enable:disable>";
+        return "filterbank <enable:disable>";
     }
 
     @Override
-    public int getRequiredPermissionLevel() {
-        return 0;
+    public String getDescription() {
+        return "Toggles the filter for bank messages";
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return Arrays.asList("fb");
     }
 }
