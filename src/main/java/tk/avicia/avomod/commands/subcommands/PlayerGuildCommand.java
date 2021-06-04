@@ -5,6 +5,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import tk.avicia.avomod.Utils;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.webapi.PlayerData;
@@ -19,15 +20,21 @@ public class PlayerGuildCommand extends Command {
             String outputMessage = "";
             if (params.length >= 1) {
                 String username = params[0];
-                PlayerData playerData = new PlayerData(username);
-                String playerGuild = playerData.getGuild();
-                String playerGuildRank = playerData.getGuildRank();
+                try {
 
-                if (playerGuild != null && playerGuildRank != null) {
-                    outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is a " + TextFormatting.AQUA +
-                            Utils.firstLetterCapital(playerGuildRank) + TextFormatting.GRAY + " in the guild " + TextFormatting.AQUA + playerGuild;
-                } else {
-                    outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is not in a guild.";
+                    PlayerData playerData = new PlayerData(username);
+                    String playerGuild = playerData.getGuild();
+                    String playerGuildRank = playerData.getGuildRank();
+
+                    if (playerGuild != null && playerGuildRank != null) {
+                        outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is a " + TextFormatting.AQUA +
+                                Utils.firstLetterCapital(playerGuildRank) + TextFormatting.GRAY + " in the guild " + TextFormatting.AQUA + playerGuild;
+                    } else {
+                        outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is not in a guild.";
+                    }
+                } catch (NotFound e) {
+                    outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a Wynncraft player.";
+
                 }
             }
 
