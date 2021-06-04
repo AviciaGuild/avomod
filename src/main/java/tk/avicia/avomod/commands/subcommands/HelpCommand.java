@@ -1,4 +1,4 @@
-package tk.avicia.avomod.commands;
+package tk.avicia.avomod.commands.subcommands;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.commands.Command;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,9 +18,7 @@ public class HelpCommand extends Command {
         String outputMessage = TextFormatting.BLUE + "Help for AVOMod:";
 
         for (Map.Entry<String, Command> command : Avomod.commands.entrySet()) {
-            if (!Avomod.aliases.keySet().contains(command)) {
-                outputMessage += "\n" + TextFormatting.GOLD + "/avomod " + command.getKey() + ": " + TextFormatting.GREEN + command.getValue().getDescription();
-            }
+            outputMessage += "\n" + TextFormatting.GOLD + "/avomod " + command.getKey() + ": " + TextFormatting.GREEN + command.getValue().getDescription();
         }
 
         TextComponentString textComponent = new TextComponentString(outputMessage);

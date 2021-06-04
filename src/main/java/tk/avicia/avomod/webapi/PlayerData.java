@@ -12,13 +12,11 @@ import java.net.URL;
 
 public class PlayerData {
     private String playerName;
-    private String playerData;
+    private JsonObject playerData;
 
     public PlayerData(String playerName) {
-        this.playerName = playerName;
-
         try {
-            URL urlObject = new URL("https://api.wynncraft.com/v2/player/" + this.playerName + "/stats");
+            URL urlObject = new URL("https://api.wynncraft.com/v2/player/" + playerName + "/stats");
             HttpURLConnection con = (HttpURLConnection) urlObject.openConnection();
             con.setRequestMethod("GET");
             int responseCode = con.getResponseCode();
@@ -34,7 +32,8 @@ public class PlayerData {
                 }
                 in.close();
 
-                this.playerData = response.toString();
+                this.playerData = new JsonParser().parse(response.toString()).getAsJsonObject().getAsJsonArray("data").get(0).getAsJsonObject();
+                this.playerName = this.playerData.get("username").getAsString();
             } else {
                 System.out.println("GET request not worked");
             }
@@ -48,18 +47,43 @@ public class PlayerData {
     }
 
     public int getChestCount() {
-        JsonParser jsonParser = new JsonParser();
-        JsonElement jsonTree = jsonParser.parse(this.playerData);
-        JsonObject jsonObject = jsonTree.getAsJsonObject();
-        JsonArray classes = ((JsonObject) jsonObject.getAsJsonArray("data").get(0)).getAsJsonArray("classes");
+        JsonArray classes = this.playerData.getAsJsonArray("classes");
 
         int totalChestCount = 0;
 
         for (int i = 0; i < classes.size(); i++) {
-            int classChestCount = ((JsonObject) classes.get(i)).get("chestsFound").getAsInt();
+            int classChestCount = classes.get(i).getAsJsonObject().get("chestsFound").getAsInt();
             totalChestCount += classChestCount;
         }
 
         return totalChestCount;
+    }
+
+    public String getWorld() {
+        JsonObject locationData = this.playerData.getAsJsonObject("meta").getAsJsonObject("location");
+
+        if (locationData.get("online").getAsBoolean()) {
+            return locationData.get("server").getAsString();
+        }
+
+        return "";
+    }
+
+    public String getGuild() {
+        JsonObject guildData = this.playerData.getAsJsonObject("guild");
+        JsonElement guildName = guildData.get("name");
+
+        if (guildName.isJsonNull()) return null;
+
+        return guildName.getAsString();
+    }
+
+    public String getGuildRank() {
+        JsonObject guildData = this.playerData.getAsJsonObject("guild");
+        JsonElement guildName = guildData.get("rank");
+
+        if (guildName.isJsonNull()) return null;
+
+        return guildName.getAsString();
     }
 }

@@ -1,10 +1,11 @@
-package tk.avicia.avomod.commands;
+package tk.avicia.avomod.commands.subcommands;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.commands.Command;
 
 import java.util.Arrays;
 import java.util.List;
