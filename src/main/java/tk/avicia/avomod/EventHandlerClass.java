@@ -7,7 +7,6 @@ public class EventHandlerClass {
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {
         String message = event.getMessage().getFormattedText();
-        System.out.println(message);
         boolean bankMessage = message.startsWith("[INFO]") && message.contains("Guild Bank");
         if (bankMessage && Avomod.isBankFiltered()) {
             event.setCanceled(true);

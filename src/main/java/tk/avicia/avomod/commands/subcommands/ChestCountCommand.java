@@ -6,7 +6,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
-import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.webapi.PlayerData;
 
@@ -16,28 +15,25 @@ import java.util.List;
 public class ChestCountCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        Thread thread = new Thread(() -> {
-            String outputMessage = "";
-            PlayerData player;
-            String username = "";
-            if (params != null && params.length >= 1) {
-                username = params[0];
-            } else {
-                username = sender.getName();
-            }
-            try {
-                player = new PlayerData(username);
-                outputMessage = TextFormatting.AQUA + player.getPlayerName() + TextFormatting.GRAY + " has found " +
-                        TextFormatting.AQUA + player.getChestCount() + TextFormatting.GRAY + " chests!";
-            } catch (NotFound e) {
-                outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a valid Wynncraft player";
-            }
+        String outputMessage = "";
+        PlayerData player;
+        String username = "";
+        if (params != null && params.length >= 1) {
+            username = params[0];
+        } else {
+            username = sender.getName();
+        }
+        try {
+            player = new PlayerData(username);
+            outputMessage = TextFormatting.AQUA + player.getPlayerName() + TextFormatting.GRAY + " has found " +
+                    TextFormatting.AQUA + player.getChestCount() + TextFormatting.GRAY + " chests!";
+        } catch (NotFound e) {
+            outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a valid Wynncraft player";
+        }
 
 
-            TextComponentString textComponent = new TextComponentString(outputMessage);
-            sender.sendMessage(textComponent);
-        });
-        thread.start();
+        TextComponentString textComponent = new TextComponentString(outputMessage);
+        sender.sendMessage(textComponent);
     }
 
     @Override

@@ -15,20 +15,29 @@ import java.util.List;
 public class AvomodCommand extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        if (params.length >= 1) {
-            Command commandToExecute = Avomod.commands.get(params[0]);
+        Thread thread = new Thread(() -> {
+            if (params.length >= 1) {
+                Command commandToExecute = Avomod.commands.get(params[0]);
 
-            if (commandToExecute == null) {
-                commandToExecute = Avomod.aliases.get(params[0]);
-            }
+                if (commandToExecute == null) {
+                    commandToExecute = Avomod.aliases.get(params[0]);
+                }
 
-            if (commandToExecute != null) {
-                commandToExecute.execute(server, sender, Arrays.copyOfRange(params, 1, params.length));
-            } else {
-                TextComponentString textComponent = new TextComponentString("That command does not exist.");
-                sender.sendMessage(textComponent);
+                if (commandToExecute != null) {
+                    try {
+                        commandToExecute.execute(server, sender, Arrays.copyOfRange(params, 1, params.length));
+                    } catch (Exception e) {
+//                        TextComponentString textComponent = new TextComponentString(TextFormatting.RED + "Command Failed");
+//                        sender.sendMessage(textComponent);
+                        e.printStackTrace();
+                    }
+                } else {
+                    TextComponentString textComponent = new TextComponentString("That command does not exist.");
+                    sender.sendMessage(textComponent);
+                }
             }
-        }
+        });
+        thread.start();
     }
 
     @Override
@@ -47,7 +56,8 @@ public class AvomodCommand extends CommandBase {
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos
+            targetPos) {
         if (args.length == 1) {
             return getListOfStringsMatchingLastWord(args, Avomod.commands.keySet());
         }

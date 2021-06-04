@@ -49,14 +49,22 @@ public class OnlinePlayers {
     public boolean isPlayerOnline(String username) {
         Set<Map.Entry<String, JsonElement>> worlds = onlinePlayerData.entrySet();
         for (Map.Entry<String, JsonElement> world : worlds) {
-            if(world.getKey().equals("request")) continue;
+            if (world.getKey().equals("request")) continue;
             JsonArray players = world.getValue().getAsJsonArray();
             for (JsonElement player : players) {
-                if(player.getAsString().equals(username)){
+                if (player.getAsString().equals(username)) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    public JsonArray getWorldPlayers(String world) {
+        if (world.matches("^\\d+")) {
+            world = "WC" + world;
+        }
+
+        return this.onlinePlayerData.getAsJsonArray(world);
     }
 }

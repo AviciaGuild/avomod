@@ -15,32 +15,29 @@ import java.util.List;
 public class FindCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        Thread thread = new Thread(() -> {
-            String outputMessage = "";
-            if (params.length >= 1) {
-                String username = params[0];
-                PlayerData playerData = null;
-                try {
-                    playerData = new PlayerData(username);
-                    String playerWorld = playerData.getWorld();
-                    if (playerWorld != "") {
-                        outputMessage = TextFormatting.DARK_RED + playerData.getPlayerName() + TextFormatting.RED + " is on " + playerWorld;
-                    } else {
-                        outputMessage = TextFormatting.DARK_RED + playerData.getPlayerName() + TextFormatting.RED + " is not online";
-                    }
-                } catch (NotFound notFound) {
-                    outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a Wynncraft player";
+        String outputMessage = "";
+        if (params.length >= 1) {
+            String username = params[0];
+            PlayerData playerData = null;
+            try {
+                playerData = new PlayerData(username);
+                String playerWorld = playerData.getWorld();
+                if (playerWorld != "") {
+                    outputMessage = TextFormatting.DARK_RED + playerData.getPlayerName() + TextFormatting.RED + " is on " + playerWorld;
+                } else {
+                    outputMessage = TextFormatting.DARK_RED + playerData.getPlayerName() + TextFormatting.RED + " is not online";
                 }
-
-            } else{
-                outputMessage = TextFormatting.RED + "find <username>";
-
+            } catch (NotFound notFound) {
+                outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a Wynncraft player";
             }
 
-            TextComponentString textComponent = new TextComponentString(outputMessage);
-            sender.sendMessage(textComponent);
-        });
-        thread.start();
+        } else {
+            outputMessage = TextFormatting.RED + "find <username>";
+
+        }
+
+        TextComponentString textComponent = new TextComponentString(outputMessage);
+        sender.sendMessage(textComponent);
     }
 
     @Override

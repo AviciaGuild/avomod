@@ -16,32 +16,29 @@ import java.util.List;
 public class PlayerGuildCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        Thread thread = new Thread(() -> {
-            String outputMessage = "";
-            if (params.length >= 1) {
-                String username = params[0];
-                try {
+        String outputMessage = "";
+        if (params.length >= 1) {
+            String username = params[0];
+            try {
 
-                    PlayerData playerData = new PlayerData(username);
-                    String playerGuild = playerData.getGuild();
-                    String playerGuildRank = playerData.getGuildRank();
+                PlayerData playerData = new PlayerData(username);
+                String playerGuild = playerData.getGuild();
+                String playerGuildRank = playerData.getGuildRank();
 
-                    if (playerGuild != null && playerGuildRank != null) {
-                        outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is a " + TextFormatting.AQUA +
-                                Utils.firstLetterCapital(playerGuildRank) + TextFormatting.GRAY + " in the guild " + TextFormatting.AQUA + playerGuild;
-                    } else {
-                        outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is not in a guild.";
-                    }
-                } catch (NotFound e) {
-                    outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a Wynncraft player.";
-
+                if (playerGuild != null && playerGuildRank != null) {
+                    outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is a " + TextFormatting.AQUA +
+                            Utils.firstLetterCapital(playerGuildRank) + TextFormatting.GRAY + " in the guild " + TextFormatting.AQUA + playerGuild;
+                } else {
+                    outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is not in a guild.";
                 }
-            }
+            } catch (NotFound e) {
+                outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a Wynncraft player.";
 
-            TextComponentString textComponent = new TextComponentString(outputMessage);
-            sender.sendMessage(textComponent);
-        });
-        thread.start();
+            }
+        }
+
+        TextComponentString textComponent = new TextComponentString(outputMessage);
+        sender.sendMessage(textComponent);
     }
 
     @Override

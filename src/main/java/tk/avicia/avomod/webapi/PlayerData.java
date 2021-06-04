@@ -39,10 +39,9 @@ public class PlayerData {
                 System.out.println("GET request not worked");
                 throw new NotFound();
             }
-        }catch (NotFound ne){
+        } catch (NotFound ne) {
             throw new NotFound();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -90,5 +89,9 @@ public class PlayerData {
         if (guildName.isJsonNull()) return null;
 
         return guildName.getAsString();
+    }
+
+    public String getLastJoin() {
+        return this.playerData.getAsJsonObject("meta").get("lastJoin").getAsString();
     }
 }
