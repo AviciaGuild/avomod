@@ -55,7 +55,7 @@ public class EventHandlerClass {
         } else if (openContainer instanceof ContainerChest) {
             String containerName = ((ContainerChest) openContainer).getLowerChestInventory().getName();
             if (containerName.equals("Trade Market") && !Avomod.searchButtonClicked) {
-                if (Mouse.getEventButtonState() && Mouse.getY() < ((screenHeight - 439) / 2) + (4 * slotDimensions) + 7 && Mouse.getY() > (screenHeight - 439) / 2 &&
+                if (Mouse.isButtonDown(2) && Mouse.getY() < ((screenHeight - 439) / 2) + (4 * slotDimensions) + 7 && Mouse.getY() > (screenHeight - 439) / 2 &&
                         Mouse.getX() > (screenWidth - 323) / 2 && Mouse.getX() < ((screenWidth - 323) / 2) + (9 * slotDimensions)) {
                     event.setCanceled(true);
 
@@ -63,18 +63,15 @@ public class EventHandlerClass {
                     int slotX = (int) Math.floor((Mouse.getX() - ((screenWidth - 323) / 2)) / 36);
                     int slotY = (int) Math.ceil(((((screenHeight - 439) / 2) + (4 * slotDimensions) + 7) - Mouse.getY()) / 36);
 
-                    System.out.println(slotX + ", " + slotY);
                     if (slotY == 3) {
                         slotNumber = slotX;
                     } else {
                         slotNumber = 9 * (slotY + 1) + slotX;
                     }
-                    System.out.println(slotNumber);
 
                     ItemStack itemInSlot = inventory.getStackInSlot(slotNumber);
                     String name = TextFormatting.getTextWithoutFormattingCodes(itemInSlot.getDisplayName());
 
-                    System.out.println(name);
                     if (!name.equals("Air")) {
                         ItemStack compass = openContainer.inventorySlots.get(35).getStack();
                         if (compass.getDisplayName().contains("Search Item")) {
