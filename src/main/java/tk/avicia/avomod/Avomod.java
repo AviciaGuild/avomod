@@ -39,7 +39,6 @@ public class Avomod {
     public static boolean searchButtonClicked = false;
     private static boolean filterChat = true;
     private static boolean disableMovingArmorOrAccessories = true;
-
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
     }
@@ -70,11 +69,11 @@ public class Avomod {
     }
 
     public void initializeAliases() {
-        for (Map.Entry<String, Command> commandMap : this.commands.entrySet()) {
+        for (Map.Entry<String, Command> commandMap : commands.entrySet()) {
             Command command = commandMap.getValue();
 
             for (String alias : command.getAliases()) {
-                this.aliases.put(alias, command);
+                aliases.put(alias, command);
             }
         }
     }
