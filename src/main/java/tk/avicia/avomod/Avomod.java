@@ -36,7 +36,7 @@ public class Avomod {
     }};
     public static Map<String, Command> aliases = new HashMap<>();
     public static int[] armorAccessorySlotNumbers = new int[]{5, 6, 7, 8, 9, 10, 11, 12};
-
+    public static boolean searchButtonClicked = false;
     private static boolean filterChat = true;
     private static boolean disableMovingArmorOrAccessories = true;
 
@@ -61,6 +61,7 @@ public class Avomod {
     }
 
     @EventHandler
+
     public void postInit(FMLPostInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new EventHandlerClass());
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
