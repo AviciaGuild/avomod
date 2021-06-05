@@ -32,9 +32,13 @@ public class Avomod {
         put("lastseen", new LastSeenCommand());
         put("playercount", new PlayerCountCommand());
         put("count", new CountCommand());
+        put("togglemoving", new ToggleMovingArmorCommand());
     }};
-    public static Map<String, Command> aliases = new HashMap<String, Command>();
+    public static Map<String, Command> aliases = new HashMap<>();
+    public static int[] armorAccessorySlotNumbers = new int[]{5, 6, 7, 8, 9, 10, 11, 12};
+
     private static boolean filterChat = true;
+    private static boolean disableMovingArmorOrAccessories = true;
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
@@ -46,6 +50,14 @@ public class Avomod {
 
     public static boolean isBankFiltered() {
         return filterChat;
+    }
+
+    public static boolean isMovingArmorOrAccessoriesDisabled() {
+        return disableMovingArmorOrAccessories;
+    }
+
+    public static void toggleMovingArmorOrAccessories(boolean newValue) {
+        disableMovingArmorOrAccessories = newValue;
     }
 
     @EventHandler
