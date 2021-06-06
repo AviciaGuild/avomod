@@ -13,6 +13,7 @@ public class CustomFile extends File {
         if (!super.exists()) {
             try {
                 super.createNewFile();
+                this.writeJson("{}");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -39,9 +40,12 @@ public class CustomFile extends File {
     }
 
     public void writeJson(JsonObject jsonObject) {
+        this.writeJson(jsonObject.toString());
+    }
+
+    public void writeJson(String text) {
         try {
             OutputStreamWriter fileWriter = new OutputStreamWriter(new FileOutputStream(this), StandardCharsets.UTF_8);
-            String text = jsonObject.toString();
             fileWriter.write(text, 0, text.length());
             fileWriter.close();
         } catch (Exception e) {

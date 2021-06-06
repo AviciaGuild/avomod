@@ -14,15 +14,19 @@ import tk.avicia.avomod.Avomod;
 public class TradeMarketAutoSearch {
     private static boolean executing = false;
 
-    public static void execute(GuiScreenEvent.MouseInputEvent.Pre event, Container openContainer, int screenWidth, int screenHeight, int slotDimensions) {
-        if (TradeMarketAutoSearch.executing) return;
-        if (Mouse.isButtonDown(2) && Mouse.getY() < ((screenHeight - 439) / 2) + (4 * slotDimensions) + 7 && Mouse.getY() > (screenHeight - 439) / 2 &&
-                Mouse.getX() > (screenWidth - 323) / 2 && Mouse.getX() < ((screenWidth - 323) / 2) + (9 * slotDimensions)) {
+    public static void execute(GuiScreenEvent.MouseInputEvent.Pre event, Container openContainer, int screenWidth, int screenHeight, int slotDimensions, int scaleFactor) {
+        int leftEdge = (screenWidth / 2) - (int) Math.floor(4.5 * slotDimensions);
+        int topEdge = (screenHeight / 2) - (int) Math.floor(0.9 * slotDimensions) - 12;
+        int scaledMouseX = Mouse.getX() / scaleFactor;
+        int scaledMouseY = Mouse.getY() / scaleFactor;
+
+        if (Mouse.isButtonDown(2) && scaledMouseY < topEdge && scaledMouseY > topEdge - (4 * slotDimensions) - (2 * scaleFactor) &&
+                scaledMouseX > leftEdge && scaledMouseX < leftEdge + (9 * slotDimensions)) {
             event.setCanceled(true);
 
             int slotNumber = 0;
-            int slotX = (int) Math.floor((Mouse.getX() - ((screenWidth - 323) / 2)) / 36);
-            int slotY = (int) Math.ceil(((((screenHeight - 439) / 2) + (4 * slotDimensions) + 7) - Mouse.getY()) / 36);
+            int slotX = (int) Math.floor((scaledMouseX - leftEdge) / slotDimensions);
+            int slotY = (int) Math.ceil((topEdge - scaledMouseY) / slotDimensions);
             InventoryPlayer inventory = Avomod.getMC().player.inventory;
 
             if (slotY == 3) {
@@ -37,6 +41,8 @@ public class TradeMarketAutoSearch {
             if (!name.equals("Air")) {
                 ItemStack compass = openContainer.inventorySlots.get(35).getStack();
                 if (compass.getDisplayName().contains("Search Item")) {
+                    if (TradeMarketAutoSearch.executing) return;
+
                     Thread thread = new Thread(() -> {
                         executing = true;
 

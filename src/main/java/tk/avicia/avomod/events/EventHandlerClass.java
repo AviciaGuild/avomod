@@ -1,5 +1,7 @@
 package tk.avicia.avomod.events;
 
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
@@ -36,18 +38,22 @@ public class EventHandlerClass {
         }
 
         Container openContainer = Avomod.getMC().player.openContainer;
-        int screenWidth = Avomod.getMC().displayWidth;
-        int screenHeight = Avomod.getMC().displayHeight;
-        int slotDimensions = 36;
+        ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
+        int screenWidth = scaledResolution.getScaledWidth();
+        int screenHeight = scaledResolution.getScaledHeight();
+        int scaleFactor = scaledResolution.getScaleFactor();
+        int scaledMouseX = Mouse.getX() / scaleFactor;
+        int scaledMouseY = Mouse.getY() / scaleFactor;
+        int slotDimensions = 18;
 
-        if (openContainer instanceof ContainerPlayer && Avomod.isMovingArmorOrAccessoriesDisabled()) {
-            if (Mouse.getEventButtonState() && Mouse.getY() > (screenHeight / 2) - slotDimensions && Mouse.getX() < (screenWidth / 2) - (4.5 * slotDimensions) + (4 * slotDimensions)) {
+        if (openContainer instanceof ContainerPlayer && event.getGui() instanceof GuiInventory && Avomod.isMovingArmorOrAccessoriesDisabled()) {
+            if (Mouse.getEventButtonState() && scaledMouseY > (screenHeight / 2) - slotDimensions && scaledMouseX < (screenWidth / 2) - (4.5 * slotDimensions) + (4 * slotDimensions)) {
                 event.setCanceled(true);
             }
         } else if (openContainer instanceof ContainerChest) {
             String containerName = ((ContainerChest) openContainer).getLowerChestInventory().getName();
             if (containerName.equals("Trade Market")) {
-                TradeMarketAutoSearch.execute(event, openContainer, screenWidth, screenHeight, slotDimensions);
+                TradeMarketAutoSearch.execute(event, openContainer, screenWidth, screenHeight, slotDimensions, scaleFactor);
             }
         }
     }
@@ -132,7 +138,7 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event) {
-        if(Avomod.getMC().gameSettings.keyBindPlayerList.isKeyDown()){
+        if (Avomod.getMC().gameSettings.keyBindPlayerList.isKeyDown()) {
             WorldInfo.draw();
         }
     }
