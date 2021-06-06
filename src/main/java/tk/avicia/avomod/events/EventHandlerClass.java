@@ -99,11 +99,23 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        ServerData serverData = Avomod.getMC().getCurrentServerData();
+        Thread thread = new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                ServerData serverData = Avomod.getMC().getCurrentServerData();
 
-        if (serverData.serverName.equals("Wynncraft")) {
-            Autojoin.execute();
-        }
+                if (serverData.serverName.equals("Wynncraft")) {
+                    Autojoin.execute();
+                    break;
+                }
+
+                try {
+                    Thread.sleep(400);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 
     @SubscribeEvent

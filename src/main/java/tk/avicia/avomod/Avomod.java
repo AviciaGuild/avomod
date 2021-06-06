@@ -3,8 +3,10 @@ package tk.avicia.avomod;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -45,6 +47,7 @@ public class Avomod {
     }};
     public static Map<String, Command> aliases = new HashMap<>();
     public static Map<String, Keybind> keybinds = new HashMap<>();
+    public static boolean autoConnect = false;
     private static boolean filterChat = true;
     private static boolean disableMovingArmorOrAccessories = true;
 
@@ -84,8 +87,12 @@ public class Avomod {
     }
 
     @EventHandler
-
     public void postInit(FMLPostInitializationEvent event) {
+        if (autoConnect) {
+            FMLClientHandler.instance().connectToServerAtStartup("play.wynncraft.com", 25565);
+            Avomod.getMC().setServerData(new ServerData("Wynncraft", "play.wynncraft.com", false));
+        }
+
         MinecraftForge.EVENT_BUS.register(new EventHandlerClass());
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
 
