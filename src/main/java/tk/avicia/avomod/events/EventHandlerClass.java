@@ -24,6 +24,9 @@ public class EventHandlerClass {
         if (bankMessage && Avomod.isBankFiltered()) {
             event.setCanceled(true);
         }
+        if (message.contains("Welcome to Wynncraft")) {
+            WorldInfo.updateCurrentWorld();
+        }
     }
 
     @SubscribeEvent
@@ -124,6 +127,13 @@ public class EventHandlerClass {
             if (keybind.isPressed()) {
                 Avomod.getMC().player.sendChatMessage("/" + keybind.getCommandToRun());
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderTick(TickEvent.RenderTickEvent event) {
+        if(Avomod.getMC().gameSettings.keyBindPlayerList.isKeyDown()){
+            WorldInfo.draw();
         }
     }
 }

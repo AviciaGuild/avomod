@@ -4,10 +4,13 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import tk.avicia.avomod.Avomod;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -41,15 +44,15 @@ public class AverageLevel {
                             .filter(line -> line.contains("Lv. ")).findFirst();
 
                     if (itemLevel.isPresent()) {
+                        String itemLevelUnformatted = TextFormatting.getTextWithoutFormattingCodes(itemLevel.get());
                         try {
-                            Pattern numberPattern = Pattern.compile("(^[0-9]+)", Pattern.CASE_INSENSITIVE);
-                            if (numberPattern.matcher(itemLevel.get().split(": ")[1]).find()) {
-                                totalLevelItems += Integer.parseInt(itemLevel.get().split(": ")[1].replaceAll("§.", ""));
-                            } else if (itemLevel.get().split(" §f")[1].split("-").length == 2) {
-                                System.out.println("double");
-                                String[] levelRange = itemLevel.get().split(" §f")[1].split("-");
-                                totalLevelItems += (Integer.parseInt(levelRange[0].replaceAll("§.", ""))
-                                        + Integer.parseInt(levelRange[1].replaceAll("§.", ""))) / 2;
+                            Pattern numberPattern = Pattern.compile("(^[0-9]+$)", Pattern.CASE_INSENSITIVE);
+                            if (numberPattern.matcher(itemLevelUnformatted.split(": ")[1]).find()) {
+                                totalLevelItems += Integer.parseInt(itemLevelUnformatted.split(": ")[1]);
+                            } else if (itemLevelUnformatted.split(": ")[1].split("-").length == 2) {
+                                String[] levelRange = itemLevelUnformatted.split(": ")[1].split("-");
+                                totalLevelItems += (Integer.parseInt(levelRange[0])
+                                        + Integer.parseInt(levelRange[1])) / 2;
                             }
                             levelledItemCount += 1;
                         } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
@@ -62,7 +65,11 @@ public class AverageLevel {
 
         int screenWidth = event.getGui().width;
         int screenHeight = event.getGui().height;
-        String displayString = "Average level of items in chest: " + (totalLevelItems / levelledItemCount);
+        int averageLevel = 0;
+        if (levelledItemCount > 0) {
+            averageLevel = (totalLevelItems / levelledItemCount);
+        }
+        String displayString = "Average level of items in chest: " + averageLevel;
         FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
         fontRenderer.drawString(displayString, screenWidth / 2 - fontRenderer.getStringWidth(displayString) / 2
                 , screenHeight / 2 - 100, Color.WHITE.getRGB());

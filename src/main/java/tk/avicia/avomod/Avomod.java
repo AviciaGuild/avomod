@@ -16,11 +16,13 @@ import tk.avicia.avomod.commands.AvomodCommand;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.commands.subcommands.*;
 import tk.avicia.avomod.events.EventHandlerClass;
+import tk.avicia.avomod.events.WorldInfo;
 import tk.avicia.avomod.settings.KeybindSettings;
 import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Utils;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Mod(modid = Avomod.MODID, name = Avomod.NAME, version = Avomod.VERSION)
@@ -71,15 +73,17 @@ public class Avomod {
         disableMovingArmorOrAccessories = newValue;
     }
 
+
     public static void updateKeybinds() {
         JsonObject settings = KeybindSettings.getSettings();
+        if (settings != null) {
+            for (Map.Entry<String, JsonElement> e : settings.entrySet()) {
+                if (!keybinds.containsKey(e.getKey()) || !keybinds.get(e.getKey()).getCommandToRun().equals(e.getValue().getAsString())) {
+                    Keybind keybind = new Keybind(Utils.firstLetterCapital(e.getValue().getAsString()), Keyboard.getKeyIndex(e.getKey().toUpperCase()), "Avomod", e.getValue().getAsString());
+                    keybinds.put(e.getKey(), keybind);
 
-        for (Map.Entry<String, JsonElement> e : settings.entrySet()) {
-            if (!keybinds.containsKey(e.getKey()) || !keybinds.get(e.getKey()).getCommandToRun().equals(e.getValue().getAsString())) {
-                Keybind keybind = new Keybind(Utils.firstLetterCapital(e.getValue().getAsString()), Keyboard.getKeyIndex(e.getKey().toUpperCase()), "Avomod", e.getValue().getAsString());
-                keybinds.put(e.getKey(), keybind);
-
-                ClientRegistry.registerKeyBinding(keybind);
+                    ClientRegistry.registerKeyBinding(keybind);
+                }
             }
         }
 
@@ -92,6 +96,18 @@ public class Avomod {
             FMLClientHandler.instance().connectToServerAtStartup("play.wynncraft.com", 25565);
             Avomod.getMC().setServerData(new ServerData("Wynncraft", "play.wynncraft.com", false));
         }
+
+        Thread thread = new Thread(() -> {
+            do {
+                WorldInfo.updateWorldData();
+                try {
+                    Thread.sleep(60 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } while (true);
+        });
+        thread.start();
 
         MinecraftForge.EVENT_BUS.register(new EventHandlerClass());
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
