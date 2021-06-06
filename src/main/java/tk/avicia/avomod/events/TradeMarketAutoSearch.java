@@ -42,10 +42,9 @@ public class TradeMarketAutoSearch {
                 ItemStack compass = openContainer.inventorySlots.get(35).getStack();
                 if (compass.getDisplayName().contains("Search Item")) {
                     if (TradeMarketAutoSearch.executing) return;
+                    executing = true;
 
                     Thread thread = new Thread(() -> {
-                        executing = true;
-
                         CPacketClickWindow compassPacket = new CPacketClickWindow(openContainer.windowId, 35, 0,
                                 ClickType.PICKUP, compass, openContainer.getNextTransactionID(inventory));
                         Avomod.getMC().getConnection().sendPacket(compassPacket);
