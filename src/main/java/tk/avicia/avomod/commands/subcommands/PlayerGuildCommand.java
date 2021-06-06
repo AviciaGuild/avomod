@@ -6,8 +6,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
-import tk.avicia.avomod.Utils;
 import tk.avicia.avomod.commands.Command;
+import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.PlayerData;
 
 import java.util.Arrays;

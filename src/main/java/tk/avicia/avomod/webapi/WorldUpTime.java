@@ -3,21 +3,24 @@ package tk.avicia.avomod.webapi;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import javafx.util.Pair;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
-import tk.avicia.avomod.Tuple;
+import tk.avicia.avomod.utils.Tuple;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class WorldUpTime {
     JsonObject worldUpTimeData;
+    private java.util.Comparator<Map.Entry<String, JsonElement>> mapComparator =
+            Comparator.comparingInt(m -> m.getValue().getAsJsonObject().get("age").getAsInt());
 
     public WorldUpTime() {
         try {
@@ -73,8 +76,4 @@ public class WorldUpTime {
             throw new NotFound();
         }
     }
-
-
-    private java.util.Comparator<Map.Entry<String, JsonElement>> mapComparator =
-            Comparator.comparingInt(m -> m.getValue().getAsJsonObject().get("age").getAsInt());
 }

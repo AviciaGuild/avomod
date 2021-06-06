@@ -7,8 +7,8 @@ import net.minecraft.command.NumberInvalidException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import tk.avicia.avomod.Utils;
 import tk.avicia.avomod.commands.Command;
+import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.WorldUpTime;
 
 import java.util.ArrayList;

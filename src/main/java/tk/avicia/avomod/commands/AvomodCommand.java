@@ -6,6 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
 
 import java.util.Arrays;
@@ -27,8 +28,8 @@ public class AvomodCommand extends CommandBase {
                     try {
                         commandToExecute.execute(server, sender, Arrays.copyOfRange(params, 1, params.length));
                     } catch (Exception e) {
-//                        TextComponentString textComponent = new TextComponentString(TextFormatting.RED + "Command Failed");
-//                        sender.sendMessage(textComponent);
+                        TextComponentString textComponent = new TextComponentString(TextFormatting.RED + "Command Failed");
+                        sender.sendMessage(textComponent);
                         e.printStackTrace();
                     }
                 } else {
