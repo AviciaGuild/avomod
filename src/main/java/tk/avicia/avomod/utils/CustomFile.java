@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class CustomFile extends File {
     public CustomFile(File parent, String child) {
@@ -12,6 +13,17 @@ public class CustomFile extends File {
 
         if (!super.exists()) {
             try {
+                String[] split = child.split("/");
+
+                if (split.length > 1) {
+                    String[] directorySplit = Arrays.copyOfRange(split, 0, split.length - 1);
+                    if (directorySplit.length > 1) {
+                        String directory = String.join("/", directorySplit);
+
+                        File file = new File(directory);
+                        file.mkdirs();
+                    }
+                }
                 super.createNewFile();
                 this.writeJson("{}");
             } catch (Exception e) {
