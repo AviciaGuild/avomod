@@ -17,6 +17,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Keybind;
+import tk.avicia.avomod.utils.Renderer;
+
+import java.awt.*;
 
 public class EventHandlerClass {
     @SubscribeEvent
@@ -141,5 +144,17 @@ public class EventHandlerClass {
         if (Avomod.getMC().gameSettings.keyBindPlayerList.isKeyDown()) {
             WorldInfo.draw();
         }
+    }
+
+    @SubscribeEvent
+    public void onScreenDraw(GuiScreenEvent.DrawScreenEvent.Post event){
+        if (Avomod.getMC().player == null || event.getGui() == null) {
+            return;
+        }
+        // Stuff you draw here appears above the chest slots and behind the items z-levels, so you can use this for
+        // highlights
+//        int screenWidth = event.getGui().width;
+//        int screenHeight = event.getGui().height;
+//        Renderer.drawRect(new Color(0,0,255,255), screenWidth / 2f, screenHeight / 2f, 2000, 20);
     }
 }

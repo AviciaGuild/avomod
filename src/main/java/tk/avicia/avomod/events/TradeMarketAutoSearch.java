@@ -72,7 +72,7 @@ public class TradeMarketAutoSearch {
                             e.printStackTrace();
                         }
 
-                        CPacketChatMessage chatPacket = new CPacketChatMessage(name);
+                        CPacketChatMessage chatPacket = new CPacketChatMessage(name.replaceAll(" \\[.*\\]", ""));
                         Avomod.getMC().getConnection().sendPacket(chatPacket);
 
                         for (int i = 0; i < 5; i++) {

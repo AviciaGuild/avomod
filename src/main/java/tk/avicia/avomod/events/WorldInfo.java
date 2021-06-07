@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.utils.Renderer;
 import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.WorldUpTime;
 
@@ -36,29 +37,17 @@ public class WorldInfo {
                     Utils.getReadableTime(Integer.parseInt(newestWorld.getValue().getAsJsonObject().get("age").getAsString()));
             FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
 
-            int[] pos = new int[]{screenWidth - fontRenderer.getStringWidth(newestWorldString) - 2, screenHeight / 2 + 88, screenWidth + 2, (screenHeight / 2 + 100) + 10};
 
-            GlStateManager.enableBlend();
-            GlStateManager.disableTexture2D();
-
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder worldRenderer = tessellator.getBuffer();
-
-            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-            GlStateManager.color(0, 0, 255, 1);
-            worldRenderer.begin(7, DefaultVertexFormats.POSITION);
-            worldRenderer.pos(new Double(pos[0]), new Double(pos[3]), 0.0).endVertex();
-            worldRenderer.pos(new Double(pos[2]), new Double(pos[3]), 0.0).endVertex();
-            worldRenderer.pos(new Double(pos[2]), new Double(pos[1]), 0.0).endVertex();
-            worldRenderer.pos(new Double(pos[0]), new Double(pos[1]), 0.0).endVertex();
-            tessellator.draw();
-            GlStateManager.color(1f, 1f, 1f, 1f);
-
-            GlStateManager.enableTexture2D();
-            GlStateManager.disableBlend();
-
-            fontRenderer.drawString(currentWorldString, screenWidth - fontRenderer.getStringWidth(currentWorldString)
-                    , screenHeight / 2 + 100, Color.WHITE.getRGB());
+            if (!currentWorldString.equals("")) {
+                Renderer.drawRect(new Color(0, 0, 255, 100),
+                        screenWidth - fontRenderer.getStringWidth(currentWorldString) - 2, screenHeight / 2f + 98,
+                        fontRenderer.getStringWidth(currentWorldString) + 4, 14);
+                fontRenderer.drawString(currentWorldString, screenWidth - fontRenderer.getStringWidth(currentWorldString)
+                        , screenHeight / 2 + 100, Color.WHITE.getRGB());
+            }
+            Renderer.drawRect(new Color(0, 0, 255, 100),
+                    screenWidth - fontRenderer.getStringWidth(newestWorldString) - 2, screenHeight / 2f + 88,
+                    fontRenderer.getStringWidth(newestWorldString) + 4, 12);
             fontRenderer.drawString(newestWorldString, screenWidth - fontRenderer.getStringWidth(newestWorldString)
                     , screenHeight / 2 + 90, Color.WHITE.getRGB());
         }
