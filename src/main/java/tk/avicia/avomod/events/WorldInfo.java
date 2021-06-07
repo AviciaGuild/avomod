@@ -3,10 +3,10 @@ package tk.avicia.avomod.events;
 import com.google.gson.JsonElement;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Utils;
@@ -35,6 +35,28 @@ public class WorldInfo {
             String newestWorldString = "Newest world " + newestWorld.getKey() + " : " +
                     Utils.getReadableTime(Integer.parseInt(newestWorld.getValue().getAsJsonObject().get("age").getAsString()));
             FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
+
+            int[] pos = new int[]{screenWidth - fontRenderer.getStringWidth(newestWorldString) - 2, screenHeight / 2 + 88, screenWidth + 2, (screenHeight / 2 + 100) + 10};
+
+            GlStateManager.enableBlend();
+            GlStateManager.disableTexture2D();
+
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder worldRenderer = tessellator.getBuffer();
+
+            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+            GlStateManager.color(0, 0, 255, 1);
+            worldRenderer.begin(7, DefaultVertexFormats.POSITION);
+            worldRenderer.pos(new Double(pos[0]), new Double(pos[3]), 0.0).endVertex();
+            worldRenderer.pos(new Double(pos[2]), new Double(pos[3]), 0.0).endVertex();
+            worldRenderer.pos(new Double(pos[2]), new Double(pos[1]), 0.0).endVertex();
+            worldRenderer.pos(new Double(pos[0]), new Double(pos[1]), 0.0).endVertex();
+            tessellator.draw();
+            GlStateManager.color(1f, 1f, 1f, 1f);
+
+            GlStateManager.enableTexture2D();
+            GlStateManager.disableBlend();
+
             fontRenderer.drawString(currentWorldString, screenWidth - fontRenderer.getStringWidth(currentWorldString)
                     , screenHeight / 2 + 100, Color.WHITE.getRGB());
             fontRenderer.drawString(newestWorldString, screenWidth - fontRenderer.getStringWidth(newestWorldString)
