@@ -58,18 +58,18 @@ public class GuildData {
         Map<String, String> rankStars = new HashMap<>();
         // For some reason the stars show up as some weird combination of characters instead of stars,
         // the same seems to be happening to a lot of special characters. No idea why or how
-//        rankStars.put("OWNER", "★★★★★");
-//        rankStars.put("CHIEF", "★★★★");
-//        rankStars.put("STRATEGIST", "★★★");
-//        rankStars.put("CAPTAIN", "★★");
-//        rankStars.put("RECRUITER", "★");
-//        rankStars.put("RECRUIT", "");
-        rankStars.put("OWNER", "*****");
-        rankStars.put("CHIEF", "****");
-        rankStars.put("STRATEGIST", "***");
-        rankStars.put("CAPTAIN", "**");
-        rankStars.put("RECRUITER", "*");
+        rankStars.put("OWNER", "\u2605\u2605\u2605\u2605\u2605");
+        rankStars.put("CHIEF", "\u2605\u2605\u2605\u2605");
+        rankStars.put("STRATEGIST", "\u2605\u2605\u2605");
+        rankStars.put("CAPTAIN", "\u2605\u2605");
+        rankStars.put("RECRUITER", "\u2605");
         rankStars.put("RECRUIT", "");
+//        rankStars.put("OWNER", "*****");
+//        rankStars.put("CHIEF", "****");
+//        rankStars.put("STRATEGIST", "***");
+//        rankStars.put("CAPTAIN", "**");
+//        rankStars.put("RECRUITER", "*");
+//        rankStars.put("RECRUIT", "");
         for (JsonElement jsonElement : members) {
             JsonObject memberData = jsonElement.getAsJsonObject();
             if(memberData.get("name").getAsString().equals(member)){

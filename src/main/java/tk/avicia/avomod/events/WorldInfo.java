@@ -40,10 +40,10 @@ public class WorldInfo {
 
             if (!currentWorldString.equals("")) {
                 Renderer.drawRect(new Color(0, 0, 255, 100),
-                        screenWidth - fontRenderer.getStringWidth(currentWorldString) - 2, screenHeight / 2f + 98,
-                        fontRenderer.getStringWidth(currentWorldString) + 4, 14);
+                        screenWidth - fontRenderer.getStringWidth(currentWorldString) - 2, screenHeight / 2f + 100,
+                        fontRenderer.getStringWidth(currentWorldString) + 4, 12);
                 fontRenderer.drawString(currentWorldString, screenWidth - fontRenderer.getStringWidth(currentWorldString)
-                        , screenHeight / 2 + 100, Color.WHITE.getRGB());
+                        , screenHeight / 2 + 102, Color.WHITE.getRGB());
             }
             Renderer.drawRect(new Color(0, 0, 255, 100),
                     screenWidth - fontRenderer.getStringWidth(newestWorldString) - 2, screenHeight / 2f + 88,

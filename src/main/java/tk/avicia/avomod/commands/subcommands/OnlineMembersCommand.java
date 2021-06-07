@@ -14,10 +14,7 @@ import tk.avicia.avomod.webapi.GuildData;
 import tk.avicia.avomod.webapi.GuildNameFromTag;
 import tk.avicia.avomod.webapi.OnlinePlayers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OnlineMembersCommand extends Command {
     @Override
@@ -57,9 +54,10 @@ public class OnlineMembersCommand extends Command {
                             membersWithRank.add(guildData.getWithRankFormatting(memberData.get("name").getAsString()));
                         }
                     }
-                    // Sorts the list alphabetically and since the ranks are displayed with * and * is really early
-                    // alphabetically, it also sorts by rank
+                    // Sorts the list alphabetically and since the ranks are displayed with ★ and since ★ is really
+                    // late alphabetically, it also sorts by rank
                     membersWithRank.sort(String::compareToIgnoreCase);
+                    Collections.reverse(membersWithRank);
                     outputMessage = TextFormatting.BLUE + guildData.getGuildName() + TextFormatting.AQUA + " has " +
                             membersWithRank.size() + " members online: " +
                             TextFormatting.GOLD + String.join(", ", membersWithRank);
