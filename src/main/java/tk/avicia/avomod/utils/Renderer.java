@@ -1,14 +1,16 @@
 package tk.avicia.avomod.utils;
 
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import tk.avicia.avomod.Avomod;
 
 import java.awt.*;
 
 public class Renderer {
-    public static void drawRect(Color color, float x, float y, float width, float height){
+    public static void drawRect(Color color, float x, float y, float width, float height) {
         float[] pos = new float[]{x, y, x + width, y + height};
 
         GlStateManager.enableBlend();
@@ -28,5 +30,32 @@ public class Renderer {
 
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
+    }
+
+
+    public static void drawString(String text, int x, int y, Color color) {
+        FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
+        fontRenderer.drawString(text, x, y, color.getRGB());
+    }
+
+    public static void drawStringWithShadow(String text, int x, int y, Color color) {
+        FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
+        fontRenderer.drawString(text, x + 1, y + 1, Utils.getContrastColor(color).getRGB());
+        fontRenderer.drawString(text, x, y, color.getRGB());
+    }
+
+    public static void drawStringWithShadow(String text, int x, int y, Color color, int maxWidth) {
+        FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
+        String newText = text;
+        if (!text.equals(fontRenderer.trimStringToWidth(text, maxWidth))){
+            newText = fontRenderer.trimStringToWidth(text, maxWidth - 3) + "..";
+        }
+        fontRenderer.drawString(newText, x + 1, y + 1, Utils.getContrastColor(color).getRGB());
+        fontRenderer.drawString(newText, x, y, color.getRGB());
+    }
+
+    public static void drawCenteredString(String text, int x, int y, Color color) {
+        FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
+        fontRenderer.drawString(text, x - fontRenderer.getStringWidth(text) / 2, y, color.getRGB());
     }
 }

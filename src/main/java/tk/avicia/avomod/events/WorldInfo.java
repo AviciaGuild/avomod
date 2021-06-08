@@ -27,17 +27,18 @@ public class WorldInfo {
         if (worldData != null) {
             updateCurrentWorld();
             String currentWorldString = "";
+            String newestWorldString = "";
             try {
                 currentWorldString = "Your world " + currentWorld + " : " + Utils.getReadableTime(worldData.getAge(currentWorld).y);
-            } catch (NotFound notFound) {
-                notFound.printStackTrace();
-            }
             Map.Entry<String, JsonElement> newestWorld = worldData.getWorldUpTimeData().get(0);
-            String newestWorldString = "Newest world " + newestWorld.getKey() + " : " +
+            newestWorldString = "Newest world " + newestWorld.getKey() + " : " +
                     Utils.getReadableTime(Integer.parseInt(newestWorld.getValue().getAsJsonObject().get("age").getAsString()));
+            } catch (NotFound | NullPointerException e) {
+                e.printStackTrace();
+            }
+
+
             FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
-
-
             if (!currentWorldString.equals("")) {
                 Renderer.drawRect(new Color(0, 0, 255, 100),
                         screenWidth - fontRenderer.getStringWidth(currentWorldString) - 2, screenHeight / 2f + 100,

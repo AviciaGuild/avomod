@@ -1,5 +1,6 @@
 package tk.avicia.avomod.events;
 
+import javafx.scene.control.Tooltip;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.multiplayer.ServerData;
@@ -9,6 +10,7 @@ import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -18,6 +20,8 @@ import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Renderer;
+import tk.avicia.avomod.utils.Tuple;
+import tk.avicia.avomod.utils.Utils;
 
 import java.awt.*;
 
@@ -28,9 +32,6 @@ public class EventHandlerClass {
         boolean bankMessage = message.startsWith("[INFO]") && message.contains("Guild Bank");
         if (bankMessage && Avomod.isBankFiltered()) {
             event.setCanceled(true);
-        }
-        if (message.contains("Welcome to Wynncraft")) {
-            WorldInfo.updateCurrentWorld();
         }
     }
 
@@ -107,6 +108,7 @@ public class EventHandlerClass {
         if (!(openContainer instanceof ContainerChest)) {
             AverageLevel.isChestNew = true;
         }
+        ToolTipState.isTooltipRendering = false;
     }
 
     @SubscribeEvent
@@ -147,14 +149,31 @@ public class EventHandlerClass {
     }
 
     @SubscribeEvent
-    public void onScreenDraw(GuiScreenEvent.DrawScreenEvent.Post event){
+    public void onScreenDraw(GuiScreenEvent.DrawScreenEvent.Post event) {
         if (Avomod.getMC().player == null || event.getGui() == null) {
             return;
         }
+
         // Stuff you draw here appears above the chest slots and behind the items z-levels, so you can use this for
         // highlights
-//        int screenWidth = event.getGui().width;
-//        int screenHeight = event.getGui().height;
-//        Renderer.drawRect(new Color(0,0,255,255), screenWidth / 2f, screenHeight / 2f, 2000, 20);
+
+        Container openContainer = Avomod.getMC().player.openContainer;
+        if (openContainer instanceof ContainerChest) {
+            InventoryBasic lowerInventory = (InventoryBasic) ((ContainerChest) openContainer).getLowerChestInventory();
+            String containerName = lowerInventory.getName();
+            if (containerName.contains("Territories")) {
+                TerritoryMenuHelper.execute(lowerInventory);
+            }
+        }
+
+    }
+
+    @SubscribeEvent
+    public void onTooltipRender(RenderTooltipEvent.PostBackground event){
+        ToolTipState.isTooltipRendering = true;
+        ToolTipState.toolTipX = event.getX();
+        ToolTipState.toolTipY = event.getY();
+        ToolTipState.toolTipWidth = event.getWidth();
+        ToolTipState.toolTipHeight = event.getHeight();
     }
 }
