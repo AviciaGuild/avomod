@@ -1,6 +1,5 @@
 package tk.avicia.avomod.events;
 
-import javafx.scene.control.Tooltip;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.multiplayer.ServerData;
@@ -19,15 +18,14 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Keybind;
-import tk.avicia.avomod.utils.Renderer;
-import tk.avicia.avomod.utils.Tuple;
-import tk.avicia.avomod.utils.Utils;
-
-import java.awt.*;
 
 public class EventHandlerClass {
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {
+        if (Avomod.revealNicks) {
+            RealName.execute(event);
+        }
+
         String message = event.getMessage().getFormattedText();
         boolean bankMessage = message.startsWith("[INFO]") && message.contains("Guild Bank");
         if (bankMessage && Avomod.isBankFiltered()) {
@@ -169,7 +167,7 @@ public class EventHandlerClass {
     }
 
     @SubscribeEvent
-    public void onTooltipRender(RenderTooltipEvent.PostBackground event){
+    public void onTooltipRender(RenderTooltipEvent.PostBackground event) {
         ToolTipState.isTooltipRendering = true;
         ToolTipState.toolTipX = event.getX();
         ToolTipState.toolTipY = event.getY();
