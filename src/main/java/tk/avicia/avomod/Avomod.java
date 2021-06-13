@@ -53,6 +53,7 @@ public class Avomod {
     public static boolean autoConnect = false;
     private static boolean filterChat = true;
     private static boolean disableMovingArmorOrAccessories = true;
+    public static boolean revealNicks = true;
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();

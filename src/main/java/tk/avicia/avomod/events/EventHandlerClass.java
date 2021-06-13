@@ -23,7 +23,7 @@ public class EventHandlerClass {
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {
         if (Avomod.revealNicks) {
-            RealName.execute(event);
+            ChatUtils.execute(event);
         }
 
         String message = event.getMessage().getFormattedText();
@@ -154,15 +154,6 @@ public class EventHandlerClass {
 
         // Stuff you draw here appears above the chest slots and behind the items z-levels, so you can use this for
         // highlights
-
-        Container openContainer = Avomod.getMC().player.openContainer;
-        if (openContainer instanceof ContainerChest) {
-            InventoryBasic lowerInventory = (InventoryBasic) ((ContainerChest) openContainer).getLowerChestInventory();
-            String containerName = lowerInventory.getName();
-            if (containerName.contains("Territories")) {
-                TerritoryMenuHelper.execute(lowerInventory);
-            }
-        }
 
     }
 
