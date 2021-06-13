@@ -22,7 +22,6 @@ import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Utils;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @Mod(modid = Avomod.MODID, name = Avomod.NAME, version = Avomod.VERSION)
@@ -47,13 +46,15 @@ public class Avomod {
         put("togglemoving", new ToggleMovingArmorCommand());
         put("keybinds", new KeybindsCommand());
         put("configs", new ConfigsCommand());
+        put("playsound", new PlaySoundCommand());
     }};
     public static Map<String, Command> aliases = new HashMap<>();
     public static Map<String, Keybind> keybinds = new HashMap<>();
     public static boolean autoConnect = false;
+    public static boolean revealNicks = true;
+    public static boolean autoJoinWorld = false;
     private static boolean filterChat = true;
     private static boolean disableMovingArmorOrAccessories = true;
-    public static boolean revealNicks = true;
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
