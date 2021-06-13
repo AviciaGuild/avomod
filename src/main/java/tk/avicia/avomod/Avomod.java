@@ -46,7 +46,6 @@ public class Avomod {
         put("togglemoving", new ToggleMovingArmorCommand());
         put("keybinds", new KeybindsCommand());
         put("configs", new ConfigsCommand());
-        put("playsound", new PlaySoundCommand());
     }};
     public static Map<String, Command> aliases = new HashMap<>();
     public static Map<String, Keybind> keybinds = new HashMap<>();
