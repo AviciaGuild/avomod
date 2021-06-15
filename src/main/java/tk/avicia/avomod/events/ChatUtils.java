@@ -101,6 +101,7 @@ public class ChatUtils {
     }
 
     private static boolean checkIfGuildChat(ITextComponent textComponent) {
+        if (!textComponent.getFormattedText().startsWith("\u00A73")) return false;
         Pattern pattern = Pattern.compile("^(\\[\u2605*[A-Za-z_]*]) .*", Pattern.CASE_INSENSITIVE);
         String messageString = TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedText());
         if (messageString.startsWith("[Info]")) return false;
