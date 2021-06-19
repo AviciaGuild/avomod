@@ -78,7 +78,15 @@ public class ChatUtils {
             String command = "/msg" + messageString.substring(messageString.indexOf("\u27a4") + 1, messageString.indexOf("]")).replaceAll(" \\(.*\\)", "") + " ";
 
             for (ITextComponent sibling : textComponent.getSiblings()) {
-                sibling.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+                if (sibling.getStyle().getClickEvent() != null) {
+                    // Doesn't override links in chat
+                    if (!sibling.getStyle().getClickEvent().getValue().contains("http")
+                            && !sibling.getStyle().getClickEvent().getValue().contains("://")) {
+                        sibling.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+                    }
+                } else {
+                    sibling.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+                }
             }
         }
     }
@@ -95,8 +103,15 @@ public class ChatUtils {
             String command = "/msg " + messageString.substring(0, messageString.indexOf("[") - 1) + " ";
 
             for (ITextComponent sibling : textComponent.getSiblings()) {
-                sibling.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
-            }
+                if (sibling.getStyle().getClickEvent() != null) {
+                    // Doesn't override links in chat
+                    if (!sibling.getStyle().getClickEvent().getValue().contains("http")
+                            && !sibling.getStyle().getClickEvent().getValue().contains("://")) {
+                        sibling.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+                    }
+                } else {
+                    sibling.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+                }            }
         }
     }
 
