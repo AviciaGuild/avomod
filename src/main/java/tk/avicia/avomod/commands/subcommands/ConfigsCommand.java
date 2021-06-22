@@ -3,7 +3,9 @@ package tk.avicia.avomod.commands.subcommands;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.commands.Command;
+import tk.avicia.avomod.configs.ConfigsGui;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,10 +13,7 @@ import java.util.List;
 public class ConfigsCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-//        String outputMessage = "";
-//
-//        TextComponentString textComponent = new TextComponentString(outputMessage);
-//        sender.sendMessage(textComponent);
+        Avomod.guiToDraw = new ConfigsGui();
     }
 
     @Override

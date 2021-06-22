@@ -3,6 +3,7 @@ package tk.avicia.avomod;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -11,13 +12,16 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.lwjgl.input.Keyboard;
 import tk.avicia.avomod.commands.AvomodCommand;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.commands.subcommands.*;
+import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.events.EventHandlerClass;
 import tk.avicia.avomod.events.WorldInfo;
 import tk.avicia.avomod.settings.KeybindSettings;
+import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Utils;
 
@@ -29,11 +33,9 @@ public class Avomod {
     public static final String MODID = "avomod";
     public static final String NAME = "AvoMod";
     public static final String VERSION = "1.0";
-
     public static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("help", new HelpCommand());
         put("chestcount", new ChestCountCommand());
-        put("filterbank", new FilterBankCommand());
         put("aliases", new AliasesCommand());
         put("find", new FindCommand());
         put("playerguild", new PlayerGuildCommand());
@@ -43,38 +45,24 @@ public class Avomod {
         put("lastseen", new LastSeenCommand());
         put("playercount", new PlayerCountCommand());
         put("count", new CountCommand());
-        put("togglemoving", new ToggleMovingArmorCommand());
         put("keybinds", new KeybindsCommand());
         put("configs", new ConfigsCommand());
     }};
     public static Map<String, Command> aliases = new HashMap<>();
     public static Map<String, Keybind> keybinds = new HashMap<>();
-    public static boolean autoConnect = false;
-    public static boolean revealNicks = true;
-    public static boolean autoJoinWorld = false;
-    private static boolean filterChat = true;
-    private static boolean disableMovingArmorOrAccessories = true;
+    public static GuiScreen guiToDraw = null;
+    public static JsonObject configs = null;
+    public static Config[] configsArray = new Config[]{
+            new Config("Autojoin world", new String[]{"Enabled", "Disabled"}, "Disabled", "autojoinWorld"),
+            new Config("Autojoin wynncraft", new String[]{"Enabled", "Disabled"}, "Disabled", "autojoinWynncraft"),
+            new Config("Moving armor/accessories", new String[]{"Enabled", "Disabled"}, "Disabled", "disableMovingArmor"),
+            new Config("Filter out bank messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterBankMessages"),
+            new Config("Reveal nicknames", new String[]{"Enabled", "Disabled"}, "Enabled", "revealNicks")
+    };
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
     }
-
-    public static void toggleFilter(boolean newValue) {
-        filterChat = newValue;
-    }
-
-    public static boolean isBankFiltered() {
-        return filterChat;
-    }
-
-    public static boolean isMovingArmorOrAccessoriesDisabled() {
-        return disableMovingArmorOrAccessories;
-    }
-
-    public static void toggleMovingArmorOrAccessories(boolean newValue) {
-        disableMovingArmorOrAccessories = newValue;
-    }
-
 
     public static void updateKeybinds() {
         JsonObject settings = KeybindSettings.getSettings();
@@ -92,9 +80,30 @@ public class Avomod {
         keybinds.entrySet().removeIf(entry -> !settings.has(entry.getKey()));
     }
 
+    public static String getConfig(String configKey) {
+        JsonElement configElement = Avomod.configs.get(configKey);
+
+        if (configElement == null || configElement.isJsonNull()) {
+            return "";
+        } else {
+            return configElement.getAsString();
+        }
+    }
+
+    public static boolean getConfigBoolean(String configKey) {
+        String configValue = Avomod.getConfig(configKey);
+
+        return configValue.equals("Enabled");
+    }
+
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        this.initializeConfigs();
+    }
+
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        if (autoConnect) {
+        if (Avomod.getConfigBoolean("autojoinWynncraft")) {
             FMLClientHandler.instance().connectToServerAtStartup("play.wynncraft.com", 25565);
             Avomod.getMC().setServerData(new ServerData("Wynncraft", "play.wynncraft.com", false));
         }
@@ -118,7 +127,28 @@ public class Avomod {
         updateKeybinds();
     }
 
-    public void initializeAliases() {
+    private void initializeConfigs() {
+        CustomFile configsFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/configs.json");
+        JsonObject configsJson = configsFile.readJson();
+        boolean changed = false;
+
+        for (Config config : this.configsArray) {
+            JsonElement configElement = configsJson.get(config.configsKey);
+
+            if (configElement == null || configElement.isJsonNull()) {
+                configsJson.addProperty(config.configsKey, config.defaultValue);
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            configsFile.writeJson(configsJson);
+        }
+
+        Avomod.configs = configsJson;
+    }
+
+    private void initializeAliases() {
         for (Map.Entry<String, Command> commandMap : commands.entrySet()) {
             Command command = commandMap.getValue();
 

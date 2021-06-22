@@ -22,13 +22,13 @@ import tk.avicia.avomod.utils.Keybind;
 public class EventHandlerClass {
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {
-        if (Avomod.revealNicks) {
+        if (Avomod.getConfigBoolean("revealNicks")) {
             ChatUtils.execute(event);
         }
 
-        String message = event.getMessage().getFormattedText();
+        String message = event.getMessage().getUnformattedText();
         boolean bankMessage = message.startsWith("[INFO]") && message.contains("Guild Bank");
-        if (bankMessage && Avomod.isBankFiltered()) {
+        if (bankMessage && Avomod.getConfigBoolean("filterBankMessages")) {
             event.setCanceled(true);
         }
     }
@@ -48,7 +48,7 @@ public class EventHandlerClass {
         int scaledMouseY = Mouse.getY() / scaleFactor;
         int slotDimensions = 18;
 
-        if (openContainer instanceof ContainerPlayer && event.getGui() instanceof GuiInventory && Avomod.isMovingArmorOrAccessoriesDisabled()) {
+        if (openContainer instanceof ContainerPlayer && event.getGui() instanceof GuiInventory && Avomod.getConfigBoolean("disableMovingArmor")) {
             if (Mouse.getEventButtonState() && scaledMouseY > (screenHeight / 2) - slotDimensions && scaledMouseX < (screenWidth / 2) - (4.5 * slotDimensions) + (4 * slotDimensions)) {
                 event.setCanceled(true);
             }
@@ -65,7 +65,7 @@ public class EventHandlerClass {
         if (Avomod.getMC().player == null) {
             return;
         }
-        if (Avomod.isMovingArmorOrAccessoriesDisabled()) {
+        if (Avomod.getConfigBoolean("disableMovingArmor")) {
             Container openContainer = Avomod.getMC().player.openContainer;
 
             if (openContainer instanceof ContainerPlayer) {
@@ -111,7 +111,7 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        if (Avomod.autoJoinWorld) {
+        if (Avomod.getConfigBoolean("autojoinWorld")) {
             Thread thread = new Thread(() -> {
                 for (int i = 0; i < 10; i++) {
                     ServerData serverData = Avomod.getMC().getCurrentServerData();
@@ -145,6 +145,11 @@ public class EventHandlerClass {
     public void onRenderTick(TickEvent.RenderTickEvent event) {
         if (Avomod.getMC().gameSettings.keyBindPlayerList.isKeyDown()) {
             WorldInfo.draw();
+        }
+
+        if (Avomod.guiToDraw != null) {
+            Avomod.getMC().displayGuiScreen(Avomod.guiToDraw);
+            Avomod.guiToDraw = null;
         }
     }
 

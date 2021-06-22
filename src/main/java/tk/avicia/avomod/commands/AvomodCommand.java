@@ -16,6 +16,19 @@ import java.util.List;
 public class AvomodCommand extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
+        if (params[0].contains("configs")) {
+            Command commandToExecute = Avomod.commands.get("configs");
+
+            try {
+                commandToExecute.execute(server, sender, Arrays.copyOfRange(params, 1, params.length));
+            } catch (Exception e) {
+                TextComponentString textComponent = new TextComponentString(TextFormatting.RED + "Command Failed");
+                sender.sendMessage(textComponent);
+                e.printStackTrace();
+            }
+
+            return;
+        }
         Thread thread = new Thread(() -> {
             if (params.length >= 1) {
                 Command commandToExecute = Avomod.commands.get(params[0]);
