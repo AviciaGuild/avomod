@@ -111,12 +111,14 @@ public class ChatUtils {
                     }
                 } else {
                     sibling.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
-                }            }
+                }
+            }
         }
     }
 
     private static boolean checkIfGuildChat(ITextComponent textComponent) {
         if (!textComponent.getFormattedText().startsWith("\u00A73")) return false;
+        if (textComponent.getSiblings().size() == 0) return false;
         Pattern pattern = Pattern.compile("^(\\[\u2605*[A-Za-z_]*]) .*", Pattern.CASE_INSENSITIVE);
         String messageString = TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedText());
         if (messageString.startsWith("[Info]")) return false;

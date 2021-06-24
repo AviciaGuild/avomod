@@ -20,9 +20,17 @@ public class UpCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
         int amount = 5;
+        int minAge = 0;
+        int maxAge = Integer.MAX_VALUE;
         if (params.length >= 1) {
             try {
                 amount = parseInt(params[0]);
+                if (params.length >= 2) {
+                    minAge = parseInt(params[1]);
+                }
+                if (params.length >= 3) {
+                    maxAge = parseInt(params[2]);
+                }
             } catch (NumberInvalidException e) {
                 TextComponentString textComponent = new TextComponentString(TextFormatting.DARK_RED + params[0] + TextFormatting.RED + " is not a valid amount");
                 sender.sendMessage(textComponent);
@@ -34,10 +42,15 @@ public class UpCommand extends Command {
         for (int i = 0; i < amount; i++) {
             int age = worldData.get(i).getValue()
                     .getAsJsonObject().get("age").getAsInt();
-            String readableAge = Utils.getReadableTime(age);
-            TextComponentString textComponent = new TextComponentString(TextFormatting.GOLD +
-                    worldData.get(i).getKey() + ": " + TextFormatting.GREEN + readableAge);
-            sender.sendMessage(textComponent);
+            if (age >= minAge && age <= maxAge) {
+                String readableAge = Utils.getReadableTime(age);
+                TextComponentString textComponent = new TextComponentString(TextFormatting.GOLD +
+                        worldData.get(i).getKey() + ": " + TextFormatting.GREEN + readableAge);
+                sender.sendMessage(textComponent);
+            } else {
+                if (amount < worldData.size() - 2)
+                    amount++;
+            }
         }
     }
 
@@ -48,7 +61,7 @@ public class UpCommand extends Command {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "up <amount>";
+        return "up <amount> <minAge(minutes)> <maxAge(minutes)>";
     }
 
     @Override

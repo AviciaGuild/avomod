@@ -35,6 +35,8 @@ public class PlayerGuildCommand extends Command {
                 outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a Wynncraft player.";
 
             }
+        } else {
+            outputMessage = TextFormatting.RED + "Correct usage: /am playerguild <username>";
         }
 
         TextComponentString textComponent = new TextComponentString(outputMessage);

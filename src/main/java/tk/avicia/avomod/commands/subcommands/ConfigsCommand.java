@@ -33,6 +33,6 @@ public class ConfigsCommand extends Command {
 
     @Override
     public List<String> getAliases() {
-        return Arrays.asList();
+        return Arrays.asList("cf", "config");
     }
 }

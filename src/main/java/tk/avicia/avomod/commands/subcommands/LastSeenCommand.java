@@ -43,6 +43,8 @@ public class LastSeenCommand extends Command {
                 outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a Wynncraft player.";
 
             }
+        } else{
+            outputMessage = TextFormatting.RED + "Correct usage: /am lastseen <username>";
         }
 
         TextComponentString textComponent = new TextComponentString(outputMessage);

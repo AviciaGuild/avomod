@@ -7,13 +7,20 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.IClientCommand;
 import tk.avicia.avomod.Avomod;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class AvomodCommand extends CommandBase {
+public class AvomodCommand extends CommandBase implements IClientCommand {
+
+    @Override
+    public boolean allowUsageWithoutPrefix(ICommandSender sender, String s) {
+        return false;
+    }
+
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
         if (params[0].contains("configs")) {
