@@ -9,10 +9,16 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import tk.avicia.avomod.Avomod;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class ChatUtils {
+    private static ITextComponent fullMessage;
+    private static String guildMessageSenderNickname = "";
+
     public static void execute(ClientChatReceivedEvent event) {
+        fullMessage = event.getMessage();
+        guildMessageSenderNickname = "";
         doChecks(event.getMessage());
         for (ITextComponent textComponent : event.getMessage().getSiblings()) {
             if (textComponent.getSiblings().size() > 0) {
@@ -21,6 +27,22 @@ public class ChatUtils {
                 }
             } else {
                 doChecks(textComponent);
+            }
+        }
+        if (!guildMessageSenderNickname.equals("")) {
+            try {
+                // Save all sibling of the message
+                List<ITextComponent> siblings = fullMessage.getSiblings();
+                // Make a textcomponent with the real name
+                fullMessage = new TextComponentString(TextFormatting.RED + "(" + guildMessageSenderNickname + ")");
+                // Add all old siblings to the real name
+                fullMessage.getSiblings().addAll(siblings);
+                // Clears everything except for the nicknameand [***] stuff
+                event.getMessage().getSiblings().clear();
+                // Adds the real name + the original message after the nickname
+                event.getMessage().appendSibling(fullMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -43,12 +65,16 @@ public class ChatUtils {
 
     private static boolean checkIfNickHover(ITextComponent textComponent) {
         HoverEvent hover = textComponent.getStyle().getHoverEvent();
-
+        boolean res;
+//        res = textComponent.getUnformattedText().contains("\u00A7o");
+        res = textComponent.getSiblings().size() == 0;
         if (hover != null) {
             String hoverText = hover.getValue().getUnformattedText();
-            return hoverText.contains("real username");
+            res = res && hoverText.contains("real username");
+        } else {
+            res = false;
         }
-        return false;
+        return res;
     }
 
 
@@ -61,8 +87,13 @@ public class ChatUtils {
             // I never managed to get it to work with wynntils' coordinates but now it adds the ext directly
             // to the same thing as the nickname instead of as a sibling (not much difference) but it does make both
             // duplicates of the name reveal red when there are wynntils coordinates
-            textComponent.appendText(TextFormatting.RED + "(" + realName + ")" + textComponent.getStyle().getFormattingCode());
-
+            if (hoverText.contains("Rank:")) {
+                // If it's guild chat there is both rank and real name in the hover and it breaks stuff
+                // This needs to be done after the for loop to avoid errors, hence the variable
+                guildMessageSenderNickname = realName;
+            } else {
+                textComponent.appendText(TextFormatting.RED + "(" + realName + ")" + textComponent.getStyle().getFormattingCode());
+            }
         }
     }
 

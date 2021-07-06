@@ -33,13 +33,13 @@ public class CustomFile extends File {
     }
 
     public JsonObject readJson() {
-        String output = "";
+        StringBuilder output = new StringBuilder();
         try {
             InputStreamReader reader = new InputStreamReader(new FileInputStream(this), StandardCharsets.UTF_8);
 
             int currentChar;
             while ((currentChar = reader.read()) != -1) {
-                output += (char) currentChar;
+                output.append((char) currentChar);
             }
 
             reader.close();
@@ -48,7 +48,7 @@ public class CustomFile extends File {
             return null;
         }
 
-        return new JsonParser().parse(output).getAsJsonObject();
+        return new JsonParser().parse(output.toString()).getAsJsonObject();
     }
 
     public void writeJson(JsonObject jsonObject) {
@@ -62,7 +62,6 @@ public class CustomFile extends File {
             fileWriter.close();
         } catch (Exception e) {
             e.printStackTrace();
-            return;
         }
     }
 }
