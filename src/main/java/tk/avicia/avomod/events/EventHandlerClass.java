@@ -7,8 +7,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -56,6 +58,8 @@ public class EventHandlerClass {
             String containerName = ((ContainerChest) openContainer).getLowerChestInventory().getName();
             if (containerName.equals("Trade Market")) {
                 TradeMarketAutoSearch.execute(event, openContainer, screenWidth, screenHeight, slotDimensions, scaleFactor);
+            } else if (containerName.contains("Loot Chest")) {
+                PowderStackingFix.execute(event, openContainer);
             }
         }
     }
@@ -171,5 +175,21 @@ public class EventHandlerClass {
         ToolTipState.toolTipY = event.getY();
         ToolTipState.toolTipWidth = event.getWidth();
         ToolTipState.toolTipHeight = event.getHeight();
+    }
+
+    @SubscribeEvent
+    public void bossInfo(RenderGameOverlayEvent.BossInfo event) {
+        String bossbarName = TextFormatting.getTextWithoutFormattingCodes(event.getBossInfo().getName().getUnformattedText());
+
+        if (bossbarName.contains("Tower")) {
+            String[] bossbarWords = bossbarName.split(" ");
+
+            String health = bossbarWords[bossbarWords.length - 6];
+            String defense = bossbarWords[bossbarWords.length - 5];
+            String damage = bossbarWords[bossbarWords.length - 2];
+            String attacks = bossbarWords[bossbarWords.length - 1];
+
+//            System.out.println("Health: " + health + ", Defense: " + defense + ", Damage: " + damage + ", Attacks: " + attacks);
+        }
     }
 }
