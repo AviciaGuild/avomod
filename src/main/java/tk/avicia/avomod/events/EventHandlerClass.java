@@ -1,8 +1,10 @@
 package tk.avicia.avomod.events;
 
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerPlayer;
@@ -20,17 +22,43 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Keybind;
+import tk.avicia.avomod.utils.TerritoryData;
+import tk.avicia.avomod.utils.Utils;
+
+import java.util.List;
 
 public class EventHandlerClass {
+    private int tick = 0;
+    private boolean guiOpen = false;
+
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {
         if (Avomod.getConfigBoolean("revealNicks")) {
             ChatUtils.execute(event);
         }
 
-        String message = event.getMessage().getUnformattedText();
+        String message = TextFormatting.getTextWithoutFormattingCodes(event.getMessage().getUnformattedText());
         boolean bankMessage = message.startsWith("[INFO]") && message.contains("Guild Bank");
         if (bankMessage && Avomod.getConfigBoolean("filterBankMessages")) {
+            event.setCanceled(true);
+        }
+
+        KeyBinding sneakKeyBind = Avomod.getMC().gameSettings.keyBindSneak;
+        if (message.contains("Press SHIFT to continue") && Avomod.getConfigBoolean("skipDialogue")) {
+            Thread thread = new Thread(() -> {
+                try {
+                    KeyBinding.setKeyBindState(sneakKeyBind.getKeyCode(), true);
+                    Thread.sleep(100);
+                    KeyBinding.setKeyBindState(sneakKeyBind.getKeyCode(), false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            thread.start();
+        }
+
+        if (message.startsWith("[INFO]") && message.contains("resources") && Avomod.getConfigBoolean("filterResourceMessages")) {
+//            String territory = message.split("Territory ")[1].split(" is")[0];
             event.setCanceled(true);
         }
     }
@@ -111,6 +139,13 @@ public class EventHandlerClass {
             AverageLevel.isChestNew = true;
         }
         ToolTipState.isTooltipRendering = false;
+
+        tick++;
+        if (tick % 60000 == 0) {
+            TerritoryData.updateTerritoryData();
+        }
+
+        guiOpen = false;
     }
 
     @SubscribeEvent
@@ -155,6 +190,11 @@ public class EventHandlerClass {
             Avomod.getMC().displayGuiScreen(Avomod.guiToDraw);
             Avomod.guiToDraw = null;
         }
+
+        List<String> upcomingAttacks = Utils.getUpcomingAttacks();
+        if (upcomingAttacks.size() != 0 && Avomod.getConfigBoolean("attacksMenu") && !guiOpen) {
+            AttacksMenu.draw(upcomingAttacks);
+        }
     }
 
     @SubscribeEvent
@@ -165,7 +205,9 @@ public class EventHandlerClass {
 
         // Stuff you draw here appears above the chest slots and behind the items z-levels, so you can use this for
         // highlights
-
+        if (!(event.getGui() instanceof GuiChat)) {
+            guiOpen = true;
+        }
     }
 
     @SubscribeEvent
@@ -179,17 +221,17 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void bossInfo(RenderGameOverlayEvent.BossInfo event) {
-        String bossbarName = TextFormatting.getTextWithoutFormattingCodes(event.getBossInfo().getName().getUnformattedText());
-
-        if (bossbarName.contains("Tower")) {
-            String[] bossbarWords = bossbarName.split(" ");
-
-            String health = bossbarWords[bossbarWords.length - 6];
-            String defense = bossbarWords[bossbarWords.length - 5];
-            String damage = bossbarWords[bossbarWords.length - 2];
-            String attacks = bossbarWords[bossbarWords.length - 1];
-
-//            System.out.println("Health: " + health + ", Defense: " + defense + ", Damage: " + damage + ", Attacks: " + attacks);
-        }
+//        String bossbarName = TextFormatting.getTextWithoutFormattingCodes(event.getBossInfo().getName().getUnformattedText());
+//
+//        if (bossbarName.contains("Tower")) {
+//            String[] bossbarWords = bossbarName.split(" ");
+//
+//            String health = bossbarWords[bossbarWords.length - 6];
+//            String defense = bossbarWords[bossbarWords.length - 5];
+//            String damage = bossbarWords[bossbarWords.length - 2];
+//            String attacks = bossbarWords[bossbarWords.length - 1];
+//
+////            System.out.println("Health: " + health + ", Defense: " + defense + ", Damage: " + damage + ", Attacks: " + attacks);
+//        }
     }
 }

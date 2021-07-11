@@ -5,10 +5,16 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketClickWindow;
-import org.lwjgl.input.Mouse;
+import net.minecraft.scoreboard.Score;
+import net.minecraft.scoreboard.Scoreboard;
 import tk.avicia.avomod.Avomod;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Utils {
     public static String firstLetterCapital(String input) {
@@ -50,5 +56,30 @@ public class Utils {
     public static Color getContrastColor(Color color) {
         double y = (299 * color.getRed() + 587 * color.getGreen() + 114 * color.getBlue()) / 1000;
         return y >= 128 ? Color.black : Color.white;
+    }
+
+    public static List<String> getUpcomingAttacks() {
+        if (Avomod.getMC() == null || Avomod.getMC().world == null) return new ArrayList<>();
+
+        Scoreboard scoreboard = Avomod.getMC().world.getScoreboard();
+        Collection<Score> scores = scoreboard.getScores();
+        Optional<Score> titleScoreOptional = scores.stream().filter(e -> e.getPlayerName().contains("Upcoming Attacks")).findFirst();
+
+        if (titleScoreOptional.isPresent()) {
+            int titleScore = titleScoreOptional.get().getScorePoints();
+            List<Score> upcomingAttackScores = scores.stream().filter(e -> e.getScorePoints() < titleScore).collect(Collectors.toList());
+            List<String> upcomingAttacks = upcomingAttackScores.stream().map(e -> e.getPlayerName()).collect(Collectors.toList());
+            List<String> duplicateTerritories = new ArrayList<>();
+
+            return upcomingAttacks.stream().filter(e -> {
+                if (!duplicateTerritories.contains(e)) {
+                    duplicateTerritories.add(e);
+                    return true;
+                }
+                return false;
+            }).collect(Collectors.toList());
+        }
+
+        return new ArrayList<>();
     }
 }

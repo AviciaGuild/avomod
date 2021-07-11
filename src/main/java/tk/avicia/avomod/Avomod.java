@@ -54,10 +54,13 @@ public class Avomod {
     public static JsonObject configs = null;
     public static Config[] configsArray = new Config[]{
             new Config("Autojoin world", new String[]{"Enabled", "Disabled"}, "Disabled", "autojoinWorld"),
-            new Config("Autojoin Wynncraft", new String[]{"Enabled", "Disabled"}, "Disabled", "autojoinWynncraft"),
+            new Config("Autojoin wynncraft", new String[]{"Enabled", "Disabled"}, "Disabled", "autojoinWynncraft"),
             new Config("Prevent moving armor/accessories", new String[]{"Enabled", "Disabled"}, "Disabled", "disableMovingArmor"),
             new Config("Filter out bank messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterBankMessages"),
-            new Config("Reveal nicknames", new String[]{"Enabled", "Disabled"}, "Enabled", "revealNicks")
+            new Config("Reveal nicknames", new String[]{"Enabled", "Disabled"}, "Enabled", "revealNicks"),
+            new Config("Auto skip quest dialogue", new String[]{"Enabled", "Disabled"}, "Disabled", "skipDialogue"),
+            new Config("Filter out all resource messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterResourceMessages"),
+            new Config("Custom attacks menu", new String[]{"Enabled", "Disabled"}, "Disabled", "attacksMenu")
     };
 
     public static Minecraft getMC() {

@@ -31,13 +31,14 @@ public class KeybindsCommand extends Command {
                     String messageToExecute = String.join(" ", Arrays.copyOfRange(params, 2, params.length));
                     KeybindSettings.setSettings(params[1], messageToExecute);
 
-                    outputMessage = "Keybind added for " + params[1] + ". Will execute " + messageToExecute;
+                    outputMessage = TextFormatting.BLUE + "Keybind added. " + TextFormatting.GREEN + params[1].toUpperCase() + " will execute " + TextFormatting.YELLOW + "/" + messageToExecute;
                 }
             } else if (params[0].equals("list")) {
                 JsonObject keybinds = KeybindSettings.getSettings();
+                outputMessage = TextFormatting.BLUE + "Current Avomod Keybinds:";
 
                 for (Map.Entry<String, JsonElement> e : keybinds.entrySet()) {
-                    outputMessage += e.getKey() + ": /" + e.getValue() + "\n";
+                    outputMessage += "\n" + TextFormatting.GREEN + e.getKey().toUpperCase() + ": " + TextFormatting.YELLOW + "/" + e.getValue().getAsString();
                 }
             } else if (params[0].equals("remove")) {
                 if (params.length < 2) {
@@ -50,7 +51,7 @@ public class KeybindsCommand extends Command {
                     Avomod.keybinds.get(params[1]).setKeyCode(0);
                     KeybindSettings.removeSetting(params[1]);
 
-                    outputMessage = "Keybind removed for " + params[1] + ". Note: This keybind will show up in your controls until you restart your game.";
+                    outputMessage = TextFormatting.BLUE + "Keybind removed for " + TextFormatting.GREEN + params[1].toUpperCase() + ". Note: This keybind will show up in your controls until you restart your game.";
                 }
             }
         } else {
@@ -79,7 +80,7 @@ public class KeybindsCommand extends Command {
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos
             targetPos) {
-        if (args.length == 1) {
+        if (args.length == 2) {
             return getListOfStringsMatchingLastWord(args, "add", "remove", "list");
         }
 

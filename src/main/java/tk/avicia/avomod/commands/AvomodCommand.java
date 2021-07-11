@@ -77,10 +77,20 @@ public class AvomodCommand extends CommandBase implements IClientCommand {
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos
-            targetPos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 1) {
             return getListOfStringsMatchingLastWord(args, Avomod.commands.keySet());
+        } else {
+            String commandName = args[0];
+            Command commandToExecute = Avomod.commands.get(commandName);
+
+            if (commandToExecute != null) {
+                try {
+                    return commandToExecute.getTabCompletions(server, sender, args, targetPos);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return Collections.emptyList();
