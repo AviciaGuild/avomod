@@ -2,7 +2,6 @@ package tk.avicia.avomod.events;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.text.TextFormatting;
-import scala.actors.threadpool.Arrays;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Renderer;
 import tk.avicia.avomod.utils.TerritoryData;
@@ -10,10 +9,8 @@ import tk.avicia.avomod.utils.Tuple;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
+import java.util.*;
 
 public class AttacksMenu {
     public static void draw(List<String> upcomingAttacks) {
