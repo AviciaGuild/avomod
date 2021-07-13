@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.*;
 
 public class AttacksMenu {
+    private static HashMap<String, String> savedDefenses = new HashMap<>();
+
     public static void draw(List<String> upcomingAttacks) {
         if (upcomingAttacks.size() == 0) return;
 
@@ -21,27 +23,37 @@ public class AttacksMenu {
         }
 
         List<Tuple<String, String>> upcomingAttacksSplit = new ArrayList<>();
+        List<String> upcomingAttackTerritories = new ArrayList<>();
 
         for (String upcomingAttack : upcomingAttacks) {
             String[] words = TextFormatting.getTextWithoutFormattingCodes(upcomingAttack).split(" ");
             String time = words[1];
-            String territory = String.join(" ", (String[]) Arrays.copyOfRange(words, 2, words.length));
+            String territory = String.join(" ", Arrays.copyOfRange(words, 2, words.length));
 
             upcomingAttacksSplit.add(new Tuple<>(time, territory));
+            upcomingAttackTerritories.add(territory);
         }
 
-        upcomingAttacksSplit.sort(new Comparator<Tuple<String, String>>() {
-            @Override
-            public int compare(Tuple<String, String> o1, Tuple<String, String> o2) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                    Date d1 = sdf.parse(o1.x);
-                    Date d2 = sdf.parse(o2.x);
-                    return (int) (d1.getTime() - d2.getTime());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return 0;
-                }
+        List<String> terrsToRemove = new ArrayList<>();
+        for (Map.Entry<String, String> savedDefense : savedDefenses.entrySet()) {
+            if (!upcomingAttackTerritories.contains(savedDefense.getKey())) {
+                terrsToRemove.add(savedDefense.getKey());
+            }
+        }
+
+        for (String terrToRemove : terrsToRemove) {
+            savedDefenses.remove(terrToRemove);
+        }
+
+        upcomingAttacksSplit.sort((o1, o2) -> {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                Date d1 = sdf.parse(o1.x);
+                Date d2 = sdf.parse(o2.x);
+                return (int) (d1.getTime() - d2.getTime());
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
             }
         });
 
@@ -58,7 +70,14 @@ public class AttacksMenu {
 
         for (Tuple<String, String> attack : upcomingAttacksSplit) {
             Renderer.drawRect(background, 0, y, longestLength, 12);
-            Renderer.drawString(attack.x + "   " + attack.y + " (" + TerritoryData.getTerritoryDefense(attack.y) + ")", 0, y + 2, Color.WHITE);
+
+            String savedDefense = savedDefenses.get(attack.y);
+            if (savedDefense == null) {
+                savedDefense = TerritoryData.getTerritoryDefense(attack.y);
+                savedDefenses.put(attack.y, savedDefense);
+            }
+
+            Renderer.drawString(attack.x + "   " + attack.y + " (" + savedDefense + ")", 0, y + 2, Color.WHITE);
             y += 12;
 
             if (background.equals(new Color(0, 0, 255, 150))) {
