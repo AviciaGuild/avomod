@@ -9,11 +9,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -21,11 +19,11 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.utils.Keybind;
-import tk.avicia.avomod.utils.TerritoryData;
-import tk.avicia.avomod.utils.Utils;
+import tk.avicia.avomod.utils.*;
 
+import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 public class EventHandlerClass {
     private int tick = 0;
@@ -88,6 +86,20 @@ public class EventHandlerClass {
                 TradeMarketAutoSearch.execute(event, openContainer, screenWidth, screenHeight, slotDimensions, scaleFactor);
             } else if (containerName.contains("Loot Chest")) {
                 PowderStackingFix.execute(event, openContainer);
+            }
+        }
+
+        if (event.getGui() instanceof GuiChat && Mouse.getEventButtonState()) {
+            for (Map.Entry<String, ScreenCoordinates> attackCoordinates : AttacksMenu.attackCoordinates.entrySet()) {
+                if (attackCoordinates.getValue().mouseIn(scaledMouseX, screenHeight - scaledMouseY)) {
+                    Coordinates territoryLocation = Avomod.territoryData.getMiddleOfTerritory(attackCoordinates.getKey());
+                    Avomod.compassLocation = territoryLocation;
+
+                    if (Avomod.compassLocation != null) {
+                        Avomod.getMC().player.sendMessage(new TextComponentString("A blue beacon beam has been created at the territory. The coordinates for " + attackCoordinates.getKey() + " are (" + (int) territoryLocation.getX() + ", " + (int) territoryLocation.getZ() + ")"));
+                        Avomod.compassTerritory = attackCoordinates.getKey();
+                    }
+                }
             }
         }
     }
@@ -195,6 +207,13 @@ public class EventHandlerClass {
         if (upcomingAttacks.size() != 0 && Avomod.getConfigBoolean("attacksMenu") && !guiOpen) {
             AttacksMenu.draw(upcomingAttacks);
         }
+    }
+
+    @SubscribeEvent
+    public void renderWorld(RenderWorldLastEvent e) {
+        if (Avomod.compassLocation == null) return;
+
+        Renderer.drawBeam(Avomod.compassLocation, new Color(0, 50, 150, 255), e.getPartialTicks());
     }
 
     @SubscribeEvent

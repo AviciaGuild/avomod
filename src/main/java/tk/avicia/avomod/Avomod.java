@@ -21,9 +21,11 @@ import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.events.EventHandlerClass;
 import tk.avicia.avomod.events.WorldInfo;
 import tk.avicia.avomod.settings.KeybindSettings;
+import tk.avicia.avomod.utils.Coordinates;
 import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Utils;
+import tk.avicia.avomod.webapi.TerritoryDataApi;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,6 +64,9 @@ public class Avomod {
             new Config("Filter out all resource messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterResourceMessages"),
             new Config("Custom attacks menu", new String[]{"Enabled", "Disabled"}, "Disabled", "attacksMenu")
     };
+    public static TerritoryDataApi territoryData;
+    public static Coordinates compassLocation = null;
+    public static String compassTerritory = null;
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
@@ -122,6 +127,8 @@ public class Avomod {
             } while (true);
         });
         thread.start();
+
+        territoryData = new TerritoryDataApi();
 
         MinecraftForge.EVENT_BUS.register(new EventHandlerClass());
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());

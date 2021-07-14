@@ -4,6 +4,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Renderer;
+import tk.avicia.avomod.utils.ScreenCoordinates;
 import tk.avicia.avomod.utils.TerritoryData;
 import tk.avicia.avomod.utils.Tuple;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.*;
 
 public class AttacksMenu {
+    public static HashMap<String, ScreenCoordinates> attackCoordinates = new HashMap<>();
     private static HashMap<String, String> savedDefenses = new HashMap<>();
 
     public static void draw(List<String> upcomingAttacks) {
@@ -43,6 +45,12 @@ public class AttacksMenu {
 
         for (String terrToRemove : terrsToRemove) {
             savedDefenses.remove(terrToRemove);
+            attackCoordinates.remove(terrToRemove);
+
+            if (Avomod.compassTerritory.equals(terrToRemove)) {
+                Avomod.compassTerritory = null;
+                Avomod.compassLocation = null;
+            }
         }
 
         upcomingAttacksSplit.sort((o1, o2) -> {
@@ -68,8 +76,18 @@ public class AttacksMenu {
         }).get();
         Color background = new Color(0, 0, 255, 150);
 
+        int xPos = Avomod.getMC().player.getPosition().getX();
+        int zPos = Avomod.getMC().player.getPosition().getZ();
+        String currentTerritory = Avomod.territoryData.coordinatesInTerritory(new Tuple<>(xPos, zPos));
+
         for (Tuple<String, String> attack : upcomingAttacksSplit) {
-            Renderer.drawRect(background, 0, y, longestLength, 12);
+            if (attack.y.equals(currentTerritory)) {
+                Renderer.drawRect(new Color(0, 150, 0, 200), 0, y, longestLength, 12);
+            } else {
+                Renderer.drawRect(background, 0, y, longestLength, 12);
+            }
+
+            attackCoordinates.put(attack.y, new ScreenCoordinates(0, y, longestLength, y + 12));
 
             String savedDefense = savedDefenses.get(attack.y);
             if (savedDefense == null) {
