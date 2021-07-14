@@ -47,7 +47,7 @@ public class AttacksMenu {
             savedDefenses.remove(terrToRemove);
             attackCoordinates.remove(terrToRemove);
 
-            if (Avomod.compassTerritory.equals(terrToRemove)) {
+            if (terrToRemove.equals(Avomod.compassTerritory)) {
                 Avomod.compassTerritory = null;
                 Avomod.compassLocation = null;
             }
