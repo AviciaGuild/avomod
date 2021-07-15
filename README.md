@@ -3,18 +3,24 @@
 Welcome to avomod, a quality of life mod developed by Albb_n and newracket. Below, you'll find a list of the various
 features that this mod has.
 
-This bug is still relatively new, and may have bugs in it. If you find any bugs, please notify Albb_n or newracket.
+This mod is still relatively new, and may have bugs in it. If you find any bugs, please notify Albb_n or newracket.
 
 ## **<span style="text-decoration:underline;">Commands:</span>**
 
 * World age command (lists age of world)
     * /avomod age &lt;world>
+* Aliases command (lists all command aliases)
+    * /avomod aliases
 * Chest count command (lists total chests found by player)
     * /avomod chestcount &lt;ign, leaving blank will default to user>
+* Configs command (displays avomod configs)
+    * /avomod configs
 * Item count command (counts how many of the item you’re holding is in your inventory)
     * /avomod count
 * Find player command (similar to /find, but works in lobby)
     * /avomod find &lt;ign>
+* Help command (displays avomod help)
+    * /avomod help <command (OPTIONAL)>
 * Last seen command (displays how long it’s been since person logged on)
     * /avomod lastseen &lt;ign>
 * Online members command (lists online members in guild)
@@ -45,3 +51,12 @@ Way for you to create your own chat keybinds, in which a command is executed on 
 * Disable moving armor and accessories
 * Search item on trade market by middle clicking item
 * Filter out depositing and withdrawing items from guild bank
+* Autoskip quest dialogue
+* Custom attacks menu
+    * Sorts by timer
+    * Shows defense of territory
+    * Click to create beacon at territory and post coordinates in chat
+    * Highlights what territory you're in
+* Filter out territory resource messages
+* Fixed powder stacking fix (slight delay)
+* Displays nickname of nicked champions
