@@ -66,43 +66,40 @@ public class AttacksMenu {
         });
 
         ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
-        int screenHeight = scaledResolution.getScaledHeight();
-        int y = screenHeight / 3;
-        int longestLength = upcomingAttacksSplit.stream().map(e -> Avomod.getMC().fontRenderer.getStringWidth(e.x + "   " + e.y + " (" + TerritoryData.getTerritoryDefense(e.y) + ")")).max(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1 - o2;
-            }
-        }).get();
-        Color background = new Color(0, 0, 255, 150);
+        int screenWidth = scaledResolution.getScaledWidth();
+        int y = 20;
 
         int xPos = Avomod.getMC().player.getPosition().getX();
         int zPos = Avomod.getMC().player.getPosition().getZ();
         String currentTerritory = Avomod.territoryData.coordinatesInTerritory(new Tuple<>(xPos, zPos));
 
         for (Tuple<String, String> attack : upcomingAttacksSplit) {
-            if (attack.y.equals(currentTerritory)) {
-                Renderer.drawRect(new Color(0, 150, 0, 200), 0, y, longestLength, 12);
-            } else {
-                Renderer.drawRect(background, 0, y, longestLength, 12);
-            }
-
-            attackCoordinates.put(attack.y, new ScreenCoordinates(0, y, longestLength, y + 12));
-
             String savedDefense = savedDefenses.get(attack.y);
             if (savedDefense == null) {
                 savedDefense = TerritoryData.getTerritoryDefense(attack.y);
                 savedDefenses.put(attack.y, savedDefense);
             }
 
-            Renderer.drawString(attack.x + "   " + attack.y + " (" + savedDefense + ")", 0, y + 2, Color.WHITE);
-            y += 12;
-
-            if (background.equals(new Color(0, 0, 255, 150))) {
-                background = new Color(0, 0, 150, 150);
+            if (savedDefense.equals("Low") || savedDefense.equals("Very Low")) {
+                savedDefense = TextFormatting.GREEN + savedDefense;
+            } else if (savedDefense.equals("Medium")) {
+                savedDefense = TextFormatting.YELLOW + savedDefense;
             } else {
-                background = new Color(0, 0, 255, 150);
+                savedDefense = TextFormatting.RED + savedDefense;
             }
+
+            String message = TextFormatting.GOLD + attack.y + " (" + savedDefense + TextFormatting.GOLD + ") " + TextFormatting.AQUA + attack.x;
+            if (attack.y.equals(currentTerritory)) {
+                message = TextFormatting.LIGHT_PURPLE + "" + TextFormatting.BOLD + attack.y + TextFormatting.RESET + TextFormatting.GOLD + " (" + savedDefense + TextFormatting.GOLD + ") " + TextFormatting.AQUA + attack.x;
+            }
+
+            int width = Avomod.getMC().fontRenderer.getStringWidth(message);
+            int x = screenWidth - width - 5;
+            attackCoordinates.put(attack.y, new ScreenCoordinates(0, y, width, y + 12));
+
+            Renderer.drawRect(new Color(100, 100, 100, 100), x - 2, y, width + 2, 12);
+            Renderer.drawString(message, x, y + 2, new Color(255, 170, 0));
+            y += 12;
         }
     }
 }
