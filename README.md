@@ -52,7 +52,7 @@ Way for you to create your own chat keybinds, in which a command is executed on 
 * Search item on trade market by middle clicking item
 * Filter out depositing and withdrawing items from guild bank
 * Autoskip quest dialogue
-* Custom attacks menu
+* Custom attack timer display
     * Sorts by timer
     * Shows defense of territory
     * Click to create beacon at territory and post coordinates in chat

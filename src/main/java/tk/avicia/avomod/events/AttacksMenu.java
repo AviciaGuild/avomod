@@ -67,7 +67,7 @@ public class AttacksMenu {
 
         ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
         int screenWidth = scaledResolution.getScaledWidth();
-        int y = 20;
+        int y = 35;
 
         int xPos = Avomod.getMC().player.getPosition().getX();
         int zPos = Avomod.getMC().player.getPosition().getZ();

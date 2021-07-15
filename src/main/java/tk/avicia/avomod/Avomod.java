@@ -62,7 +62,7 @@ public class Avomod {
             new Config("Reveal nicknames", new String[]{"Enabled", "Disabled"}, "Enabled", "revealNicks"),
             new Config("Auto skip quest dialogue", new String[]{"Enabled", "Disabled"}, "Disabled", "skipDialogue"),
             new Config("Filter out all resource messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterResourceMessages"),
-            new Config("Custom attacks menu", new String[]{"Enabled", "Disabled"}, "Disabled", "attacksMenu")
+            new Config("Custom attack timers display", new String[]{"Enabled", "Disabled"}, "Disabled", "attacksMenu")
     };
     public static TerritoryDataApi territoryData;
     public static Coordinates compassLocation = null;
