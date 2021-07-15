@@ -61,7 +61,7 @@ public class AttacksMenu {
                 return (int) (d1.getTime() - d2.getTime());
             } catch (Exception e) {
                 e.printStackTrace();
-                return 0;n
+                return 0;
             }
         });
 
