@@ -3,7 +3,6 @@ package tk.avicia.avomod.webapi;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import tk.avicia.avomod.utils.Tuple;
 
 import java.io.BufferedReader;
@@ -55,7 +54,7 @@ public class WorldUpTime {
         return worldUpTimes;
     }
 
-    public Tuple<String, Integer> getAge(String world) throws NotFound {
+    public Tuple<String, Integer> getAge(String world) throws NoSuchFieldException {
         Pattern pattern = Pattern.compile("(^wc[0-9]+)|(^[0-9]+$)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(world);
         boolean matchFound = matcher.find();
@@ -70,10 +69,10 @@ public class WorldUpTime {
                 int age = worldUpTimeData.get(wc).getAsJsonObject().get("age").getAsInt();
                 return new Tuple<>(wc, age);
             } else {
-                throw new NotFound();
+                throw new NoSuchFieldException();
             }
         } else {
-            throw new NotFound();
+            throw new NoSuchFieldException();
         }
     }
 }

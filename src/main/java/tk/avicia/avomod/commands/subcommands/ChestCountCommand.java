@@ -5,7 +5,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.webapi.PlayerData;
 
@@ -27,7 +26,7 @@ public class ChestCountCommand extends Command {
             player = new PlayerData(username);
             outputMessage = TextFormatting.AQUA + player.getPlayerName() + TextFormatting.GRAY + " has found " +
                     TextFormatting.AQUA + player.getChestCount() + TextFormatting.GRAY + " chests!";
-        } catch (NotFound e) {
+        } catch (NoSuchFieldException e) {
             outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a valid Wynncraft player";
         }
 

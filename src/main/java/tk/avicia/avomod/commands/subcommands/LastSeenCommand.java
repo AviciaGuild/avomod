@@ -5,7 +5,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.webapi.PlayerData;
 
@@ -39,7 +38,7 @@ public class LastSeenCommand extends Command {
                     TextComponentString textComponent = new TextComponentString(TextFormatting.RED + "Error parsing date from api.");
                     sender.sendMessage(textComponent);
                 }
-            } catch (NotFound e) {
+            } catch (NoSuchFieldException e) {
                 outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a Wynncraft player.";
 
             }

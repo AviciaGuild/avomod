@@ -3,11 +3,6 @@ package tk.avicia.avomod.events;
 import com.google.gson.JsonElement;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Renderer;
 import tk.avicia.avomod.utils.Utils;
@@ -34,7 +29,7 @@ public class WorldInfo {
                     Map.Entry<String, JsonElement> newestWorld = worldData.getWorldUpTimeData().get(0);
                     newestWorldString = "Newest world " + newestWorld.getKey() + " : " +
                             Utils.getReadableTime(Integer.parseInt(newestWorld.getValue().getAsJsonObject().get("age").getAsString()));
-                } catch (NotFound | NullPointerException e) {
+                } catch (NoSuchFieldException | NullPointerException e) {
                     e.printStackTrace();
                 }
             }

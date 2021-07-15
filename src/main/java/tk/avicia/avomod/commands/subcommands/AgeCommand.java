@@ -5,7 +5,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.utils.Tuple;
@@ -27,7 +26,7 @@ public class AgeCommand extends Command {
                 Tuple<String, Integer> worldAge = worldUpTime.getAge(world);
                 outputMessage = TextFormatting.GOLD + worldAge.x + " : " + TextFormatting.DARK_AQUA +
                         Utils.getReadableTime(worldAge.y);
-            } catch (NotFound notFound) {
+            } catch (NoSuchFieldException NoSuchFieldException) {
                 outputMessage = TextFormatting.DARK_RED + params[0] + TextFormatting.RED + " Could not be found!";
             }
         } else {
@@ -37,7 +36,7 @@ public class AgeCommand extends Command {
                 Tuple<String, Integer> worldAge = worldUpTime.getAge(currentWorld);
                 outputMessage = TextFormatting.GOLD + worldAge.x + " : " + TextFormatting.DARK_AQUA +
                         Utils.getReadableTime(worldAge.y);
-            } catch (NotFound notFound) {
+            } catch (NoSuchFieldException NoSuchFieldException) {
                 outputMessage = TextFormatting.DARK_RED + currentWorld + TextFormatting.RED + " Could not be found!";
             }
         }

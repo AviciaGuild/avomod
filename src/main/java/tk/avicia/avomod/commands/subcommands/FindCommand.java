@@ -5,7 +5,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.webapi.PlayerData;
 
@@ -27,7 +26,7 @@ public class FindCommand extends Command {
                 } else {
                     outputMessage = TextFormatting.DARK_RED + playerData.getPlayerName() + TextFormatting.RED + " is not online";
                 }
-            } catch (NotFound notFound) {
+            } catch (NoSuchFieldException NoSuchFieldException) {
                 outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a Wynncraft player";
             }
 

@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,7 +14,7 @@ public class PlayerData {
     private String playerName;
     private JsonObject playerData;
 
-    public PlayerData(String playerName) throws NotFound {
+    public PlayerData(String playerName) throws NoSuchFieldException {
         try {
             URL urlObject = new URL("https://api.wynncraft.com/v2/player/" + playerName + "/stats");
             HttpURLConnection con = (HttpURLConnection) urlObject.openConnection();
@@ -37,10 +36,10 @@ public class PlayerData {
                 this.playerName = this.playerData.get("username").getAsString();
             } else {
                 System.out.println("GET request not worked");
-                throw new NotFound();
+                throw new NoSuchFieldException();
             }
-        } catch (NotFound ne) {
-            throw new NotFound();
+        } catch (NoSuchFieldException ne) {
+            throw new NoSuchFieldException();
         } catch (Exception e) {
             e.printStackTrace();
         }
