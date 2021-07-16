@@ -205,7 +205,11 @@ public class EventHandlerClass {
 
         List<String> upcomingAttacks = Utils.getUpcomingAttacks();
         if (upcomingAttacks.size() != 0 && Avomod.getConfigBoolean("attacksMenu") && !guiOpen) {
-            AttacksMenu.draw(upcomingAttacks);
+            try {
+                AttacksMenu.draw(upcomingAttacks);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

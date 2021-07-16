@@ -29,6 +29,8 @@ public class AttacksMenu {
 
         for (String upcomingAttack : upcomingAttacks) {
             String[] words = TextFormatting.getTextWithoutFormattingCodes(upcomingAttack).split(" ");
+            if (words.length < 3) return;
+
             String time = words[1];
             String territory = String.join(" ", Arrays.copyOfRange(words, 2, words.length));
 
