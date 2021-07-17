@@ -25,7 +25,7 @@ public class ConfigsButton extends GuiButton {
     }
 
     public ConfigsButton(int buttonId, int y, String[] choices, String defaultValue, int guiWidth) {
-        super(buttonId, guiWidth - (Stream.of(choices).mapToInt((String choice) -> Avomod.getMC().fontRenderer.getStringWidth(choice)).max().getAsInt() + 4), y, Stream.of(choices).mapToInt((String choice) -> Avomod.getMC().fontRenderer.getStringWidth(choice)).max().getAsInt() + 4, 20, defaultValue);
+        super(buttonId, guiWidth - guiWidth / 4 - (Stream.of(choices).mapToInt((String choice) -> Avomod.getMC().fontRenderer.getStringWidth(choice)).max().getAsInt() + 10), y, Stream.of(choices).mapToInt((String choice) -> Avomod.getMC().fontRenderer.getStringWidth(choice)).max().getAsInt() + 10, 20, defaultValue);
         this.choices = choices;
         this.currentIndex = Arrays.asList(choices).indexOf(defaultValue);
     }

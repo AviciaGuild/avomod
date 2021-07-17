@@ -1,6 +1,7 @@
 package tk.avicia.avomod.events;
 
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Renderer;
@@ -96,7 +97,7 @@ public class AttacksMenu {
             }
 
             int width = Avomod.getMC().fontRenderer.getStringWidth(message);
-            int x = screenWidth - width - 5;
+            int x = screenWidth - width - 2;
             attackCoordinates.put(attack.y, new ScreenCoordinates(x - 2, y, x + width + 2, y + 12));
 
             Renderer.drawRect(new Color(100, 100, 100, 100), x - 2, y, width + 2, 12);

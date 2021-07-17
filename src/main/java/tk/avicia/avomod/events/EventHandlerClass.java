@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
@@ -203,13 +204,21 @@ public class EventHandlerClass {
             Avomod.guiToDraw = null;
         }
 
+    }
+
+    @SubscribeEvent
+    public void renderOverlay(RenderGameOverlayEvent.Chat event) {
+        // The Chat RenderGameOverlayEvent renders stuff normally, it disappears in f1, you can see it when your
+        // inventory is open and you can make stuff transparent
         List<String> upcomingAttacks = Utils.getUpcomingAttacks();
-        if (upcomingAttacks.size() != 0 && Avomod.getConfigBoolean("attacksMenu") && !guiOpen) {
+        if (upcomingAttacks.size() != 0 && Avomod.getConfigBoolean("attacksMenu")) {
+            GlStateManager.popMatrix();
             try {
                 AttacksMenu.draw(upcomingAttacks);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            GlStateManager.pushMatrix();
         }
     }
 
