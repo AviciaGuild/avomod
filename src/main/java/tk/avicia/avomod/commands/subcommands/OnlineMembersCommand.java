@@ -22,7 +22,7 @@ public class OnlineMembersCommand extends Command {
         String outputMessage = "";
 
         if (params.length >= 1) {
-            String guildName = params[0];
+            String guildName = String.join("%20", params);
 
             if (!guildName.equals("")) {
 
