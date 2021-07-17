@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class GuildData {
     private String guildName;
+    private String guildTag;
     private JsonObject guildData;
 
     public GuildData(String guildName) throws IllegalArgumentException {
@@ -36,6 +37,7 @@ public class GuildData {
 
                 this.guildData = new JsonParser().parse(response.toString()).getAsJsonObject();
                 this.guildName = this.guildData.get("name").getAsString();
+                this.guildTag = this.guildData.get("prefix").getAsString();
             } else {
                 System.out.println("GET request not worked");
             }
@@ -47,6 +49,10 @@ public class GuildData {
 
     public String getGuildName() {
         return guildName;
+    }
+
+    public String getGuildTag() {
+        return guildTag;
     }
 
     public JsonArray getMembers() {

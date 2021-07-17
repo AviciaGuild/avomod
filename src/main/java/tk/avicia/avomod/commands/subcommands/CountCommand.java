@@ -68,7 +68,7 @@ public class CountCommand extends Command {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "count <world>";
+        return "count";
     }
 
     @Override

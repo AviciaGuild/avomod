@@ -15,14 +15,22 @@ import java.util.Map;
 public class HelpCommand extends Command {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        String outputMessage = TextFormatting.BLUE + "Help for AVOMod:";
+        if (params.length == 0) {
+            String outputMessage = TextFormatting.BLUE + "Help for AVOMod:";
 
-        for (Map.Entry<String, Command> command : Avomod.commands.entrySet()) {
-            outputMessage += "\n" + TextFormatting.GOLD + "/avomod " + command.getKey() + ": " + TextFormatting.GREEN + command.getValue().getDescription();
+            for (Map.Entry<String, Command> command : Avomod.commands.entrySet()) {
+                outputMessage += "\n" + TextFormatting.GOLD + "/avomod " + command.getKey() + ": " + TextFormatting.GREEN + command.getValue().getDescription();
+            }
+
+            TextComponentString textComponent = new TextComponentString(outputMessage);
+            sender.sendMessage(textComponent);
+        } else {
+            if (Avomod.commands.containsKey(params[0])) {
+                sender.sendMessage(new TextComponentString(TextFormatting.GOLD + "Usage: " + Avomod.commands.get(params[0]).getUsage(sender)));
+            }else{
+                sender.sendMessage(new TextComponentString(TextFormatting.DARK_RED + params[0] + TextFormatting.RED + " is not an AvoMod command"));
+            }
         }
-
-        TextComponentString textComponent = new TextComponentString(outputMessage);
-        sender.sendMessage(textComponent);
     }
 
     @Override

@@ -96,7 +96,7 @@ public class EventHandlerClass {
                     Avomod.compassLocation = territoryLocation;
 
                     if (Avomod.compassLocation != null) {
-                        Avomod.getMC().player.sendMessage(new TextComponentString("A blue beacon beam has been created at the territory. The coordinates for " + attackCoordinates.getKey() + " are (" + (int) territoryLocation.getX() + ", " + (int) territoryLocation.getZ() + ")"));
+                        Avomod.getMC().player.sendMessage(new TextComponentString("A blue beacon beam has been created in " + attackCoordinates.getKey() + " at (" + (int) territoryLocation.getX() + ", " + (int) territoryLocation.getZ() + ")"));
                         Avomod.compassTerritory = attackCoordinates.getKey();
                     }
                 }

@@ -58,8 +58,9 @@ public class OnlineMembersCommand extends Command {
                     // late alphabetically, it also sorts by rank
                     membersWithRank.sort(String::compareToIgnoreCase);
                     Collections.reverse(membersWithRank);
-                    outputMessage = TextFormatting.BLUE + guildData.getGuildName() + TextFormatting.AQUA + " has " +
-                            membersWithRank.size() + " members online: " +
+                    outputMessage = TextFormatting.BLUE + guildData.getGuildName()  + TextFormatting.DARK_AQUA + " [" +
+                            TextFormatting.BLUE + guildData.getGuildTag() + TextFormatting.DARK_AQUA + "]"
+                            + TextFormatting.AQUA + " has " + membersWithRank.size() + " members online: " +
                             TextFormatting.GOLD + String.join(", ", membersWithRank);
                 } catch (IllegalArgumentException e) {
                     outputMessage = TextFormatting.DARK_RED + guildName + TextFormatting.RED + " is not a guild";

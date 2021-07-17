@@ -42,10 +42,13 @@ public class UpCommand extends Command {
         for (int i = 0; i < amount; i++) {
             int age = worldData.get(i).getValue()
                     .getAsJsonObject().get("age").getAsInt();
+            int playerCount = worldData.get(i).getValue()
+                    .getAsJsonObject().get("players").getAsInt();
             if (age >= minAge && age <= maxAge) {
                 String readableAge = Utils.getReadableTime(age);
                 TextComponentString textComponent = new TextComponentString(TextFormatting.GOLD +
-                        worldData.get(i).getKey() + ": " + TextFormatting.GREEN + readableAge);
+                        worldData.get(i).getKey() + ": " + TextFormatting.GREEN + readableAge + TextFormatting.GOLD +
+                        " | " + TextFormatting.GRAY + + playerCount + " players");
                 sender.sendMessage(textComponent);
             } else {
                 if (amount < worldData.size() - 2)
