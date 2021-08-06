@@ -60,7 +60,7 @@ public class TerritoryDataApi {
 
     public Coordinates getMiddleOfTerritory(String territory) {
         JsonObject territoryObject = this.territoryData.getAsJsonObject("territories").getAsJsonObject(territory);
-        if (territoryObject.isJsonNull()) return null;
+        if (territoryObject == null) return null;
 
         JsonObject locationObject = territoryObject.getAsJsonObject("location");
         if (locationObject.isJsonNull()) return null;

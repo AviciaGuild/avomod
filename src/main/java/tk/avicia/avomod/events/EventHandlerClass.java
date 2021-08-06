@@ -13,6 +13,7 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -99,6 +100,8 @@ public class EventHandlerClass {
                     if (Avomod.compassLocation != null) {
                         Avomod.getMC().player.sendMessage(new TextComponentString("A blue beacon beam has been created in " + attackCoordinates.getKey() + " at (" + (int) territoryLocation.getX() + ", " + (int) territoryLocation.getZ() + ")"));
                         Avomod.compassTerritory = attackCoordinates.getKey();
+                    } else {
+                        Avomod.getMC().player.sendMessage(new TextComponentString("Not a correct territory name (probably too long for the scoreboard)"));
                     }
                 }
             }
@@ -206,19 +209,17 @@ public class EventHandlerClass {
 
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void renderOverlay(RenderGameOverlayEvent.Chat event) {
         // The Chat RenderGameOverlayEvent renders stuff normally, it disappears in f1, you can see it when your
         // inventory is open and you can make stuff transparent
         List<String> upcomingAttacks = Utils.getUpcomingAttacks();
         if (upcomingAttacks.size() != 0 && Avomod.getConfigBoolean("attacksMenu")) {
-            GlStateManager.popMatrix();
             try {
                 AttacksMenu.draw(upcomingAttacks);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            GlStateManager.pushMatrix();
         }
     }
 

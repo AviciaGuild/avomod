@@ -42,14 +42,13 @@ public class PowderStackingFix {
             return;
         }
 
-        if (Mouse.getEventButtonState() && Keyboard.getEventKey() == 42 && Mouse.getEventButton() == 0 && scaledMouseY > screenHeight / 2) {
+        if (Mouse.getEventButtonState() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Mouse.getEventButton() == 0 && scaledMouseY > screenHeight / 2) {
             int powderIndex = -1;
             List<ItemStack> inventory = Avomod.getMC().player.inventory.mainInventory;
 
             for (int i = 0; i < inventory.size(); i++) {
                 if (inventory.get(i).getDisplayName().equals(hoveredItem.getDisplayName()) && inventory.get(i).getCount() < 64) {
                     event.setCanceled(true);
-                    System.out.println("Cancelled");
                     powderIndex = i;
                 }
             }

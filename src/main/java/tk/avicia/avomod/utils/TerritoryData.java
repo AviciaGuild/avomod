@@ -39,7 +39,7 @@ public class TerritoryData {
     }
 
     public static String getTerritoryDefense(String territoryName) {
-        return defenses.get(territoryName);
+        return defenses.getOrDefault(territoryName, "Unknown");
     }
 
     public static boolean hasValues() {

@@ -59,7 +59,7 @@ public class Utils {
     }
 
     public static List<String> getUpcomingAttacks() {
-        if (Avomod.getMC() == null || Avomod.getMC().world == null) return new ArrayList<>();
+        if (Avomod.getMC().player == null || Avomod.getMC().world == null) return new ArrayList<>();
 
         Scoreboard scoreboard = Avomod.getMC().world.getScoreboard();
         Collection<Score> scores = scoreboard.getScores();

@@ -99,7 +99,6 @@ public class AttacksMenu {
             int width = Avomod.getMC().fontRenderer.getStringWidth(message);
             int x = screenWidth - width - 2;
             attackCoordinates.put(attack.y, new ScreenCoordinates(x - 2, y, x + width + 2, y + 12));
-
             Renderer.drawRect(new Color(100, 100, 100, 100), x - 2, y, width + 2, 12);
             Renderer.drawString(message, x, y + 2, new Color(255, 170, 0));
             y += 12;
