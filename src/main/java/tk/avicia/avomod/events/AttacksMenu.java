@@ -1,7 +1,6 @@
 package tk.avicia.avomod.events;
 
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Renderer;
@@ -19,7 +18,12 @@ public class AttacksMenu {
     private static HashMap<String, String> savedDefenses = new HashMap<>();
 
     public static void draw(List<String> upcomingAttacks) {
-        if (upcomingAttacks.size() == 0) return;
+        if (upcomingAttacks.size() == 0) {
+            Avomod.soonestTerritory = null;
+            Avomod.soonestTerritoryLocation = null;
+
+            return;
+        }
 
         if (!TerritoryData.hasValues()) {
             TerritoryData.updateTerritoryData();
@@ -67,6 +71,11 @@ public class AttacksMenu {
                 return 0;
             }
         });
+
+        if (!upcomingAttacksSplit.get(0).y.equals(Avomod.soonestTerritory)) {
+            Avomod.soonestTerritory = upcomingAttacksSplit.get(0).y;
+            Avomod.soonestTerritoryLocation = Avomod.territoryData.getMiddleOfTerritory(upcomingAttacksSplit.get(0).y);
+        }
 
         ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
         int screenWidth = scaledResolution.getScaledWidth();

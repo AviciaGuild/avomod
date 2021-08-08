@@ -3,7 +3,6 @@ package tk.avicia.avomod.events;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.inventory.Container;
@@ -17,11 +16,11 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.*;
+import tk.avicia.avomod.webapi.UpdateChecker;
 
 import java.awt.*;
 import java.util.List;
@@ -30,6 +29,7 @@ import java.util.Map;
 public class EventHandlerClass {
     private int tick = 0;
     private boolean guiOpen = false;
+    private boolean guiJustOpened = false;
 
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {
@@ -58,8 +58,22 @@ public class EventHandlerClass {
         }
 
         if (message.startsWith("[INFO]") && message.contains("resources") && Avomod.getConfigBoolean("filterResourceMessages")) {
-//            String territory = message.split("Territory ")[1].split(" is")[0];
             event.setCanceled(true);
+        }
+
+        if (message.contains("The war for") && message.endsWith("minutes.")) {
+            String territory = message.split("for ")[1].split(" will")[0];
+
+            if (Avomod.getConfigBoolean("terrDefenseInChat")) {
+                AttackedTerritoryDifficulty.receivedChatMessage(territory);
+            }
+        }
+
+        if (message.trim().startsWith("Welcome to Wynncraft")) {
+            Thread thread = new Thread(() -> {
+                UpdateChecker.checkUpdate();
+            });
+            thread.start();
         }
     }
 
@@ -140,8 +154,41 @@ public class EventHandlerClass {
             String containerName = lowerInventory.getName();
             if (containerName.contains("Loot Chest")) {
                 AverageLevel.execute(event, lowerInventory);
+            } else if (Avomod.getConfigBoolean("terrDefenseInChat") && containerName.contains("Attacking: ")) {
+                AttackedTerritoryDifficulty.inMenu();
             }
         }
+
+        guiJustOpened = false;
+    }
+
+    @SubscribeEvent
+    public void guiInitialize(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (Avomod.getMC().player == null || event.getGui() == null) {
+            return;
+        }
+
+        Container openContainer = Avomod.getMC().player.openContainer;
+        if (openContainer instanceof ContainerChest) {
+            InventoryBasic lowerInventory = (InventoryBasic) ((ContainerChest) openContainer).getLowerChestInventory();
+            String containerName = lowerInventory.getName();
+            if (containerName.contains("Loot Chest")) {
+                ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
+                int screenHeight = scaledResolution.getScaledHeight();
+                int scaleFactor = scaledResolution.getScaleFactor();
+                int scaledMouseX = Mouse.getX() / scaleFactor;
+                int scaledMouseY = Mouse.getY() / scaleFactor;
+
+                if (guiJustOpened && scaledMouseY != Math.ceil(screenHeight / 2.0)) {
+                    Mouse.setCursorPosition(scaledMouseX * scaleFactor, ((int) Math.ceil(screenHeight / 2.0)) * scaleFactor);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void guiJustOpened(GuiOpenEvent event) {
+        guiJustOpened = true;
     }
 
     @SubscribeEvent
@@ -165,29 +212,6 @@ public class EventHandlerClass {
     }
 
     @SubscribeEvent
-    public void onJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        if (Avomod.getConfigBoolean("autojoinWorld")) {
-            Thread thread = new Thread(() -> {
-                for (int i = 0; i < 10; i++) {
-                    ServerData serverData = Avomod.getMC().getCurrentServerData();
-
-                    if (serverData.serverIP.contains("wynncraft.com")) {
-                        Autojoin.execute();
-                        break;
-                    }
-
-                    try {
-                        Thread.sleep(400);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            thread.start();
-        }
-    }
-
-    @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
         for (Keybind keybind : Avomod.keybinds.values()) {
             if (keybind.isPressed()) {
@@ -206,7 +230,6 @@ public class EventHandlerClass {
             Avomod.getMC().displayGuiScreen(Avomod.guiToDraw);
             Avomod.guiToDraw = null;
         }
-
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -225,9 +248,14 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void renderWorld(RenderWorldLastEvent e) {
-        if (Avomod.compassLocation == null) return;
+        if (Avomod.compassLocation != null) {
+            Renderer.drawBeam(Avomod.compassLocation, new Color(0, 50, 150, 255), e.getPartialTicks(), Avomod.compassTerritory);
+        }
 
-        Renderer.drawBeam(Avomod.compassLocation, new Color(0, 50, 150, 255), e.getPartialTicks());
+        if (Avomod.soonestTerritoryLocation != null) {
+            Renderer.drawBeam(Avomod.soonestTerritoryLocation, new Color(50, 150, 0, 255), e.getPartialTicks(), Avomod.soonestTerritory);
+        }
+
     }
 
     @SubscribeEvent

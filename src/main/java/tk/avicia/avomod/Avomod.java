@@ -26,6 +26,7 @@ import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
+import tk.avicia.avomod.webapi.UpdateChecker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,18 +56,20 @@ public class Avomod {
     public static GuiScreen guiToDraw = null;
     public static JsonObject configs = null;
     public static Config[] configsArray = new Config[]{
-            new Config("Autojoin world", new String[]{"Enabled", "Disabled"}, "Disabled", "autojoinWorld"),
             new Config("Autojoin wynncraft", new String[]{"Enabled", "Disabled"}, "Disabled", "autojoinWynncraft"),
             new Config("Prevent moving armor/accessories", new String[]{"Enabled", "Disabled"}, "Disabled", "disableMovingArmor"),
             new Config("Filter out bank messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterBankMessages"),
             new Config("Reveal nicknames", new String[]{"Enabled", "Disabled"}, "Enabled", "revealNicks"),
             new Config("Auto skip quest dialogue", new String[]{"Enabled", "Disabled"}, "Disabled", "skipDialogue"),
             new Config("Filter out all resource messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterResourceMessages"),
-            new Config("Custom attack timers display", new String[]{"Enabled", "Disabled"}, "Disabled", "attacksMenu")
+            new Config("Custom attack timers display", new String[]{"Enabled", "Disabled"}, "Disabled", "attacksMenu"),
+            new Config("Say territory defense in chat automatically when attacked", new String[]{"Enabled", "Disabled"}, "Enabled", "terrDefenseInChat")
     };
     public static TerritoryDataApi territoryData;
     public static Coordinates compassLocation = null;
     public static String compassTerritory = null;
+    public static Coordinates soonestTerritoryLocation = null;
+    public static String soonestTerritory = null;
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
@@ -107,6 +110,7 @@ public class Avomod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         this.initializeConfigs();
+        UpdateChecker.checkUpdate();
     }
 
     @EventHandler

@@ -6,9 +6,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.opengl.GL11;
 import tk.avicia.avomod.Avomod;
 
 import java.awt.*;
@@ -70,7 +73,7 @@ public class Renderer {
         drawRect(color, startX, y, endX - startX, 1);
     }
 
-    public static void drawBeam(Coordinates loc, Color color, float partialTicks) {
+    public static void drawBeam(Coordinates loc, Color color, float partialTicks, String territoryName) {
         RenderManager renderManager = Avomod.getMC().getRenderManager();
         if (renderManager.renderViewEntity == null) return;
 
@@ -97,10 +100,10 @@ public class Renderer {
             positionVec = playerVec.add(new Vec3d(delta.x * maxDistance, delta.y * maxDistance, delta.z * maxDistance));
         }
 
-        drawBeam(positionVec.x - renderManager.viewerPosX, -renderManager.viewerPosY, positionVec.z - renderManager.viewerPosZ, alpha, color);
+        drawBeam(loc, positionVec.x - renderManager.viewerPosX, -renderManager.viewerPosY, positionVec.z - renderManager.viewerPosZ, alpha, color, partialTicks, territoryName);
     }
 
-    private static void drawBeam(double x, double y, double z, float alpha, Color color) {
+    private static void drawBeam(Coordinates originalLoc, double x, double y, double z, float alpha, Color color, float partialTicks, String territoryName) {
         GlStateManager.pushAttrib();
         {
             Avomod.getMC().renderEngine.bindTexture(beamResource);  // binds the texture
@@ -144,12 +147,75 @@ public class Renderer {
                 builder.pos(x + .2d, y + d1, z + .2d).tex(0d, d3).color(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, alpha).endVertex();
             }
             tessellator.draw();
-
-            // resetting
-            GlStateManager.color(1f, 1f, 1f, 1f);
-            GlStateManager.disableBlend();
-            GlStateManager.enableCull();
         }
         GlStateManager.popAttrib();
+
+        // resetting
+        GlStateManager.color(1f, 1f, 1f, 1f);
+        GlStateManager.disableBlend();
+        GlStateManager.enableCull();
+
+        GlStateManager.alphaFunc(516, 0.1f);
+        GlStateManager.pushMatrix();
+        Entity viewer = Avomod.getMC().getRenderViewEntity();
+        double viewerX = viewer.lastTickPosX + (viewer.posX - viewer.lastTickPosX) * partialTicks;
+        double viewerY = viewer.lastTickPosY + (viewer.posY - viewer.lastTickPosY) * partialTicks;
+        double viewerZ = viewer.lastTickPosZ + (viewer.posZ - viewer.lastTickPosZ) * partialTicks;
+        double newX = originalLoc.getX() - viewerX;
+        double newY = (viewer.posY + 3) - viewerY - viewer.getEyeHeight();
+        double newZ = originalLoc.getZ() - viewerZ;
+        double distSq = newX * newX + newY * newY + newZ * newZ;
+        double dist = Math.sqrt(distSq);
+        if (distSq > 144) {
+            newX *= 12 / dist;
+            newY *= 12 / dist;
+            newZ *= 12 / dist;
+        }
+        GlStateManager.translate(newX, newY, newZ);
+        GlStateManager.translate(0f, viewer.getEyeHeight(), 0f);
+        drawNametag(territoryName);
+        GlStateManager.rotate(-Avomod.getMC().getRenderManager().playerViewY, 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(Avomod.getMC().getRenderManager().playerViewX, 1.0f, 0.0f, 0.0f);
+        GlStateManager.translate(0f, -0.25f, 0f);
+        GlStateManager.rotate(-Avomod.getMC().getRenderManager().playerViewX, 1.0f, 0.0f, 0.0f);
+        GlStateManager.rotate(Avomod.getMC().getRenderManager().playerViewY, 0.0f, 1.0f, 0.0f);
+        drawNametag(TextFormatting.YELLOW.toString() + Math.round(dist) + "m");
+        GlStateManager.popMatrix();
+        GlStateManager.disableLighting();
+    }
+
+    private static void drawNametag(String text) {
+        FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
+        double f = 1.6f;
+        double f1 = 0.016666668f * f;
+        GlStateManager.pushMatrix();
+        GL11.glNormal3f(0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(-Avomod.getMC().getRenderManager().playerViewY, 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(Avomod.getMC().getRenderManager().playerViewX, 1.0f, 0.0f, 0.0f);
+        GlStateManager.scale(-f1, -f1, f1);
+        GlStateManager.disableLighting();
+        GlStateManager.depthMask(false);
+        GlStateManager.disableDepth();
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder worldrenderer = tessellator.getBuffer();
+        int i = 0;
+        double j = fontRenderer.getStringWidth(text) / 2;
+        GlStateManager.disableTexture2D();
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        worldrenderer.pos((-j - 1), (-1 + i), 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
+        worldrenderer.pos((-j - 1), (8 + i), 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
+        worldrenderer.pos((j + 1), (8 + i), 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
+        worldrenderer.pos((j + 1), (-1 + i), 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
+        fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, i, 553648127);
+        GlStateManager.depthMask(true);
+        fontRenderer.drawString(text, -fontRenderer.getStringWidth(text) / 2, i, -1);
+        GlStateManager.enableDepth();
+        GlStateManager.enableBlend();
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+        GlStateManager.popMatrix();
     }
 }
