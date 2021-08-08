@@ -3,10 +3,7 @@ package tk.avicia.avomod.events;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.utils.Renderer;
-import tk.avicia.avomod.utils.ScreenCoordinates;
-import tk.avicia.avomod.utils.TerritoryData;
-import tk.avicia.avomod.utils.Tuple;
+import tk.avicia.avomod.utils.*;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -19,8 +16,8 @@ public class AttacksMenu {
 
     public static void draw(List<String> upcomingAttacks) {
         if (upcomingAttacks.size() == 0) {
-            Avomod.soonestTerritory = null;
-            Avomod.soonestTerritoryLocation = null;
+            BeaconManager.soonestTerritory = null;
+            BeaconManager.soonestTerritoryLocation = null;
 
             return;
         }
@@ -54,9 +51,9 @@ public class AttacksMenu {
             savedDefenses.remove(terrToRemove);
             attackCoordinates.remove(terrToRemove);
 
-            if (terrToRemove.equals(Avomod.compassTerritory)) {
-                Avomod.compassTerritory = null;
-                Avomod.compassLocation = null;
+            if (terrToRemove.equals(BeaconManager.compassTerritory)) {
+                BeaconManager.compassTerritory = null;
+                BeaconManager.compassLocation = null;
             }
         }
 
@@ -72,9 +69,9 @@ public class AttacksMenu {
             }
         });
 
-        if (!upcomingAttacksSplit.get(0).y.equals(Avomod.soonestTerritory)) {
-            Avomod.soonestTerritory = upcomingAttacksSplit.get(0).y;
-            Avomod.soonestTerritoryLocation = Avomod.territoryData.getMiddleOfTerritory(upcomingAttacksSplit.get(0).y);
+        if (!upcomingAttacksSplit.get(0).y.equals(BeaconManager.soonestTerritory)) {
+            BeaconManager.soonestTerritory = upcomingAttacksSplit.get(0).y;
+            BeaconManager.soonestTerritoryLocation = Avomod.territoryData.getMiddleOfTerritory(upcomingAttacksSplit.get(0).y);
         }
 
         ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());

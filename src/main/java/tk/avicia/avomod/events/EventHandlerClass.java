@@ -3,7 +3,6 @@ package tk.avicia.avomod.events;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
@@ -109,11 +108,11 @@ public class EventHandlerClass {
             for (Map.Entry<String, ScreenCoordinates> attackCoordinates : AttacksMenu.attackCoordinates.entrySet()) {
                 if (attackCoordinates.getValue().mouseIn(scaledMouseX, screenHeight - scaledMouseY)) {
                     Coordinates territoryLocation = Avomod.territoryData.getMiddleOfTerritory(attackCoordinates.getKey());
-                    Avomod.compassLocation = territoryLocation;
+                    BeaconManager.compassLocation = territoryLocation;
 
-                    if (Avomod.compassLocation != null) {
+                    if (BeaconManager.compassLocation != null) {
                         Avomod.getMC().player.sendMessage(new TextComponentString("A blue beacon beam has been created in " + attackCoordinates.getKey() + " at (" + (int) territoryLocation.getX() + ", " + (int) territoryLocation.getZ() + ")"));
-                        Avomod.compassTerritory = attackCoordinates.getKey();
+                        BeaconManager.compassTerritory = attackCoordinates.getKey();
                     } else {
                         Avomod.getMC().player.sendMessage(new TextComponentString("Not a correct territory name (probably too long for the scoreboard)"));
                     }
@@ -248,12 +247,12 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void renderWorld(RenderWorldLastEvent e) {
-        if (Avomod.compassLocation != null) {
-            Renderer.drawBeam(Avomod.compassLocation, new Color(0, 50, 150, 255), e.getPartialTicks(), Avomod.compassTerritory);
+        if (BeaconManager.compassLocation != null) {
+            BeaconManager.drawBeam(BeaconManager.compassLocation, new Color(0, 50, 150, 255), e.getPartialTicks(), BeaconManager.compassTerritory);
         }
 
-        if (Avomod.soonestTerritoryLocation != null) {
-            Renderer.drawBeam(Avomod.soonestTerritoryLocation, new Color(50, 150, 0, 255), e.getPartialTicks(), Avomod.soonestTerritory);
+        if (BeaconManager.soonestTerritoryLocation != null && Avomod.getConfigBoolean("greenBeacon")) {
+            BeaconManager.drawBeam(BeaconManager.soonestTerritoryLocation, new Color(50, 150, 0, 255), e.getPartialTicks(), BeaconManager.soonestTerritory);
         }
 
     }

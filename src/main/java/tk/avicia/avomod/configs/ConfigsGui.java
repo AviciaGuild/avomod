@@ -2,15 +2,19 @@ package tk.avicia.avomod.configs;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.gui.GuiScreen;
+import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Renderer;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ConfigsGui extends GuiScreen {
-    ArrayList<ConfigsSection> sectionList = new ArrayList<>();
     private final int settingLineHeight = 27;
+    ArrayList<ConfigsSection> sectionList = new ArrayList<>();
+    ArrayList<ConfigsSection> totalSectionsList = new ArrayList<>();
+
     public ConfigsGui() {
         super();
     }
@@ -23,18 +27,20 @@ public class ConfigsGui extends GuiScreen {
         this.drawCenteredString(this.fontRenderer, ChatFormatting.BOLD + "Avomod Configs", this.width / 2 + 1, 6, 0x444444);
         this.drawCenteredString(this.fontRenderer, ChatFormatting.BOLD + "Avomod Configs", this.width / 2, 5, 0x1B33CF);
 
-        this.sectionList.forEach((ConfigsSection configsSection) -> {
+        for (ConfigsSection configsSection : this.sectionList) {
+            int y = sectionList.indexOf(configsSection) * settingLineHeight;
+
             int color = 0x777777;
             // Makes the enabled options brighter
-            if(configsSection.button.displayString.equals("Enabled")){
+            if (configsSection.button.displayString.equals("Enabled")) {
                 color = 0xFFFFFF;
             }
             // Draws a shadowed string with the opposite color, to make it easier to read depending on the background
-            this.drawString(this.fontRenderer, configsSection.title, this.width / 2 - this.width / 4 + 1 , sectionList.indexOf(configsSection) * settingLineHeight + 22, 0xFFFFFF - color);
+            this.drawString(this.fontRenderer, configsSection.title, this.width / 2 - this.width / 4 + 1, y + 22, 0xFFFFFF - color);
             // Draws the actual string
-            this.drawString(this.fontRenderer, configsSection.title, this.width / 2 - this.width / 4, sectionList.indexOf(configsSection) * settingLineHeight + 21, color);
-            Renderer.drawHorizontalLine(this.width / 4 + 3, this.width / 4 * 3 - 5, sectionList.indexOf(configsSection) * settingLineHeight + 38, new Color(255, 255, 255));
-        });
+            this.drawString(this.fontRenderer, configsSection.title, this.width / 2 - this.width / 4, y + 21, color);
+            Renderer.drawHorizontalLine(this.width / 4 + 3, this.width / 4 * 3 - 5, y + 38, new Color(255, 255, 255));
+        }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
@@ -55,11 +61,51 @@ public class ConfigsGui extends GuiScreen {
         });
     }
 
+    @Override
+    public void handleMouseInput() throws IOException {
+        super.handleMouseInput();
+
+        int scrollAmount = Mouse.getDWheel() / 120;
+
+        if (scrollAmount != 0) {
+            this.scroll(scrollAmount);
+        }
+    }
+
+    public void scroll(int amount) {
+        if (this.totalSectionsList.size() == this.sectionList.size()) return;
+
+        int totalAllowed = (int) Math.floor(this.height / settingLineHeight);
+        int startingIndex = this.totalSectionsList.indexOf(this.sectionList.get(0));
+        if (amount < 0 && startingIndex + totalAllowed < this.totalSectionsList.size()) {
+            startingIndex++;
+        } else if (amount > 0 && startingIndex > 0) {
+            startingIndex--;
+        }
+
+        this.sectionList = new ArrayList<>();
+        this.buttonList = new ArrayList<>();
+        for (int i = startingIndex; i < startingIndex + totalAllowed; i++) {
+            this.sectionList.add(this.totalSectionsList.get(i));
+        }
+
+        for (ConfigsSection configsSection : this.sectionList) {
+            configsSection.button.y = this.sectionList.indexOf(configsSection) * settingLineHeight + 15;
+            this.buttonList.add(configsSection.button);
+        }
+    }
+
     public void addSection(Config config) {
         String configValue = Avomod.getConfig(config.configsKey);
         if (!configValue.equals("")) {
             config.defaultValue = configValue;
         }
-        this.sectionList.add(new ConfigsSection(config.sectionText, new ConfigsButton(this.sectionList.size(), this.sectionList.size() * settingLineHeight + 15, config.choices, config.defaultValue, this.width), config.configsKey));
+
+        ConfigsSection sectionToAdd = new ConfigsSection(config.sectionText, new ConfigsButton(this.sectionList.size(), this.sectionList.size() * settingLineHeight + 15, config.choices, config.defaultValue, this.width), config.configsKey);
+        if ((this.sectionList.size() + 1) * settingLineHeight < this.height) {
+            this.sectionList.add(sectionToAdd);
+        }
+
+        this.totalSectionsList.add(sectionToAdd);
     }
 }

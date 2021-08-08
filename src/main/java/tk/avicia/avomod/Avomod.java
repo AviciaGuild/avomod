@@ -21,7 +21,6 @@ import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.events.EventHandlerClass;
 import tk.avicia.avomod.events.WorldInfo;
 import tk.avicia.avomod.settings.KeybindSettings;
-import tk.avicia.avomod.utils.Coordinates;
 import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Utils;
@@ -62,14 +61,11 @@ public class Avomod {
             new Config("Reveal nicknames", new String[]{"Enabled", "Disabled"}, "Enabled", "revealNicks"),
             new Config("Auto skip quest dialogue", new String[]{"Enabled", "Disabled"}, "Disabled", "skipDialogue"),
             new Config("Filter out all resource messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterResourceMessages"),
-            new Config("Custom attack timers display", new String[]{"Enabled", "Disabled"}, "Disabled", "attacksMenu"),
-            new Config("Say territory defense in chat automatically when attacked", new String[]{"Enabled", "Disabled"}, "Enabled", "terrDefenseInChat")
+            new Config("Custom attack timers display", new String[]{"Enabled", "Disabled"}, "Enabled", "attacksMenu"),
+            new Config("Green beacon at soonest war", new String[]{"Enabled", "Disabled"}, "Enabled", "greenBeacon"),
+            new Config("Say territory defense in chat", new String[]{"Enabled", "Disabled"}, "Enabled", "terrDefenseInChat")
     };
     public static TerritoryDataApi territoryData;
-    public static Coordinates compassLocation = null;
-    public static String compassTerritory = null;
-    public static Coordinates soonestTerritoryLocation = null;
-    public static String soonestTerritory = null;
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
