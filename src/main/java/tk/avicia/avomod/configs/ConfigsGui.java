@@ -1,6 +1,7 @@
 package tk.avicia.avomod.configs;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
@@ -53,6 +54,9 @@ public class ConfigsGui extends GuiScreen {
     @Override
     public void initGui() {
         this.sectionList = new ArrayList<>();
+        this.totalSectionsList = new ArrayList<>();
+        this.buttonList = new ArrayList<>();
+
         for (Config config : Avomod.configsArray) {
             this.addSection(config);
         }
@@ -62,13 +66,25 @@ public class ConfigsGui extends GuiScreen {
     }
 
     @Override
+    public void onResize(Minecraft mineIn, int w, int h) {
+        super.onResize(mineIn, w, h);
+
+        this.initGui();
+    }
+
+    @Override
+
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
 
         int scrollAmount = Mouse.getDWheel() / 120;
 
         if (scrollAmount != 0) {
-            this.scroll(scrollAmount);
+            try {
+                this.scroll(scrollAmount);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
