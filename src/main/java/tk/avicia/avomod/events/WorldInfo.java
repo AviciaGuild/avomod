@@ -23,15 +23,15 @@ public class WorldInfo {
             updateCurrentWorld();
             String currentWorldString = "";
             String newestWorldString = "";
-            if (!currentWorld.equals("-")) {
-                try {
+            try {
+                Map.Entry<String, JsonElement> newestWorld = worldData.getWorldUpTimeData().get(0);
+                newestWorldString = "Newest world " + newestWorld.getKey() + " : " +
+                        Utils.getReadableTime(Integer.parseInt(newestWorld.getValue().getAsJsonObject().get("age").getAsString()));
+                if (!currentWorld.equals("-")) {
                     currentWorldString = "Your world " + currentWorld + " : " + Utils.getReadableTime(worldData.getAge(currentWorld).y);
-                    Map.Entry<String, JsonElement> newestWorld = worldData.getWorldUpTimeData().get(0);
-                    newestWorldString = "Newest world " + newestWorld.getKey() + " : " +
-                            Utils.getReadableTime(Integer.parseInt(newestWorld.getValue().getAsJsonObject().get("age").getAsString()));
-                } catch (NoSuchFieldException | NullPointerException e) {
-                    e.printStackTrace();
                 }
+            } catch (NoSuchFieldException | NullPointerException e) {
+                e.printStackTrace();
             }
 
 
