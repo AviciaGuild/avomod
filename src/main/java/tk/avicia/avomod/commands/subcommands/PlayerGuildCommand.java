@@ -5,14 +5,14 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import tk.avicia.avomod.commands.Command;
+import tk.avicia.avomod.commands.PlayerTabCompletionCommand;
 import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.PlayerData;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class PlayerGuildCommand extends Command {
+public class PlayerGuildCommand extends PlayerTabCompletionCommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
         String outputMessage = "";

@@ -39,6 +39,7 @@ public class UpCommand extends Command {
         WorldUpTime worldUpTime = new WorldUpTime();
         ArrayList<Map.Entry<String, JsonElement>> worldData = worldUpTime.getWorldUpTimeData();
         if (amount > worldData.size()) amount = worldData.size();
+        int sentWorlds = 0;
         for (int i = 0; i < amount; i++) {
             int age = worldData.get(i).getValue()
                     .getAsJsonObject().get("age").getAsInt();
@@ -48,12 +49,16 @@ public class UpCommand extends Command {
                 String readableAge = Utils.getReadableTime(age);
                 TextComponentString textComponent = new TextComponentString(TextFormatting.GOLD +
                         worldData.get(i).getKey() + ": " + TextFormatting.GREEN + readableAge + TextFormatting.GOLD +
-                        " | " + TextFormatting.GRAY + + playerCount + " players");
+                        " | " + TextFormatting.GRAY + +playerCount + " players");
                 sender.sendMessage(textComponent);
+                sentWorlds++;
             } else {
                 if (amount < worldData.size() - 2)
                     amount++;
             }
+        }
+        if(sentWorlds == 0){
+            sender.sendMessage(new TextComponentString(TextFormatting.RED + "No worlds found with that criteria"));
         }
     }
 

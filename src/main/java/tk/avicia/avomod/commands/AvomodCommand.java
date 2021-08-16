@@ -83,6 +83,9 @@ public class AvomodCommand extends CommandBase implements IClientCommand {
         } else {
             String commandName = args[0];
             Command commandToExecute = Avomod.commands.get(commandName);
+            if(commandToExecute == null){
+                commandToExecute = Avomod.aliases.get(commandName);
+            }
 
             if (commandToExecute != null) {
                 try {

@@ -13,9 +13,14 @@ import java.util.Map;
 import java.util.Set;
 
 public class OnlinePlayers {
+    private Thread thread;
     private JsonObject onlinePlayerData;
 
     public OnlinePlayers() {
+        getAPIData();
+    }
+
+    private void getAPIData() {
         try {
             URL urlObject = new URL("https://api.wynncraft.com/public_api.php?action=onlinePlayers");
             HttpURLConnection con = (HttpURLConnection) urlObject.openConnection();
@@ -39,6 +44,23 @@ public class OnlinePlayers {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void updateData() {
+        // Updates the data, but it can be called at most once per minute to not spam requests to the api
+        if (thread == null) {
+            thread = new Thread(() -> {
+                getAPIData();
+                try {
+                    Thread.sleep(60000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        if (!thread.isAlive()) {
+            thread.start();
         }
     }
 

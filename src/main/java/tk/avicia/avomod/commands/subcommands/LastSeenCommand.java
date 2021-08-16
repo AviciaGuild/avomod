@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.commands.Command;
+import tk.avicia.avomod.commands.PlayerTabCompletionCommand;
 import tk.avicia.avomod.webapi.PlayerData;
 
 import java.text.ParseException;
@@ -15,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-public class LastSeenCommand extends Command {
+public class LastSeenCommand extends PlayerTabCompletionCommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
         String outputMessage = "";

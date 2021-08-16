@@ -27,7 +27,7 @@ public class WorldInfo {
                 Map.Entry<String, JsonElement> newestWorld = worldData.getWorldUpTimeData().get(0);
                 newestWorldString = "Newest world " + newestWorld.getKey() + " : " +
                         Utils.getReadableTime(Integer.parseInt(newestWorld.getValue().getAsJsonObject().get("age").getAsString()));
-                if (!currentWorld.equals("-")) {
+                if (currentWorld.length() > 1) { // Not in streamer mode or lobby
                     currentWorldString = "Your world " + currentWorld + " : " + Utils.getReadableTime(worldData.getAge(currentWorld).y);
                 }
             } catch (NoSuchFieldException | NullPointerException e) {
@@ -55,9 +55,7 @@ public class WorldInfo {
         try {
             String name = Avomod.getMC().getConnection().getPlayerInfo(UUID.fromString("16ff7452-714f-3752-b3cd-c3cb2068f6af")).getDisplayName().getUnformattedText();
             currentWorld = name.substring(name.indexOf("[") + 1, name.indexOf("]"));
-        } catch (NullPointerException | StringIndexOutOfBoundsException e) {
-            e.printStackTrace();
-        }
+        } catch (NullPointerException | StringIndexOutOfBoundsException ignored) {} // If the current world can't be found on tab it gets caught here ignore to prevent console spam in lobby
     }
 
     public static void updateWorldData() {

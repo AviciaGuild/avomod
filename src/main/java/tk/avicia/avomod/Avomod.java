@@ -24,6 +24,7 @@ import tk.avicia.avomod.settings.KeybindSettings;
 import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Utils;
+import tk.avicia.avomod.webapi.OnlinePlayers;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
 import tk.avicia.avomod.webapi.UpdateChecker;
 
@@ -66,6 +67,7 @@ public class Avomod {
             new Config("Say territory defense in chat", new String[]{"Enabled", "Disabled"}, "Enabled", "terrDefenseInChat")
     };
     public static TerritoryDataApi territoryData;
+    public static OnlinePlayers onlinePlayers;
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
@@ -118,6 +120,7 @@ public class Avomod {
 
         Thread thread = new Thread(() -> {
             do {
+                onlinePlayers = new OnlinePlayers();
                 WorldInfo.updateWorldData();
                 try {
                     Thread.sleep(60 * 1000);
