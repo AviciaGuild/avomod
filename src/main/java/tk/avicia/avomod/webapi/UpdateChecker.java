@@ -4,8 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 import tk.avicia.avomod.Avomod;
 
 import java.io.BufferedReader;
@@ -53,15 +56,21 @@ public class UpdateChecker {
 
         if (Avomod.getMC().player == null) return;
 
-        String message = TextFormatting.AQUA + "Avomod has an update! Please update to version "
+        String message = "\n\n\n" + TextFormatting.AQUA + "Avomod has an update! Please update to version "
                 + TextFormatting.GOLD + version
                 + TextFormatting.AQUA + " as soon as you can. \n"
-                + TextFormatting.RED + TextFormatting.BOLD + "Changelog: \n";
+                + TextFormatting.RED + TextFormatting.BOLD + "Changelog: ";
 
         for (JsonElement element : changelog) {
-            message += TextFormatting.YELLOW + element.getAsString() + "\n";
+            message += "\n" + TextFormatting.YELLOW + element.getAsString();
         }
 
+        String linkMessage = TextFormatting.LIGHT_PURPLE + "You can find the newest version at " + TextFormatting.GOLD + TextFormatting.UNDERLINE + "https://avicia.tk/avomod";
+        ITextComponent linkComponent = new TextComponentString(linkMessage).setStyle(
+                new Style().setClickEvent(
+                        new ClickEvent(ClickEvent.Action.OPEN_URL, "https://avicia.tk/avomod")));
+
         Avomod.getMC().player.sendMessage(new TextComponentString(message));
+        Avomod.getMC().player.sendMessage(linkComponent);
     }
 }
