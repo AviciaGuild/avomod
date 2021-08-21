@@ -34,8 +34,8 @@ import java.util.Map;
 @Mod(modid = Avomod.MODID, name = Avomod.NAME, version = Avomod.VERSION)
 public class Avomod {
     public static final String MODID = "avomod";
-    public static final String NAME = "AvoMod";
-    public static final String VERSION = "1.1";
+    public static final String NAME = "avomod";
+    public static final String VERSION = "1.2";
     public static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("help", new HelpCommand());
         put("chestcount", new ChestCountCommand());
