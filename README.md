@@ -43,6 +43,17 @@ Way for you to create your own chat keybinds, in which a command is executed on 
 * Remove keybind command (removes keybind from list)
     * /avomod keybinds remove &lt;keybind letter>
 
+## **<span style="text-decoration:underline;">Custom Attack Timers Display:</span>**
+
+Custom attack timers display in the top right, which sorts attack timers and displays their defense.
+
+* Sorts timers soonest to latest
+* Sorts by timer
+* Shows defense of territory
+* Click to create beacon at territory and post coordinates in chat
+* Highlights what territory you're in
+* Green beacon at soonest war
+
 ## **<span style="text-decoration:underline;">Other Features:</span>**
 
 * Autojoin wynncraft on minecraft load
@@ -52,11 +63,7 @@ Way for you to create your own chat keybinds, in which a command is executed on 
 * Search item on trade market by middle clicking item
 * Filter out depositing and withdrawing items from guild bank
 * Autoskip quest dialogue
-* Custom attack timer display
-    * Sorts by timer
-    * Shows defense of territory
-    * Click to create beacon at territory and post coordinates in chat
-    * Highlights what territory you're in
 * Filter out territory resource messages
-* Fixed powder stacking fix (slight delay)
+* Autostack powders from loot chests
 * Displays nickname of nicked champions
+* Say territory defense in chat automatically after attacking

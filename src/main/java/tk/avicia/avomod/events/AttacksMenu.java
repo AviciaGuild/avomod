@@ -18,6 +18,8 @@ public class AttacksMenu {
         if (upcomingAttacks.size() == 0) {
             BeaconManager.soonestTerritory = null;
             BeaconManager.soonestTerritoryLocation = null;
+            BeaconManager.compassTerritory = null;
+            BeaconManager.compassLocation = null;
 
             return;
         }

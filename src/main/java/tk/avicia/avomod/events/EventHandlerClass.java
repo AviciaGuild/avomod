@@ -236,12 +236,8 @@ public class EventHandlerClass {
         // The Chat RenderGameOverlayEvent renders stuff normally, it disappears in f1, you can see it when your
         // inventory is open and you can make stuff transparent
         List<String> upcomingAttacks = Utils.getUpcomingAttacks();
-        if (upcomingAttacks.size() != 0 && Avomod.getConfigBoolean("attacksMenu")) {
-            try {
-                AttacksMenu.draw(upcomingAttacks);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (Avomod.getConfigBoolean("attacksMenu")) {
+            AttacksMenu.draw(upcomingAttacks);
         }
     }
 
@@ -281,17 +277,50 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void bossInfo(RenderGameOverlayEvent.BossInfo event) {
-//        String bossbarName = TextFormatting.getTextWithoutFormattingCodes(event.getBossInfo().getName().getUnformattedText());
-//
-//        if (bossbarName.contains("Tower")) {
+//        try {
+//            BossInfo bossInfo = event.getBossInfo();
+//            String bossbarName = bossInfo.getName().getFormattedText();
 //            String[] bossbarWords = bossbarName.split(" ");
 //
-//            String health = bossbarWords[bossbarWords.length - 6];
-//            String defense = bossbarWords[bossbarWords.length - 5];
-//            String damage = bossbarWords[bossbarWords.length - 2];
-//            String attacks = bossbarWords[bossbarWords.length - 1];
+//            if (bossbarName.contains("Tower") && bossbarWords.length >= 6) {
+//                int startIndex1 = Arrays.asList(bossbarWords).indexOf("-");
+//                int startIndex2 = Arrays.asList(bossbarWords).lastIndexOf("-");
+//                String health = TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 2]);
+//                String defense = TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 3])
+//                        .replace("(", "").split("\\)")[0].replace("%", "");
+//                String damage = TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex2 + 2]);
+//                String attacks = TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex2 + 3])
+//                        .replace("(", "").split("\\)")[0].replace("x", "");
 //
-////            System.out.println("Health: " + health + ", Defense: " + defense + ", Damage: " + damage + ", Attacks: " + attacks);
+//                System.out.println(bossbarWords);
+//                System.out.println(bossInfo.getName().getUnformattedText());
+//                System.out.println("Health: " + health + ", Defense: " + defense + ", Damage: " + damage + ", Attacks: " + attacks);
+//
+//                double ehp = Math.round(Double.parseDouble(health) / (1.0 - (Double.parseDouble(defense) / 100.0)));
+//                double lowerDps = Double.parseDouble(damage.split("-")[0]) * Double.parseDouble(attacks);
+//                double higherDps = Double.parseDouble(damage.split("-")[1]) * Double.parseDouble(attacks);
+//
+//                System.out.println(ehp);
+//                System.out.println(lowerDps);
+//                System.out.println(higherDps);
+//
+//                List<String> newMessageWords = new ArrayList<>(Arrays.asList(bossbarWords.clone()));
+//                newMessageWords.set(startIndex1 + 3, TextFormatting.GRAY + "(" + TextFormatting.GOLD + defense + "%" + TextFormatting.GRAY + ")"
+//                        + TextFormatting.DARK_PURPLE + " ❤ " + (int) ehp + TextFormatting.GRAY);
+//                newMessageWords.set(startIndex2 + 3, TextFormatting.GRAY + "(" + TextFormatting.DARK_AQUA + attacks + "x" + TextFormatting.GRAY + ")"
+//                        + TextFormatting.DARK_PURPLE + " ☠ " + (int) lowerDps + "-" + (int) higherDps);
+//
+//                for (int i = startIndex1 + 4; i < startIndex2; i++) {
+//                    newMessageWords.remove(i);
+//                }
+//                for (int i = startIndex2 + 4; i < newMessageWords.size(); i++) {
+//                    newMessageWords.remove(i);
+//                }
+//
+//                bossInfo.setName(new TextComponentString(String.join(" ", newMessageWords)));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
     }
 }
