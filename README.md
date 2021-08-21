@@ -56,8 +56,6 @@ Custom attack timers display in the top right, which sorts attack timers and dis
 
 ## **<span style="text-decoration:underline;">Other Features:</span>**
 
-* Autojoin wynncraft on minecraft load
-* Autojoin world after joining wynncraft
 * Average level of items in chest displayed above chest
 * Disable moving armor and accessories
 * Search item on trade market by middle clicking item

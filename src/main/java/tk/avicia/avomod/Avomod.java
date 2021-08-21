@@ -4,10 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -56,7 +54,6 @@ public class Avomod {
     public static GuiScreen guiToDraw = null;
     public static JsonObject configs = null;
     public static Config[] configsArray = new Config[]{
-            new Config("Autojoin wynncraft", new String[]{"Enabled", "Disabled"}, "Disabled", "autojoinWynncraft"),
             new Config("Prevent moving armor/accessories", new String[]{"Enabled", "Disabled"}, "Disabled", "disableMovingArmor"),
             new Config("Filter out bank messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterBankMessages"),
             new Config("Reveal nicknames", new String[]{"Enabled", "Disabled"}, "Enabled", "revealNicks"),
@@ -113,11 +110,6 @@ public class Avomod {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        if (Avomod.getConfigBoolean("autojoinWynncraft")) {
-            FMLClientHandler.instance().connectToServerAtStartup("play.wynncraft.com", 25565);
-            Avomod.getMC().setServerData(new ServerData("Wynncraft", "play.wynncraft.com", false));
-        }
-
         Thread thread = new Thread(() -> {
             do {
                 onlinePlayers = new OnlinePlayers();
