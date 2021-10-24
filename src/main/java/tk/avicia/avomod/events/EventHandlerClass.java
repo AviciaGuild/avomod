@@ -75,7 +75,7 @@ public class EventHandlerClass {
             });
             thread.start();
         }
-        if (System.currentTimeMillis() - WarDPS.lastTimeInWar < 5000) {
+        if (Avomod.getConfigBoolean("dpsInWars") && System.currentTimeMillis() - WarDPS.lastTimeInWar < 5000 && message.contains(WarDPS.previousTerritoryName)) {
             // If you saw a tower health bar less than 5 seconds ago (if you're in a war)
             if (message.startsWith("[WAR] You have taken control of ")) {
                 WarDPS.warEnded(true);
@@ -109,8 +109,6 @@ public class EventHandlerClass {
             String containerName = ((ContainerChest) openContainer).getLowerChestInventory().getName();
             if (containerName.equals("Trade Market")) {
                 TradeMarketAutoSearch.execute(event, openContainer, screenWidth, screenHeight, slotDimensions, scaleFactor);
-            } else if (containerName.contains("Loot Chest")) {
-                PowderStackingFix.execute(event, openContainer);
             }
         }
 
@@ -291,7 +289,7 @@ public class EventHandlerClass {
             BossInfo bossInfo = event.getBossInfo();
             String bossbarName = bossInfo.getName().getFormattedText();
             String[] bossbarWords = bossbarName.split(" ");
-            if (bossbarName.contains("Tower") && bossbarWords.length >= 6) {
+            if (Avomod.getConfigBoolean("dpsInWars") && bossbarName.contains("Tower") && bossbarWords.length >= 6) {
                 WarDPS.execute(bossbarWords);
             }
         } catch (Exception e) {

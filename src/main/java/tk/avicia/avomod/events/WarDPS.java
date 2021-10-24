@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class WarDPS {
     public static long warStartTime = -1;
-    private static String previousTerritoryName = "";
+    public static String previousTerritoryName = "";
     public static long lastTimeInWar = 0;
     private static long previousTime = 0;
     private static double previousEhp = 0;
@@ -24,12 +24,14 @@ public class WarDPS {
             int startIndex1 = Arrays.asList(bossbarWords).indexOf("-");
             int startIndex2 = Arrays.asList(bossbarWords).lastIndexOf("-");
             StringBuilder territoryName = new StringBuilder();
-            for (int i = 1; i < startIndex1; i++) {
-                territoryName.append(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[i]));
+            for (int i = 1; i < startIndex1 - 1; i++) {
+                territoryName.append(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[i])).append(" ");
             }
+            System.out.println(territoryName.toString() + " TERRITORY NAME GAMING");
             if (!territoryName.toString().equals(previousTerritoryName)) {
                 resetValues();
                 previousTerritoryName = territoryName.toString();
+                System.out.println(previousTerritoryName + " PREVIOUS TERRITORY NAME");
                 warStartTime = System.currentTimeMillis();
             }
             String health = TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 2]);
