@@ -38,7 +38,7 @@ public class UpdateChecker {
                 in.close();
 
                 JsonObject updateData = new JsonParser().parse(response.toString()).getAsJsonObject();
-                if (!updateData.get("version").getAsString().equals(Avomod.VERSION)) {
+                if (Double.parseDouble(updateData.get("version").getAsString()) > Double.parseDouble(Avomod.VERSION)) {
                     UpdateChecker.updateData = updateData;
                     updateMessage();
                 }
