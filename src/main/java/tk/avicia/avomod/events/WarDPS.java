@@ -20,6 +20,11 @@ public class WarDPS {
 
     public static void execute(String[] bossbarWords) {
         try {
+            if(System.currentTimeMillis() - lastTimeInWar > 119 * 1000) {
+                // If the last war happened more than 2 minutes ago, reset the previous territory name,
+                // in case you war the same territory twice in a row
+                previousTerritoryName = "";
+            }
             lastTimeInWar = System.currentTimeMillis();
             int startIndex1 = Arrays.asList(bossbarWords).indexOf("-");
             int startIndex2 = Arrays.asList(bossbarWords).lastIndexOf("-");
@@ -27,11 +32,9 @@ public class WarDPS {
             for (int i = 1; i < startIndex1 - 1; i++) {
                 territoryName.append(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[i])).append(" ");
             }
-            System.out.println(territoryName.toString() + " TERRITORY NAME GAMING");
             if (!territoryName.toString().equals(previousTerritoryName)) {
                 resetValues();
                 previousTerritoryName = territoryName.toString();
-                System.out.println(previousTerritoryName + " PREVIOUS TERRITORY NAME");
                 warStartTime = System.currentTimeMillis();
             }
             String health = TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 2]);
@@ -99,5 +102,6 @@ public class WarDPS {
         previousEhp = 0;
         dps = 0;
         maxEhp = 0;
+        previousTerritoryName = "";
     }
 }
