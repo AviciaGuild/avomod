@@ -33,6 +33,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         if (Avomod.getConfigBoolean("revealNicks")) {
             ChatUtils.execute(event);
         }
@@ -88,6 +90,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onGuiMouseInput(GuiScreenEvent.MouseInputEvent.Pre event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         if (Avomod.getMC().player == null) {
             return;
         }
@@ -131,6 +135,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onGuiKeyInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         if (Avomod.getMC().player == null) {
             return;
         }
@@ -151,6 +157,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onGuiOpen(GuiScreenEvent.BackgroundDrawnEvent event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         if (Avomod.getMC().player == null || event.getGui() == null) {
             return;
         }
@@ -171,6 +179,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void guiInitialize(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         if (Avomod.getMC().player == null || event.getGui() == null) {
             return;
         }
@@ -200,6 +210,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         if (Avomod.getMC().player == null) {
             return;
         }
@@ -220,6 +232,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         for (Keybind keybind : Avomod.keybinds.values()) {
             if (keybind.isPressed()) {
                 Avomod.getMC().player.sendChatMessage("/" + keybind.getCommandToRun());
@@ -229,18 +243,22 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event) {
-        if (Avomod.getMC().gameSettings.keyBindPlayerList.isKeyDown()) {
-            WorldInfo.draw();
-        }
-
         if (Avomod.guiToDraw != null) {
             Avomod.getMC().displayGuiScreen(Avomod.guiToDraw);
             Avomod.guiToDraw = null;
+        }
+
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
+        if (Avomod.getMC().gameSettings.keyBindPlayerList.isKeyDown()) {
+            WorldInfo.draw();
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void renderOverlay(RenderGameOverlayEvent.Chat event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         // The Chat RenderGameOverlayEvent renders stuff normally, it disappears in f1, you can see it when your
         // inventory is open and you can make stuff transparent
         List<String> upcomingAttacks = Utils.getUpcomingAttacks();
@@ -251,6 +269,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void renderWorld(RenderWorldLastEvent e) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         if (BeaconManager.compassLocation != null) {
             BeaconManager.drawBeam(BeaconManager.compassLocation, new Color(0, 50, 150, 255), e.getPartialTicks(), BeaconManager.compassTerritory);
         }
@@ -263,6 +283,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onScreenDraw(GuiScreenEvent.DrawScreenEvent.Post event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         if (Avomod.getMC().player == null || event.getGui() == null) {
             return;
         }
@@ -276,6 +298,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onTooltipRender(RenderTooltipEvent.PostBackground event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         ToolTipState.isTooltipRendering = true;
         ToolTipState.toolTipX = event.getX();
         ToolTipState.toolTipY = event.getY();
@@ -285,6 +309,8 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void bossInfo(RenderGameOverlayEvent.BossInfo event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
         try {
             BossInfo bossInfo = event.getBossInfo();
             String bossbarName = bossInfo.getName().getFormattedText();

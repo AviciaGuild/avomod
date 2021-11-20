@@ -19,14 +19,14 @@ public class ChatUtils {
     public static void execute(ClientChatReceivedEvent event) {
         fullMessage = event.getMessage();
         guildMessageSenderNickname = "";
-        doChecks(event.getMessage());
+        doChecks(event, event.getMessage());
         for (ITextComponent textComponent : event.getMessage().getSiblings()) {
             if (textComponent.getSiblings().size() > 0) {
                 for (ITextComponent textComponent1 : textComponent.getSiblings()) {
-                    doChecks(textComponent1);
+                    doChecks(event, textComponent1);
                 }
             } else {
-                doChecks(textComponent);
+                doChecks(event, textComponent);
             }
         }
         if (!guildMessageSenderNickname.equals("")) {
@@ -48,7 +48,7 @@ public class ChatUtils {
 
     }
 
-    private static void doChecks(ITextComponent textComponent) {
+    private static void doChecks(ClientChatReceivedEvent event, ITextComponent textComponent) {
         if (checkIfGuildChat(textComponent)) {
             makeHereRunFindCommand(textComponent);
         }
@@ -60,6 +60,7 @@ public class ChatUtils {
         }
         if (checkIfShout(textComponent)) {
             makeShoutClickSuggestMsg(textComponent);
+//            makeShoutsGreen(event, textComponent);
         }
     }
 
@@ -147,8 +148,41 @@ public class ChatUtils {
         }
     }
 
+    private static void makeShoutsGreen(ClientChatReceivedEvent event, ITextComponent textComponent) {
+        TextComponentString outputComponent;
+
+        if (textComponent.getUnformattedComponentText().startsWith(TextFormatting.AQUA + "")) {
+            outputComponent = new TextComponentString(TextFormatting.GREEN + TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedComponentText()));
+            outputComponent.setStyle(textComponent.getStyle());
+
+        } else if (textComponent.getUnformattedComponentText().startsWith(TextFormatting.DARK_AQUA + "")) {
+            outputComponent = new TextComponentString(TextFormatting.DARK_GREEN + TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedComponentText()));
+            outputComponent.setStyle(textComponent.getStyle());
+        } else {
+            outputComponent = new TextComponentString(textComponent.getUnformattedComponentText());
+            outputComponent.setStyle(textComponent.getStyle());
+        }
+
+        for (ITextComponent sibling : textComponent.getSiblings()) {
+            if (sibling.getFormattedText().startsWith(TextFormatting.AQUA + "")) {
+                TextComponentString newComponent = new TextComponentString(TextFormatting.GREEN + TextFormatting.getTextWithoutFormattingCodes(sibling.getFormattedText()));
+                newComponent.setStyle(sibling.getStyle());
+                outputComponent.appendSibling(newComponent);
+            } else if (sibling.getFormattedText().startsWith(TextFormatting.DARK_AQUA + "")) {
+                TextComponentString newComponent = new TextComponentString(TextFormatting.DARK_GREEN + TextFormatting.getTextWithoutFormattingCodes(sibling.getFormattedText()));
+                newComponent.setStyle(sibling.getStyle());
+                outputComponent.appendSibling(newComponent);
+            } else {
+                outputComponent.appendSibling(sibling);
+            }
+        }
+
+        event.setCanceled(true);
+        Avomod.getMC().player.sendMessage(outputComponent);
+    }
+
     private static boolean checkIfGuildChat(ITextComponent textComponent) {
-        if (!textComponent.getFormattedText().startsWith("\u00A73")) return false;
+        if (!textComponent.getUnformattedComponentText().startsWith("\u00A73")) return false;
         if (textComponent.getSiblings().size() == 0) return false;
         Pattern pattern = Pattern.compile("^(\\[\u2605*[A-Za-z_]*]) .*", Pattern.CASE_INSENSITIVE);
         String messageString = TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedText());

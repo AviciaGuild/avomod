@@ -62,7 +62,8 @@ public class Avomod {
             new Config("Custom attack timers display", new String[]{"Enabled", "Disabled"}, "Enabled", "attacksMenu"),
             new Config("Green beacon at soonest war", new String[]{"Enabled", "Disabled"}, "Enabled", "greenBeacon"),
             new Config("Say territory defense in chat", new String[]{"Enabled", "Disabled"}, "Enabled", "terrDefenseInChat"),
-            new Config("Display DPS in wars", new String[]{"Enabled", "Disabled"}, "Enabled", "dpsInWars")
+            new Config("Display DPS in wars", new String[]{"Enabled", "Disabled"}, "Enabled", "dpsInWars"),
+            new Config("Disable everything", new String[]{"Enabled", "Disabled"}, "Disabled", "disableAll")
     };
     public static TerritoryDataApi territoryData;
     public static OnlinePlayers onlinePlayers;
