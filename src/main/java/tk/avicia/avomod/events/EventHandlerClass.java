@@ -1,9 +1,12 @@
 package tk.avicia.avomod.events;
 
+import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerPlayer;
@@ -40,6 +43,8 @@ public class EventHandlerClass {
         }
 
         String message = TextFormatting.getTextWithoutFormattingCodes(event.getMessage().getUnformattedText());
+        if (message == null) return;
+
         boolean bankMessage = message.startsWith("[INFO]") && message.contains("Guild Bank");
         if (bankMessage && Avomod.getConfigBoolean("filterBankMessages")) {
             event.setCanceled(true);
@@ -67,14 +72,12 @@ public class EventHandlerClass {
             String territory = message.split("for ")[1].split(" will")[0];
 
             if (Avomod.getConfigBoolean("terrDefenseInChat")) {
-                AttackedTerritoryDifficulty.receivedChatMessage(territory);
+                AttackedTerritoryDifficulty.receivedChatMessage(message, territory);
             }
         }
 
         if (message.trim().startsWith("Welcome to Wynncraft")) {
-            Thread thread = new Thread(() -> {
-                UpdateChecker.checkUpdate();
-            });
+            Thread thread = new Thread(UpdateChecker::checkUpdate);
             thread.start();
         }
         if (Avomod.getConfigBoolean("dpsInWars") && System.currentTimeMillis() - WarDPS.lastTimeInWar < 5000 && message.contains(WarDPS.previousTerritoryName)) {
@@ -106,7 +109,7 @@ public class EventHandlerClass {
         int slotDimensions = 18;
 
         if (openContainer instanceof ContainerPlayer && event.getGui() instanceof GuiInventory && Avomod.getConfigBoolean("disableMovingArmor")) {
-            if (Mouse.getEventButtonState() && scaledMouseY > (screenHeight / 2) - slotDimensions && scaledMouseX < (screenWidth / 2) - (4.5 * slotDimensions) + (4 * slotDimensions)) {
+            if (Mouse.getEventButtonState() && scaledMouseY > (screenHeight / 2) - slotDimensions && scaledMouseX < (screenWidth / 2.0) - (4.5 * slotDimensions) + (4 * slotDimensions)) {
                 event.setCanceled(true);
             }
         } else if (openContainer instanceof ContainerChest) {
@@ -123,7 +126,7 @@ public class EventHandlerClass {
                     BeaconManager.compassLocation = territoryLocation;
 
                     if (BeaconManager.compassLocation != null) {
-                        Avomod.getMC().player.sendMessage(new TextComponentString("A blue beacon beam has been created in " + attackCoordinates.getKey() + " at (" + (int) territoryLocation.getX() + ", " + (int) territoryLocation.getZ() + ")"));
+                        Avomod.getMC().player.sendMessage(new TextComponentString("A blue beacon beam has been created in " + attackCoordinates.getKey() + " at (" + territoryLocation.getX() + ", " + territoryLocation.getZ() + ")"));
                         BeaconManager.compassTerritory = attackCoordinates.getKey();
                     } else {
                         Avomod.getMC().player.sendMessage(new TextComponentString("Not a correct territory name (probably too long for the scoreboard)"));
@@ -148,7 +151,7 @@ public class EventHandlerClass {
                 int screenHeight = Avomod.getMC().displayHeight;
                 int slotDimensions = 36;
 
-                if (Keyboard.getEventKey() == 16 && Mouse.getY() > (screenHeight / 2) - slotDimensions && Mouse.getX() < (screenWidth / 2) - (4.5 * slotDimensions) + (4 * slotDimensions)) {
+                if (Keyboard.getEventKey() == 16 && Mouse.getY() > (screenHeight / 2) - slotDimensions && Mouse.getX() < (screenWidth / 2.0) - (4.5 * slotDimensions) + (4 * slotDimensions)) {
                     event.setCanceled(true);
                 }
             }
@@ -265,6 +268,8 @@ public class EventHandlerClass {
         if (Avomod.getConfigBoolean("attacksMenu")) {
             AttacksMenu.draw(upcomingAttacks);
         }
+
+//        WarDPS.draw(5, 12345728, 20000, 25000);
     }
 
     @SubscribeEvent
@@ -316,10 +321,26 @@ public class EventHandlerClass {
             String bossbarName = bossInfo.getName().getFormattedText();
             String[] bossbarWords = bossbarName.split(" ");
             if (Avomod.getConfigBoolean("dpsInWars") && bossbarName.contains("Tower") && bossbarWords.length >= 6) {
-                WarDPS.execute(bossbarWords);
+                try {
+                    WarDPS.execute(bossbarWords);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @SubscribeEvent
+    public void entityRender(RenderLivingEvent.Pre<EntityLivingBase> event) {
+        EntityLivingBase entity = event.getEntity();
+        if (entity instanceof EntityPlayerSP) return;
+
+        if (entity instanceof EntityOtherPlayerMP) {
+            if (entity.getName().contains("\u0001")) {
+                event.setCanceled(true);
+            }
         }
     }
 }

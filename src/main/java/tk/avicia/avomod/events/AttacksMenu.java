@@ -12,7 +12,7 @@ import java.util.*;
 
 public class AttacksMenu {
     public static HashMap<String, ScreenCoordinates> attackCoordinates = new HashMap<>();
-    private static HashMap<String, String> savedDefenses = new HashMap<>();
+    public static HashMap<String, String> savedDefenses = new HashMap<>();
 
     public static void draw(List<String> upcomingAttacks) {
         if (upcomingAttacks.size() == 0) {
@@ -20,6 +20,7 @@ public class AttacksMenu {
             BeaconManager.soonestTerritoryLocation = null;
             BeaconManager.compassTerritory = null;
             BeaconManager.compassLocation = null;
+            savedDefenses.clear();
 
             return;
         }
@@ -87,7 +88,12 @@ public class AttacksMenu {
         for (Tuple<String, String> attack : upcomingAttacksSplit) {
             String savedDefense = savedDefenses.get(attack.y);
             if (savedDefense == null) {
-                savedDefense = TerritoryData.getTerritoryDefense(attack.y);
+                if (System.currentTimeMillis() - AttackedTerritoryDifficulty.currentTime < 5000 && attack.y.equals((currentTerritory))) {
+                    savedDefense = AttackedTerritoryDifficulty.currentDefense;
+                } else {
+                    savedDefense = TerritoryData.getTerritoryDefense(attack.y);
+                }
+
                 savedDefenses.put(attack.y, savedDefense);
             }
 

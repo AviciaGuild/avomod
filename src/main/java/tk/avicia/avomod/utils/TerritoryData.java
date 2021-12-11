@@ -3,6 +3,8 @@ package tk.avicia.avomod.utils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.events.AttacksMenu;
+import tk.avicia.avomod.webapi.ApiRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +41,24 @@ public class TerritoryData {
     }
 
     public static String getTerritoryDefense(String territoryName) {
-        return defenses.getOrDefault(territoryName, "Unknown");
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+                String defense = ApiRequest.get(String.format("https://script.google.com/macros/s/AKfycbw7lRN6tojW1RjsPeC7bhVNsGETBl_LZEc6bZKXAHG95HB_UC4NKQMm9LGmuvT8KU-R-A/exec?territory=%s&timestamp=%s", territoryName.replace(" ", "%20"), System.currentTimeMillis()));
+
+                if (defense != null && !defense.equals("null")) {
+                    AttacksMenu.savedDefenses.put(territoryName, defense);
+                } else {
+                    AttacksMenu.savedDefenses.put(territoryName, defenses.getOrDefault(territoryName, "Unknown"));
+                }
+            } catch (Exception e) {
+                AttacksMenu.savedDefenses.put(territoryName, defenses.getOrDefault(territoryName, "Unknown"));
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+
+        return "Retrieving...";
     }
 
     public static boolean hasValues() {

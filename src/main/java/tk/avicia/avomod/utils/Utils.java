@@ -1,6 +1,7 @@
 package tk.avicia.avomod.utils;
 
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -28,7 +29,11 @@ public class Utils {
     public static void sendClickPacket(Container container, int slotId, ClickType clickType, int clickButton, ItemStack itemStack) {
         CPacketClickWindow compassPacket = new CPacketClickWindow(container.windowId, slotId, clickButton,
                 clickType, itemStack, container.getNextTransactionID(Avomod.getMC().player.inventory));
-        Avomod.getMC().getConnection().sendPacket(compassPacket);
+        NetHandlerPlayClient connection = Avomod.getMC().getConnection();
+
+        if (connection != null) {
+            connection.sendPacket(compassPacket);
+        }
     }
 
     public static Tuple<Integer, Integer> getTopLeftCornerOfSlot(int slot) {
@@ -46,7 +51,7 @@ public class Utils {
         // For all new rows added after 3 the center of the screen gets adjusted by .5 slotdimentions
         // the thing between the slots that says "Inventory" has a height of 14
         int topEdge = (screenHeight / 2) - (int) Math.floor(((rows - 3) * -0.5) * slotDimensions) - rows * slotDimensions - 14 +
-                (int) Math.floor(slot / 9) * slotDimensions;
+                (int) Math.floor(slot / 9.0) * slotDimensions;
         if (slot > rows * 9) {
             topEdge += 14;
         }
@@ -54,7 +59,7 @@ public class Utils {
     }
 
     public static Color getContrastColor(Color color) {
-        double y = (299 * color.getRed() + 587 * color.getGreen() + 114 * color.getBlue()) / 1000;
+        double y = (299.0 * color.getRed() + 587.0 * color.getGreen() + 114.0 * color.getBlue()) / 1000;
         return y >= 128 ? Color.black : Color.white;
     }
 
@@ -68,7 +73,7 @@ public class Utils {
         if (titleScoreOptional.isPresent()) {
             int titleScore = titleScoreOptional.get().getScorePoints();
             List<Score> upcomingAttackScores = scores.stream().filter(e -> e.getScorePoints() < titleScore).collect(Collectors.toList());
-            List<String> upcomingAttacks = upcomingAttackScores.stream().map(e -> e.getPlayerName()).collect(Collectors.toList());
+            List<String> upcomingAttacks = upcomingAttackScores.stream().map(Score::getPlayerName).collect(Collectors.toList());
             List<String> duplicateTerritories = new ArrayList<>();
 
             return upcomingAttacks.stream().filter(e -> {
@@ -81,5 +86,17 @@ public class Utils {
         }
 
         return new ArrayList<>();
+    }
+
+    public static String parseReadableNumber(double number) {
+        if (number >= 1000000000) {
+            return String.format("%sB", Math.floor(number / 10000000) / 100);
+        } else if (number >= 1000000) {
+            return String.format("%sM", Math.floor(number / 10000) / 100);
+        } else if (number >= 1000) {
+            return String.format("%sK", Math.floor(number / 10) / 100);
+        }
+
+        return String.valueOf(Math.floor(number));
     }
 }

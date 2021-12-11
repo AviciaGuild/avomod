@@ -5,9 +5,12 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Renderer;
+import tk.avicia.avomod.utils.Utils;
 
 import java.awt.*;
-import java.util.Arrays;
+import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class WarDPS {
     public static long warStartTime = -1;
@@ -16,11 +19,13 @@ public class WarDPS {
     private static long previousTime = 0;
     private static double previousEhp = 0;
     private static double dps = 0;
+    private static List<Double> previousFiveEhp = new ArrayList<>();
+    private static double dpsFiveSec = 0;
     private static double maxEhp = 0;
 
     public static void execute(String[] bossbarWords) {
         try {
-            if(System.currentTimeMillis() - lastTimeInWar > 119 * 1000) {
+            if (System.currentTimeMillis() - lastTimeInWar > 119 * 1000) {
                 // If the last war happened more than 2 minutes ago, reset the previous territory name,
                 // in case you war the same territory twice in a row
                 previousTerritoryName = "";
@@ -37,11 +42,11 @@ public class WarDPS {
                 previousTerritoryName = territoryName.toString();
                 warStartTime = System.currentTimeMillis();
             }
-            String health = TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 2]);
-            String defense = TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 3])
+            String health = Objects.requireNonNull(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 2]));
+            String defense = Objects.requireNonNull(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 3]))
                     .replace("(", "").split("\\)")[0].replace("%", "");
-            String damage = TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex2 + 2]);
-            String attacks = TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex2 + 3])
+            String damage = Objects.requireNonNull(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex2 + 2]));
+            String attacks = Objects.requireNonNull(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex2 + 3]))
                     .replace("(", "").split("\\)")[0].replace("x", "");
 
 //            System.out.println(bossbarWords);
@@ -54,6 +59,7 @@ public class WarDPS {
             if (maxEhp == 0) {
                 maxEhp = ehp;
                 previousEhp = ehp;
+                previousFiveEhp.add(ehp);
             }
 //            System.out.println(ehp + "");
 //            System.out.println(lowerDps + "");
@@ -62,14 +68,17 @@ public class WarDPS {
             if (time != previousTime) {
                 dps = previousEhp - ehp;
                 previousEhp = ehp;
-            }
-            previousTime = time;
-            ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
-            int screenWidth = scaledResolution.getScaledWidth();
-            int screenHeight = scaledResolution.getScaledHeight();
 
-            Renderer.drawCenteredShadowedString(time + " Seconds", scaledResolution.getScaledWidth() / 2, 100, Color.CYAN);
-            Renderer.drawCenteredShadowedString(String.format("%,.1f", dps) + " DPS", scaledResolution.getScaledWidth() / 2, 110, Color.WHITE);
+                if (previousFiveEhp.size() == 5) {
+                    previousFiveEhp.remove(0);
+                }
+
+                previousFiveEhp.add(ehp);
+                dpsFiveSec = Math.floor((previousFiveEhp.get(0) - ehp) / 5);
+            }
+
+            previousTime = time;
+            draw(time, ehp, lowerDps, higherDps);
 
 //                List<String> newMessageWords = new ArrayList<>(Arrays.asList(bossbarWords.clone()));
 //                newMessageWords.set(startIndex1 + 3, TextFormatting.GRAY + "(" + TextFormatting.GOLD + defense + "%" + TextFormatting.GRAY + ")"
@@ -100,8 +109,32 @@ public class WarDPS {
         warStartTime = -1;
         previousTime = 0;
         previousEhp = 0;
+        previousFiveEhp = new ArrayList<>();
         dps = 0;
         maxEhp = 0;
         previousTerritoryName = "";
+    }
+
+    public static void draw(long time, double towerEhp, double lowerTowerDps, double upperTowerDps) {
+        ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
+        int baseHeight = scaledResolution.getScaledHeight() / 3;
+
+        String[] stats = new String[]{
+                String.format("%s Seconds", time),
+                String.format("Tower EHP: %s", Utils.parseReadableNumber(towerEhp)),
+                String.format("Tower DPS: %s-%s", Utils.parseReadableNumber(lowerTowerDps), Utils.parseReadableNumber(upperTowerDps)),
+                String.format("Team DPS/1s: %s", Utils.parseReadableNumber(dps)),
+                String.format("Team DPS/5s %s", Utils.parseReadableNumber(dpsFiveSec))
+        };
+
+        int maxWidth = Collections.max(Arrays.stream(stats).map(Renderer::getStringWidth).collect(Collectors.toList()));
+        Renderer.drawRect(new Color(0, 0, 0, 100), 0, baseHeight - 5, maxWidth + 10, 70);
+        Renderer.drawStringWithShadow(TextFormatting.BOLD + "War Info", 5, baseHeight, Color.CYAN);
+
+        int additionalHeight = 10;
+        for (String stat : stats) {
+            Renderer.drawStringWithShadow(stat, 5, baseHeight + additionalHeight, Color.WHITE);
+            additionalHeight += 10;
+        }
     }
 }

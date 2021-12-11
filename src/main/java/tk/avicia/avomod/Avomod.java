@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.lwjgl.input.Keyboard;
 import tk.avicia.avomod.commands.AvomodCommand;
 import tk.avicia.avomod.commands.Command;
+import tk.avicia.avomod.commands.GetTokenCommand;
 import tk.avicia.avomod.commands.subcommands.*;
 import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.events.EventHandlerClass;
@@ -129,6 +130,7 @@ public class Avomod {
 
         MinecraftForge.EVENT_BUS.register(new EventHandlerClass());
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
+        ClientCommandHandler.instance.registerCommand(new GetTokenCommand());
 
         this.initializeAliases();
         updateKeybinds();

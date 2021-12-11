@@ -58,6 +58,7 @@ public class Renderer {
         FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
         fontRenderer.drawString(text, x - fontRenderer.getStringWidth(text) / 2, y, color.getRGB());
     }
+
     public static void drawCenteredShadowedString(String text, int x, int y, Color color) {
         FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
         fontRenderer.drawString(text, x - (fontRenderer.getStringWidth(text) / 2) + 1, y + 1, Utils.getContrastColor(color).getRGB());
@@ -66,5 +67,9 @@ public class Renderer {
 
     public static void drawHorizontalLine(int startX, int endX, int y, Color color) {
         drawRect(color, startX, y, endX - startX, 1);
+    }
+
+    public static int getStringWidth(String text) {
+        return Avomod.getMC().fontRenderer.getStringWidth(text);
     }
 }

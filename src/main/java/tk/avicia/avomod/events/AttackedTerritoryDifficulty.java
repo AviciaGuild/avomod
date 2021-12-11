@@ -1,5 +1,6 @@
 package tk.avicia.avomod.events;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
@@ -7,13 +8,14 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.webapi.ApiRequest;
 
 import java.util.List;
 
 public class AttackedTerritoryDifficulty {
-    private static long currentTime = System.currentTimeMillis();
-    private static String currentTerritory = null;
-    private static String currentDefense = null;
+    public static long currentTime = System.currentTimeMillis();
+    public static String currentTerritory = null;
+    public static String currentDefense = null;
 
     public static void inMenu() {
         String territoryDefense = null;
@@ -35,9 +37,28 @@ public class AttackedTerritoryDifficulty {
         currentTime = System.currentTimeMillis();
     }
 
-    public static void receivedChatMessage(String territory) {
-        if (System.currentTimeMillis() - currentTime < 10000 && territory.equals((currentTerritory))) {
+    public static void receivedChatMessage(String message, String territory) {
+        if (System.currentTimeMillis() - currentTime < 5000 && territory.equals((currentTerritory))) {
             Avomod.getMC().player.sendChatMessage("/g " + currentTerritory + " defense is " + currentDefense);
+
+            try {
+                recordDefense(message, territory, currentDefense);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            recordDefense(message, territory, "Unkown");
         }
+    }
+
+    public static void recordDefense(String message, String territory, String defense) {
+        String username = Minecraft.getMinecraft().player.getName();
+        String uuid = Minecraft.getMinecraft().player.getUniqueID().toString();
+        long timestamp = System.currentTimeMillis();
+        String timer = message.split("will start in ")[1].split(" minutes.")[0];
+
+        ApiRequest.post("https://script.google.com/macros/s/AKfycbw7lRN6tojW1RjsPeC7bhVNsGETBl_LZEc6bZKXAHG95HB_UC4NKQMm9LGmuvT8KU-R-A/exec",
+                String.format("{`username`:`%s`,`territory`:`%s`,`timestamp`:%s,`playerUuid`:`%s`,`timer`:`%s`,`defense`:`%s`}",
+                        username, territory, timestamp, uuid, timer, defense).replace('`', '"'));
     }
 }
