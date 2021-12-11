@@ -88,7 +88,7 @@ public class AttacksMenu {
         for (Tuple<String, String> attack : upcomingAttacksSplit) {
             String savedDefense = savedDefenses.get(attack.y);
             if (savedDefense == null) {
-                if (System.currentTimeMillis() - AttackedTerritoryDifficulty.currentTime < 5000 && attack.y.equals((currentTerritory))) {
+                if (System.currentTimeMillis() - AttackedTerritoryDifficulty.currentTime < 5000 && attack.y.equals((AttackedTerritoryDifficulty.currentTerritory))) {
                     savedDefense = AttackedTerritoryDifficulty.currentDefense;
                 } else {
                     savedDefense = TerritoryData.getTerritoryDefense(attack.y);

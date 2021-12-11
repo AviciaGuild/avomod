@@ -1,12 +1,9 @@
 package tk.avicia.avomod.events;
 
-import net.minecraft.client.entity.EntityOtherPlayerMP;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerPlayer;
@@ -331,16 +328,16 @@ public class EventHandlerClass {
             e.printStackTrace();
         }
     }
-
-    @SubscribeEvent
-    public void entityRender(RenderLivingEvent.Pre<EntityLivingBase> event) {
-        EntityLivingBase entity = event.getEntity();
-        if (entity instanceof EntityPlayerSP) return;
-
-        if (entity instanceof EntityOtherPlayerMP) {
-            if (entity.getName().contains("\u0001")) {
-                event.setCanceled(true);
-            }
-        }
-    }
+//
+//    @SubscribeEvent
+//    public void entityRender(RenderLivingEvent.Pre<EntityLivingBase> event) {
+//        EntityLivingBase entity = event.getEntity();
+//        if (entity instanceof EntityPlayerSP) return;
+//
+//        if (entity instanceof EntityOtherPlayerMP) {
+//            if (entity.getName().contains("\u0001")) {
+//                event.setCanceled(true);
+//            }
+//        }
+//    }
 }
