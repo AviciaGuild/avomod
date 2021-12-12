@@ -40,19 +40,21 @@ public class TerritoryData {
         }
     }
 
-    public static String getTerritoryDefense(String territoryName) {
+    public static String getTerritoryDefense(String territoryName, Long warTimestamp) {
         Thread thread = new Thread(() -> {
             try {
                 Thread.sleep(3000);
-                String defense = ApiRequest.get(String.format("https://script.google.com/macros/s/AKfycbw7lRN6tojW1RjsPeC7bhVNsGETBl_LZEc6bZKXAHG95HB_UC4NKQMm9LGmuvT8KU-R-A/exec?territory=%s&timestamp=%s", territoryName.replace(" ", "%20"), System.currentTimeMillis()));
+                String result = ApiRequest.get(String.format("https://script.google.com/macros/s/AKfycbw7lRN6tojW1RjsPeC7bhVNsGETBl_LZEc6bZKXAHG95HB_UC4NKQMm9LGmuvT8KU-R-A/exec?territory=%s&timestamp=%s", territoryName.replace(" ", "%20"), System.currentTimeMillis()));
+                String defense = result.split("\\|")[0];
+                Long savedWarTimestamp = Long.parseLong(result.split("\\|")[1]);
 
                 if (defense != null && !defense.equals("null")) {
-                    AttacksMenu.savedDefenses.put(territoryName, defense);
+                    AttacksMenu.savedDefenses.put(territoryName, new Tuple<>(defense, savedWarTimestamp));
                 } else {
-                    AttacksMenu.savedDefenses.put(territoryName, defenses.getOrDefault(territoryName, "Unknown"));
+                    AttacksMenu.savedDefenses.put(territoryName, new Tuple<>(defenses.getOrDefault(territoryName, "Unknown"), savedWarTimestamp));
                 }
             } catch (Exception e) {
-                AttacksMenu.savedDefenses.put(territoryName, defenses.getOrDefault(territoryName, "Unknown"));
+                AttacksMenu.savedDefenses.put(territoryName, new Tuple<>(defenses.getOrDefault(territoryName, "Unknown"), warTimestamp));
                 e.printStackTrace();
             }
         });

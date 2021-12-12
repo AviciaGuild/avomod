@@ -11,11 +11,14 @@ import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.webapi.ApiRequest;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class AttackedTerritoryDifficulty {
     public static long currentTime = System.currentTimeMillis();
     public static String currentTerritory = null;
     public static String currentDefense = null;
+    public static int currentTimer = 0;
 
     public static void inMenu() {
         String territoryDefense = null;
@@ -26,6 +29,16 @@ public class AttackedTerritoryDifficulty {
         List<String> territoryLore = minecart.getTooltip(Avomod.getMC().player, ITooltipFlag.TooltipFlags.ADVANCED);
         String territoryDefenseMessage = territoryLore.get(1);
 
+        Optional<String> timerTextOptional = territoryLore.stream().filter(e ->
+                Objects.requireNonNull(TextFormatting.getTextWithoutFormattingCodes(e)).startsWith("Time to Start")).findFirst();
+        if (!timerTextOptional.isPresent()) return;
+
+        String timerText = timerTextOptional.get();
+        String[] timerSplit = timerText.split(": ");
+
+        if (timerSplit.length < 2) return;
+        String timer = TextFormatting.getTextWithoutFormattingCodes(timerSplit[1].split("m")[0]);
+
         if (territoryDefenseMessage.contains("Territory Defences")) {
             territoryDefense = TextFormatting.getTextWithoutFormattingCodes(territoryDefenseMessage).split(": ")[1];
         }
@@ -35,6 +48,7 @@ public class AttackedTerritoryDifficulty {
         currentDefense = territoryDefense;
         currentTerritory = lowerInventory.getName().split(": ")[1];
         currentTime = System.currentTimeMillis();
+        currentTimer = Integer.parseInt(timer);
     }
 
     public static void receivedChatMessage(String message, String territory) {

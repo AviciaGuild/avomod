@@ -170,7 +170,11 @@ public class EventHandlerClass {
             if (containerName.contains("Loot Chest")) {
                 AverageLevel.execute(event, lowerInventory);
             } else if (Avomod.getConfigBoolean("terrDefenseInChat") && containerName.contains("Attacking: ")) {
-                AttackedTerritoryDifficulty.inMenu();
+                try {
+                    AttackedTerritoryDifficulty.inMenu();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -265,8 +269,6 @@ public class EventHandlerClass {
         if (Avomod.getConfigBoolean("attacksMenu")) {
             AttacksMenu.draw(upcomingAttacks);
         }
-
-//        WarDPS.draw(5, 12345728, 20000, 25000);
     }
 
     @SubscribeEvent

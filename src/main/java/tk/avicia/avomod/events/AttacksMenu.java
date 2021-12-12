@@ -12,7 +12,7 @@ import java.util.*;
 
 public class AttacksMenu {
     public static HashMap<String, ScreenCoordinates> attackCoordinates = new HashMap<>();
-    public static HashMap<String, String> savedDefenses = new HashMap<>();
+    public static HashMap<String, Tuple<String, Long>> savedDefenses = new HashMap<>();
 
     public static void draw(List<String> upcomingAttacks) {
         if (upcomingAttacks.size() == 0) {
@@ -20,7 +20,6 @@ public class AttacksMenu {
             BeaconManager.soonestTerritoryLocation = null;
             BeaconManager.compassTerritory = null;
             BeaconManager.compassLocation = null;
-            savedDefenses.clear();
 
             return;
         }
@@ -44,7 +43,7 @@ public class AttacksMenu {
         }
 
         List<String> terrsToRemove = new ArrayList<>();
-        for (Map.Entry<String, String> savedDefense : savedDefenses.entrySet()) {
+        for (Map.Entry<String, Tuple<String, Long>> savedDefense : savedDefenses.entrySet()) {
             if (!upcomingAttackTerritories.contains(savedDefense.getKey())) {
                 terrsToRemove.add(savedDefense.getKey());
             }
@@ -86,28 +85,33 @@ public class AttacksMenu {
         String currentTerritory = Avomod.territoryData.coordinatesInTerritory(new Tuple<>(xPos, zPos));
 
         for (Tuple<String, String> attack : upcomingAttacksSplit) {
-            String savedDefense = savedDefenses.get(attack.y);
-            if (savedDefense == null) {
+            Tuple<String, Long> savedDefense = savedDefenses.get(attack.y);
+            int minutes = Integer.parseInt(attack.x.split(":")[0]);
+            int seconds = Integer.parseInt(attack.x.split(":")[1]);
+            Long warTimestamp = (minutes * 60000L + seconds * 1000L) + System.currentTimeMillis();
+
+            if (savedDefense == null || Math.abs(savedDefense.y - warTimestamp) > 10000) {
                 if (System.currentTimeMillis() - AttackedTerritoryDifficulty.currentTime < 5000 && attack.y.equals((AttackedTerritoryDifficulty.currentTerritory))) {
-                    savedDefense = AttackedTerritoryDifficulty.currentDefense;
+                    savedDefense = new Tuple<>(AttackedTerritoryDifficulty.currentDefense, (AttackedTerritoryDifficulty.currentTimer * 60000L) + System.currentTimeMillis());
                 } else {
-                    savedDefense = TerritoryData.getTerritoryDefense(attack.y);
+                    savedDefense = new Tuple<>(TerritoryData.getTerritoryDefense(attack.y, warTimestamp), warTimestamp);
                 }
 
                 savedDefenses.put(attack.y, savedDefense);
             }
 
+            String terrDefense = savedDefense.x;
             if (savedDefense.equals("Low") || savedDefense.equals("Very Low")) {
-                savedDefense = TextFormatting.GREEN + savedDefense;
-            } else if (savedDefense.equals("Medium")) {
-                savedDefense = TextFormatting.YELLOW + savedDefense;
+                terrDefense = TextFormatting.GREEN + terrDefense;
+            } else if (terrDefense.equals("Medium")) {
+                terrDefense = TextFormatting.YELLOW + terrDefense;
             } else {
-                savedDefense = TextFormatting.RED + savedDefense;
+                terrDefense = TextFormatting.RED + terrDefense;
             }
 
-            String message = TextFormatting.GOLD + attack.y + " (" + savedDefense + TextFormatting.GOLD + ") " + TextFormatting.AQUA + attack.x;
+            String message = TextFormatting.GOLD + attack.y + " (" + terrDefense + TextFormatting.GOLD + ") " + TextFormatting.AQUA + attack.x;
             if (attack.y.equals(currentTerritory)) {
-                message = TextFormatting.LIGHT_PURPLE + "" + TextFormatting.BOLD + attack.y + TextFormatting.RESET + TextFormatting.GOLD + " (" + savedDefense + TextFormatting.GOLD + ") " + TextFormatting.AQUA + attack.x;
+                message = TextFormatting.LIGHT_PURPLE + "" + TextFormatting.BOLD + attack.y + TextFormatting.RESET + TextFormatting.GOLD + " (" + terrDefense + TextFormatting.GOLD + ") " + TextFormatting.AQUA + attack.x;
             }
 
             int width = Avomod.getMC().fontRenderer.getStringWidth(message);
