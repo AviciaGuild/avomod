@@ -101,7 +101,7 @@ public class AttacksMenu {
             }
 
             String terrDefense = savedDefense.x;
-            if (savedDefense.equals("Low") || savedDefense.equals("Very Low")) {
+            if (terrDefense.equals("Low") || terrDefense.equals("Very Low")) {
                 terrDefense = TextFormatting.GREEN + terrDefense;
             } else if (terrDefense.equals("Medium")) {
                 terrDefense = TextFormatting.YELLOW + terrDefense;
