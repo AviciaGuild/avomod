@@ -22,6 +22,8 @@ public class WarDPS {
     private static List<Double> previousFiveEhp = new ArrayList<>();
     private static double dpsFiveSec = 0;
     private static double maxEhp = 0;
+    private static double dpsSinceStart = 0;
+    private static double timeRemaining = 0;
 
     public static void execute(String[] bossbarWords) {
         try {
@@ -75,6 +77,9 @@ public class WarDPS {
 
                 previousFiveEhp.add(ehp);
                 dpsFiveSec = Math.floor((previousFiveEhp.get(0) - ehp) / 5);
+
+                dpsSinceStart = (maxEhp - previousEhp) / ((System.currentTimeMillis() - warStartTime) / 1000.0);
+                timeRemaining = Math.floor(previousEhp / dpsSinceStart);
             }
 
             previousTime = time;
@@ -124,11 +129,17 @@ public class WarDPS {
                 String.format("Tower EHP: %s", Utils.parseReadableNumber(towerEhp)),
                 String.format("Tower DPS: %s-%s", Utils.parseReadableNumber(lowerTowerDps), Utils.parseReadableNumber(upperTowerDps)),
                 String.format("Team DPS/1s: %s", Utils.parseReadableNumber(dps)),
-                String.format("Team DPS/5s %s", Utils.parseReadableNumber(dpsFiveSec))
+                String.format("Team DPS/5s: %s", Utils.parseReadableNumber(dpsFiveSec)),
+                String.format("Team DPS (total): %s", Utils.parseReadableNumber(dpsSinceStart)),
+                String.format("Estimated Time Remaining: %ss", (int) timeRemaining)
         };
 
+        if (dpsSinceStart == 0) {
+            stats[6] = "Estimated Time Remaining: Unkown";
+        }
+
         int maxWidth = Collections.max(Arrays.stream(stats).map(Renderer::getStringWidth).collect(Collectors.toList()));
-        Renderer.drawRect(new Color(0, 0, 0, 100), 0, baseHeight - 5, maxWidth + 10, 70);
+        Renderer.drawRect(new Color(0, 0, 0, 100), 0, baseHeight - 5, maxWidth + 10, 20 + (10 * stats.length));
         Renderer.drawStringWithShadow(TextFormatting.BOLD + "War Info", 5, baseHeight, Color.CYAN);
 
         int additionalHeight = 10;

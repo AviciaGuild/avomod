@@ -29,6 +29,9 @@ public class KeybindsCommand extends Command {
                     outputMessage = TextFormatting.RED + "The keybind you're adding must be one letter.";
                 } else {
                     String messageToExecute = String.join(" ", Arrays.copyOfRange(params, 2, params.length));
+                    if (messageToExecute.startsWith("/")) {
+                        messageToExecute = messageToExecute.substring(1);
+                    }
                     KeybindSettings.setSettings(params[1], messageToExecute);
 
                     outputMessage = TextFormatting.BLUE + "Keybind added. " + TextFormatting.GREEN + params[1].toUpperCase() + " will execute " + TextFormatting.YELLOW + "/" + messageToExecute;
