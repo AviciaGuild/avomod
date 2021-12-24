@@ -68,10 +68,7 @@ public class EventHandlerClass {
 
         if (message.contains("The war for") && message.endsWith("minutes.")) {
             String territory = message.split("for ")[1].split(" will")[0];
-
-            if (Avomod.getConfigBoolean("terrDefenseInChat")) {
-                AttackedTerritoryDifficulty.receivedChatMessage(message, territory);
-            }
+            AttackedTerritoryDifficulty.receivedChatMessage(message, territory);
         }
 
         if (message.trim().startsWith("Welcome to Wynncraft")) {
@@ -170,7 +167,7 @@ public class EventHandlerClass {
             String containerName = lowerInventory.getName();
             if (containerName.contains("Loot Chest")) {
                 AverageLevel.execute(event, lowerInventory);
-            } else if (Avomod.getConfigBoolean("terrDefenseInChat") && containerName.contains("Attacking: ")) {
+            } else if (containerName.contains("Attacking: ")) {
                 try {
                     AttackedTerritoryDifficulty.inMenu();
                 } catch (Exception e) {

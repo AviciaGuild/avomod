@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class WarDPS {
     public static long warStartTime = -1;
+    public static long firstDamageTime = -1;
     public static String previousTerritoryName = "";
     public static long lastTimeInWar = 0;
     private static long previousTime = 0;
@@ -71,6 +72,10 @@ public class WarDPS {
                 dps = previousEhp - ehp;
                 previousEhp = ehp;
 
+                if (firstDamageTime == -1 && dps > 0) {
+                    firstDamageTime = System.currentTimeMillis();
+                }
+
                 if (previousFiveEhp.size() == 5) {
                     previousFiveEhp.remove(0);
                 }
@@ -78,8 +83,10 @@ public class WarDPS {
                 previousFiveEhp.add(ehp);
                 dpsFiveSec = Math.floor((previousFiveEhp.get(0) - ehp) / 5);
 
-                dpsSinceStart = (maxEhp - previousEhp) / ((System.currentTimeMillis() - warStartTime) / 1000.0);
-                timeRemaining = Math.floor(previousEhp / dpsSinceStart);
+                if (firstDamageTime != -1 && System.currentTimeMillis() - firstDamageTime > 0) {
+                    dpsSinceStart = (maxEhp - previousEhp) / ((System.currentTimeMillis() - firstDamageTime) / 1000.0);
+                    timeRemaining = Math.floor(previousEhp / dpsSinceStart);
+                }
             }
 
             previousTime = time;
@@ -106,17 +113,21 @@ public class WarDPS {
 
     public static void warEnded(boolean warWon) {
         Avomod.getMC().player.sendMessage(new TextComponentString("The war lasted for: " + TextFormatting.AQUA + ((System.currentTimeMillis() - warStartTime) / 1000) + TextFormatting.WHITE + " Seconds"));
-        Avomod.getMC().player.sendMessage(new TextComponentString("Average DPS: " + String.format("%,.1f", (warWon ? maxEhp : maxEhp - previousEhp) / ((System.currentTimeMillis() - warStartTime) / 1000))));
+        Avomod.getMC().player.sendMessage(new TextComponentString("Average DPS: " + String.format("%,.1f", (warWon ? maxEhp : maxEhp - previousEhp) / ((System.currentTimeMillis() - firstDamageTime) / 1000))));
         resetValues();
     }
 
     private static void resetValues() {
         warStartTime = -1;
+        firstDamageTime = -1;
         previousTime = 0;
         previousEhp = 0;
         previousFiveEhp = new ArrayList<>();
         dps = 0;
+        dpsFiveSec = 0;
+        dpsSinceStart = 0;
         maxEhp = 0;
+        timeRemaining = 0;
         previousTerritoryName = "";
     }
 
@@ -135,7 +146,7 @@ public class WarDPS {
         };
 
         if (dpsSinceStart == 0) {
-            stats[6] = "Estimated Time Remaining: Unkown";
+            stats[6] = "Estimated Time Remaining: Unknown";
         }
 
         int maxWidth = Collections.max(Arrays.stream(stats).map(Renderer::getStringWidth).collect(Collectors.toList()));

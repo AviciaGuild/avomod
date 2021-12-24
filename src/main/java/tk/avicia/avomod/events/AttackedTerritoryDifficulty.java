@@ -53,7 +53,9 @@ public class AttackedTerritoryDifficulty {
 
     public static void receivedChatMessage(String message, String territory) {
         if (System.currentTimeMillis() - currentTime < 5000 && territory.equals((currentTerritory))) {
-            Avomod.getMC().player.sendChatMessage("/g " + currentTerritory + " defense is " + currentDefense);
+            if (Avomod.getConfigBoolean("terrDefenseInChat")) {
+                Avomod.getMC().player.sendChatMessage("/g " + currentTerritory + " defense is " + currentDefense);
+            }
 
             try {
                 recordDefense(message, territory, currentDefense);
@@ -61,7 +63,7 @@ public class AttackedTerritoryDifficulty {
                 e.printStackTrace();
             }
         } else {
-            recordDefense(message, territory, "Unkown");
+            recordDefense(message, territory, "Unknown");
         }
     }
 
