@@ -17,6 +17,8 @@ public class WarDPS {
     public static long firstDamageTime = -1;
     public static String previousTerritoryName = "";
     public static long lastTimeInWar = 0;
+    //    public static int num = 0;
+    //    public static double lastTime = 0;
     private static long previousTime = 0;
     private static double previousEhp = 0;
     private static double dps = 0;
@@ -25,6 +27,7 @@ public class WarDPS {
     private static double maxEhp = 0;
     private static double dpsSinceStart = 0;
     private static double timeRemaining = 0;
+//    private static double lastHealth = 0;
 
     public static void execute(String[] bossbarWords) {
         try {
@@ -59,11 +62,27 @@ public class WarDPS {
             double ehp = Math.round(Double.parseDouble(health) / (1.0 - (Double.parseDouble(defense) / 100.0)));
             double lowerDps = Double.parseDouble(damage.split("-")[0]) * Double.parseDouble(attacks);
             double higherDps = Double.parseDouble(damage.split("-")[1]) * Double.parseDouble(attacks);
+
+//            System.out.println(ehp);
             if (maxEhp == 0) {
                 maxEhp = ehp;
                 previousEhp = ehp;
                 previousFiveEhp.add(ehp);
+
+//                lastHealth = ehp;
             }
+
+//            if (ehp != lastHealth) {
+//                if (num == 0) {
+//                    lastTime = System.currentTimeMillis();
+//                }
+//
+//                lastHealth = ehp;
+//                num++;
+//
+//                System.out.println(System.currentTimeMillis() - lastTime);
+//                lastTime = System.currentTimeMillis();
+//            }
 //            System.out.println(ehp + "");
 //            System.out.println(lowerDps + "");
 //            System.out.println(higherDps + "");

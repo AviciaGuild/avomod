@@ -2,6 +2,7 @@ package tk.avicia.avomod.utils;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -98,5 +99,11 @@ public class Utils {
         }
 
         return String.valueOf(Math.floor(number));
+    }
+
+    public static boolean inWorld() {
+        InventoryPlayer inventoryPlayer = Avomod.getMC().player.inventory;
+
+        return inventoryPlayer.getStackInSlot(8).toString().contains("netherStar");
     }
 }

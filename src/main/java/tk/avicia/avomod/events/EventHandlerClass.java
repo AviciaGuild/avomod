@@ -229,6 +229,12 @@ public class EventHandlerClass {
             TerritoryData.updateTerritoryData();
         }
 
+        if (tick % 1000 == 0) {
+            if (Avomod.getConfigBoolean("autoStream")) {
+                AutoStream.execute();
+            }
+        }
+
         guiOpen = false;
     }
 
@@ -317,12 +323,15 @@ public class EventHandlerClass {
             BossInfo bossInfo = event.getBossInfo();
             String bossbarName = bossInfo.getName().getFormattedText();
             String[] bossbarWords = bossbarName.split(" ");
+
             if (Avomod.getConfigBoolean("dpsInWars") && bossbarName.contains("Tower") && bossbarWords.length >= 6) {
                 try {
                     WarDPS.execute(bossbarWords);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else if (Avomod.getConfigBoolean("autoStream")) {
+                AutoStream.checkIfStreaming(bossbarName);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -330,6 +339,7 @@ public class EventHandlerClass {
     }
 
     @SubscribeEvent
+
     public void entityRender(RenderLivingEvent.Pre<EntityLivingBase> event) {
         if (!Avomod.getConfigBoolean("hideEntitiesInWar") || (System.currentTimeMillis() - WarDPS.lastTimeInWar) > 2000)
             return;
