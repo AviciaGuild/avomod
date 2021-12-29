@@ -5,6 +5,9 @@ features that this mod has.
 
 This mod is still relatively new, and may have bugs in it. If you find any bugs, please notify Albb_n or newracket.
 
+Every feature is tested thouroughly before being released, however, if something gets by us, and you crash, please
+notify Albb_n or newracket and provide the crash-report, so we can fix it. Thanks!
+
 ## **<span style="text-decoration:underline;">Commands:</span>**
 
 * World age command (lists age of world)
@@ -48,7 +51,6 @@ Way for you to create your own chat keybinds, in which a command is executed on 
 Custom attack timers display in the top right, which sorts attack timers and displays their defense.
 
 * Sorts timers soonest to latest
-* Sorts by timer
 * Shows defense of territory
 * Click to create beacon at territory and post coordinates in chat
 * Highlights what territory you're in
@@ -62,6 +64,8 @@ Custom attack timers display in the top right, which sorts attack timers and dis
 * Filter out depositing and withdrawing items from guild bank
 * Autoskip quest dialogue
 * Filter out territory resource messages
-* Autostack powders from loot chests
 * Displays nickname of nicked champions
 * Say territory defense in chat automatically after attacking
+* Auto /stream on world switch
+* Hide entities (mobs and damages) in wars
+* Display war info (time in war, tower EHP/DPS, team DPS)

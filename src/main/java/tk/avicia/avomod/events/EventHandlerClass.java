@@ -71,7 +71,7 @@ public class EventHandlerClass {
             AttackedTerritoryDifficulty.receivedChatMessage(message, territory);
         }
 
-        if (message.trim().startsWith("Welcome to Wynncraft")) {
+        if (message.trim().startsWith("Loading Resource Pack...")) {
             Thread thread = new Thread(UpdateChecker::checkUpdate);
             thread.start();
         }

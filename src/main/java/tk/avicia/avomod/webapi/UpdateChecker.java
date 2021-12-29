@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 
 public class UpdateChecker {
     private static JsonObject updateData;
@@ -38,7 +39,9 @@ public class UpdateChecker {
                 in.close();
 
                 JsonObject updateData = new JsonParser().parse(response.toString()).getAsJsonObject();
-                if (Double.parseDouble(updateData.get("version").getAsString()) > Double.parseDouble(Avomod.VERSION)) {
+                String currentVersion = String.join(".", Arrays.copyOfRange(Avomod.VERSION.split("\\."), 0, 2));
+
+                if (Double.parseDouble(updateData.get("version").getAsString()) > Double.parseDouble(currentVersion)) {
                     UpdateChecker.updateData = updateData;
                     updateMessage();
                 }

@@ -18,7 +18,11 @@ import java.util.TimeZone;
 public class TerritoryDataApi {
     private JsonObject territoryData;
 
-    public TerritoryDataApi() throws IllegalArgumentException {
+    public TerritoryDataApi() {
+        this.makeApiRequest();
+    }
+
+    private void makeApiRequest() {
         try {
             URL urlObject = new URL("https://api.wynncraft.com/public_api.php?action=territoryList");
             HttpURLConnection con = (HttpURLConnection) urlObject.openConnection();
@@ -41,7 +45,15 @@ public class TerritoryDataApi {
                 System.out.println("GET request not worked");
             }
         } catch (Exception e) {
-            throw new IllegalArgumentException();
+            Thread thread = new Thread(() -> {
+                try {
+                    Thread.sleep(10000);
+                    this.makeApiRequest();
+                } catch (Exception err) {
+                    err.printStackTrace();
+                }
+            });
+            thread.start();
         }
     }
 
