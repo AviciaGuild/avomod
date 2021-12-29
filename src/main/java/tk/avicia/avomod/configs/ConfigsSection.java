@@ -23,6 +23,10 @@ public class ConfigsSection {
         JsonObject configsJson = this.customFile.readJson();
         configsJson.addProperty(this.configsKey, newValue);
 
+        if (this.configsKey.equals("autoStream") && newValue.equals("Disabled")) {
+            Avomod.getMC().player.sendChatMessage("/stream");
+        }
+
         Avomod.configs = configsJson;
         this.customFile.writeJson(configsJson);
     }
