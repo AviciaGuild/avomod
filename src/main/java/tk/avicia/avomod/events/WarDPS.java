@@ -152,7 +152,7 @@ public class WarDPS {
 
     public static void draw(long time, double towerEhp, double lowerTowerDps, double upperTowerDps) {
         ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
-        int baseHeight = scaledResolution.getScaledHeight() / 3;
+        int baseHeight = 10;
 
         String[] stats = new String[]{
                 String.format("%s Seconds", time),

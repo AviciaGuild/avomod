@@ -109,7 +109,7 @@ public class EventHandlerClass {
             }
         } else if (openContainer instanceof ContainerChest) {
             String containerName = ((ContainerChest) openContainer).getLowerChestInventory().getName();
-            if (containerName.equals("Trade Market")) {
+            if (Mouse.isButtonDown(2) && containerName.equals("Trade Market")) {
                 TradeMarketAutoSearch.execute(event, openContainer, screenWidth, screenHeight, slotDimensions, scaleFactor);
             }
         }

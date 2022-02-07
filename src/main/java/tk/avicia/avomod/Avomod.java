@@ -49,6 +49,7 @@ public class Avomod {
         put("count", new CountCommand());
         put("keybinds", new KeybindsCommand());
         put("configs", new ConfigsCommand());
+        put("soulpoints", new SoulPointCommand());
     }};
     public static Map<String, Command> aliases = new HashMap<>();
     public static Map<String, Keybind> keybinds = new HashMap<>();

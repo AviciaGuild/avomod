@@ -58,6 +58,7 @@ public class TerritoryDataApi {
     }
 
     public String coordinatesInTerritory(Tuple<Integer, Integer> coordinates) {
+        if (this.territoryData == null) return null;
         for (Map.Entry<String, JsonElement> territory : this.territoryData.getAsJsonObject("territories").entrySet()) {
             JsonObject locationObject = territory.getValue().getAsJsonObject().getAsJsonObject("location");
             int startX = Math.min(locationObject.get("startX").getAsInt(), locationObject.get("endX").getAsInt());
@@ -74,6 +75,7 @@ public class TerritoryDataApi {
     }
 
     public Coordinates getMiddleOfTerritory(String territory) {
+        if (this.territoryData == null) return null;
         JsonObject territoryObject = this.territoryData.getAsJsonObject("territories").getAsJsonObject(territory);
         if (territoryObject == null) return null;
 
@@ -86,6 +88,7 @@ public class TerritoryDataApi {
     }
 
     public Tuple<String, Double>[] getTerritoriesOnCooldown() {
+        if (this.territoryData == null) return null;
         for (Map.Entry<String, JsonElement> territory : this.territoryData.getAsJsonObject("territories").entrySet()) {
             String acquired = territory.getValue().getAsJsonObject().get("acquired").getAsString();
 

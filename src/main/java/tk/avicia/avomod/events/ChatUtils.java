@@ -49,11 +49,11 @@ public class ChatUtils {
     }
 
     private static void doChecks(ClientChatReceivedEvent event, ITextComponent textComponent) {
-        if (checkIfGuildChat(textComponent)) {
-            makeHereRunFindCommand(textComponent);
-        }
         if (checkIfNickHover(textComponent)) {
             addRealNameToTextComponent(textComponent);
+        }
+        if (checkIfGuildChat(textComponent)) {
+            makeHereRunFindCommand(textComponent);
         }
         if (checkIfDM(textComponent)) {
             makeDMClickWork(textComponent);
@@ -202,14 +202,20 @@ public class ChatUtils {
                 String splitString = " here ";
                 if (siblingText.endsWith(" here")) splitString = " here";
                 if (!siblingText.contains(splitString)) return;
-
                 temp.appendSibling(new TextComponentString(TextFormatting.AQUA + siblingText.substring(0, siblingText.indexOf(splitString))));
-                String command = "/find " + fullMessage.substring(fullMessage.lastIndexOf("\u2605") == -1 ?
-                        1 : fullMessage.lastIndexOf("\u2605") + 1, fullMessage.indexOf("]"));
+                String command = "/find " + (fullMessage.substring(fullMessage.lastIndexOf("\u2605") == -1 ?
+                        1 : fullMessage.lastIndexOf("\u2605") + 1, fullMessage.indexOf("]")));
+                // If the person typing "here" is nicked
+                HoverEvent hover = textComponent.getStyle().getHoverEvent();
+                String hoverText = hover.getValue().getUnformattedText();
+                if (hoverText.contains("real username") && hoverText.contains("Rank:")) {
+                    String realName = hoverText.split(" ")[hoverText.split(" ").length - 1];
+                    command = "/find " + realName;
+                }
 
                 ITextComponent hereComponent = new TextComponentString(TextFormatting.UNDERLINE + splitString + TextFormatting.RESET);
                 hereComponent.getStyle().setHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)))
+                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)))
                         .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
                 temp.appendSibling(hereComponent);
                 temp.appendSibling(new TextComponentString(TextFormatting.AQUA + siblingText.substring(siblingText.indexOf(splitString) + splitString.length())));
