@@ -10,6 +10,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.IClientCommand;
 import tk.avicia.avomod.Avomod;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -49,8 +51,13 @@ public class AvomodCommand extends CommandBase implements IClientCommand {
                         commandToExecute.execute(server, sender, Arrays.copyOfRange(params, 1, params.length));
                     } catch (Exception e) {
                         TextComponentString textComponent = new TextComponentString(TextFormatting.RED + "Command Failed");
+
+                        StringWriter sw = new StringWriter();
+                        e.printStackTrace(new PrintWriter(sw));
+                        String exceptionAsString = sw.toString();
+                        textComponent = new TextComponentString(TextFormatting.RED + "Command Failed: " + exceptionAsString);
+
                         sender.sendMessage(textComponent);
-                        e.printStackTrace();
                     }
                 } else {
                     TextComponentString textComponent = new TextComponentString("That command does not exist.");
@@ -83,7 +90,7 @@ public class AvomodCommand extends CommandBase implements IClientCommand {
         } else {
             String commandName = args[0];
             Command commandToExecute = Avomod.commands.get(commandName);
-            if(commandToExecute == null){
+            if (commandToExecute == null) {
                 commandToExecute = Avomod.aliases.get(commandName);
             }
 

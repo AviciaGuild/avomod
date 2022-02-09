@@ -1,6 +1,7 @@
 package tk.avicia.avomod.events;
 
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.settings.KeyBinding;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
@@ -261,6 +263,17 @@ public class EventHandlerClass {
         if (Avomod.getMC().gameSettings.keyBindPlayerList.isKeyDown()) {
             WorldInfo.draw();
         }
+
+        if (!Avomod.getConfigBoolean("auraPing")) return;
+
+        try {
+            String subtitle = (String) ReflectionHelper.findField(GuiIngame.class, "displayedSubTitle", "field_175200_y").get(Avomod.getMC().ingameGUI);
+            if (subtitle.length() > 0 && subtitle.contains("Aura")) {
+                AuraHandler.auraPinged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -272,6 +285,9 @@ public class EventHandlerClass {
         List<String> upcomingAttacks = Utils.getUpcomingAttacks();
         if (Avomod.getConfigBoolean("attacksMenu")) {
             AttacksMenu.draw(upcomingAttacks);
+        }
+        if (Avomod.getConfigBoolean("auraPing")) {
+            AuraHandler.draw();
         }
     }
 
@@ -339,14 +355,15 @@ public class EventHandlerClass {
     }
 
     @SubscribeEvent
-
     public void entityRender(RenderLivingEvent.Pre<EntityLivingBase> event) {
-        if (!Avomod.getConfigBoolean("hideEntitiesInWar") || (System.currentTimeMillis() - WarDPS.lastTimeInWar) > 2000)
-            return;
+//        if (!Avomod.getConfigBoolean("hideEntitiesInWar") || (System.currentTimeMillis() - WarDPS.lastTimeInWar) > 2000)
+//            return;
 
         EntityLivingBase entity = event.getEntity();
-        if (entity.getTeam() == null) {
-            event.setCanceled(true);
-        }
+//        if (entity.getTeam() == null) {
+//            event.setCanceled(true);
+//        }
+
+//        System.out.println(entity);
     }
 }

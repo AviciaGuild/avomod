@@ -34,7 +34,7 @@ import java.util.Map;
 public class Avomod {
     public static final String MODID = "avomod";
     public static final String NAME = "avomod";
-    public static final String VERSION = "1.3.2";
+    public static final String VERSION = "1.3.3";
     public static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("help", new HelpCommand());
         put("chestcount", new ChestCountCommand());
@@ -64,10 +64,11 @@ public class Avomod {
             new Config("Custom attack timers display", new String[]{"Enabled", "Disabled"}, "Enabled", "attacksMenu"),
             new Config("Green beacon at soonest war", new String[]{"Enabled", "Disabled"}, "Enabled", "greenBeacon"),
             new Config("Say territory defense in chat", new String[]{"Enabled", "Disabled"}, "Enabled", "terrDefenseInChat"),
-            new Config("Display DPS in wars", new String[]{"Enabled", "Disabled"}, "Enabled", "dpsInWars"),
+            new Config("Display war info (dps, tower ehp, etc.)", new String[]{"Enabled", "Disabled"}, "Enabled", "dpsInWars"),
             new Config("Hide entities in wars", new String[]{"Enabled", "Disabled"}, "Disabled", "hideEntitiesInWar"),
             new Config("Auto /stream on world swap", new String[]{"Enabled", "Disabled"}, "Disabled", "autoStream"),
-            new Config("Disable everything", new String[]{"Enabled", "Disabled"}, "Disabled", "disableAll"),
+            new Config("Aura Ping", new String[]{"Enabled", "Disabled"}, "Enabled", "auraPing"),
+            new Config("Disable everything", new String[]{"Enabled", "Disabled"}, "Disabled", "disableAll")
     };
     public static TerritoryDataApi territoryData;
     public static OnlinePlayers onlinePlayers;

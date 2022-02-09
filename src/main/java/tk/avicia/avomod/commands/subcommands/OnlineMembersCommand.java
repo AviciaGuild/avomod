@@ -42,6 +42,9 @@ public class OnlineMembersCommand extends Command {
                                 }
                             }
                             guildName = guildNameFromTag.getGuildName().replaceAll(" ", "%20");
+                        } else {
+                            ITextComponent textComponent = new TextComponentString(TextFormatting.DARK_RED + guildName + TextFormatting.RED + " is not a guild");
+                            sender.sendMessage(textComponent);
                         }
                     }
                     GuildData guildData = new GuildData(guildName);
@@ -58,7 +61,7 @@ public class OnlineMembersCommand extends Command {
                     // late alphabetically, it also sorts by rank
                     membersWithRank.sort(String::compareToIgnoreCase);
                     Collections.reverse(membersWithRank);
-                    outputMessage = TextFormatting.BLUE + guildData.getGuildName()  + TextFormatting.DARK_AQUA + " [" +
+                    outputMessage = TextFormatting.BLUE + guildData.getGuildName() + TextFormatting.DARK_AQUA + " [" +
                             TextFormatting.BLUE + guildData.getGuildTag() + TextFormatting.DARK_AQUA + "]"
                             + TextFormatting.AQUA + " has " + membersWithRank.size() + " members online: " +
                             TextFormatting.GOLD + String.join(", ", membersWithRank);
