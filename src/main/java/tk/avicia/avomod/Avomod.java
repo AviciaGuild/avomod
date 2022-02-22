@@ -17,6 +17,8 @@ import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.commands.GetTokenCommand;
 import tk.avicia.avomod.commands.subcommands.*;
 import tk.avicia.avomod.configs.Config;
+import tk.avicia.avomod.configs.ConfigInput;
+import tk.avicia.avomod.configs.ConfigToggle;
 import tk.avicia.avomod.events.EventHandlerClass;
 import tk.avicia.avomod.events.WorldInfo;
 import tk.avicia.avomod.settings.KeybindSettings;
@@ -34,7 +36,7 @@ import java.util.Map;
 public class Avomod {
     public static final String MODID = "avomod";
     public static final String NAME = "avomod";
-    public static final String VERSION = "1.3.3";
+    public static final String VERSION = "1.3.4";
     public static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("help", new HelpCommand());
         put("chestcount", new ChestCountCommand());
@@ -56,19 +58,20 @@ public class Avomod {
     public static GuiScreen guiToDraw = null;
     public static JsonObject configs = null;
     public static Config[] configsArray = new Config[]{
-            new Config("Prevent moving armor/accessories", new String[]{"Enabled", "Disabled"}, "Disabled", "disableMovingArmor"),
-            new Config("Filter out bank messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterBankMessages"),
-            new Config("Reveal nicknames", new String[]{"Enabled", "Disabled"}, "Enabled", "revealNicks"),
-            new Config("Auto skip quest dialogue", new String[]{"Enabled", "Disabled"}, "Disabled", "skipDialogue"),
-            new Config("Filter out all resource messages", new String[]{"Enabled", "Disabled"}, "Disabled", "filterResourceMessages"),
-            new Config("Custom attack timers display", new String[]{"Enabled", "Disabled"}, "Enabled", "attacksMenu"),
-            new Config("Green beacon at soonest war", new String[]{"Enabled", "Disabled"}, "Enabled", "greenBeacon"),
-            new Config("Say territory defense in chat", new String[]{"Enabled", "Disabled"}, "Enabled", "terrDefenseInChat"),
-            new Config("Display war info (dps, tower ehp, etc.)", new String[]{"Enabled", "Disabled"}, "Enabled", "dpsInWars"),
-            new Config("Hide entities in wars", new String[]{"Enabled", "Disabled"}, "Disabled", "hideEntitiesInWar"),
-            new Config("Auto /stream on world swap", new String[]{"Enabled", "Disabled"}, "Disabled", "autoStream"),
-            new Config("Aura Ping", new String[]{"Enabled", "Disabled"}, "Enabled", "auraPing"),
-            new Config("Disable everything", new String[]{"Enabled", "Disabled"}, "Disabled", "disableAll")
+            new ConfigToggle("Prevent moving armor/accessories", "Disabled", "disableMovingArmor"),
+            new ConfigToggle("Filter out bank messages", "Disabled", "filterBankMessages"),
+            new ConfigToggle("Reveal nicknames", "Enabled", "revealNicks"),
+            new ConfigToggle("Auto skip quest dialogue", "Disabled", "skipDialogue"),
+            new ConfigToggle("Filter out all resource messages", "Disabled", "filterResourceMessages"),
+            new ConfigToggle("Custom attack timers display", "Enabled", "attacksMenu"),
+            new ConfigToggle("Green beacon at soonest war", "Enabled", "greenBeacon"),
+            new ConfigToggle("Say territory defense in chat", "Enabled", "terrDefenseInChat"),
+            new ConfigToggle("Display war info (dps, tower ehp, etc.)", "Enabled", "dpsInWars"),
+            new ConfigToggle("Hide entities in wars", "Disabled", "hideEntitiesInWar"),
+            new ConfigToggle("Auto /stream on world swap", "Disabled", "autoStream"),
+            new ConfigToggle("Aura Ping", "Enabled", "auraPing"),
+            new ConfigInput("Aura Ping Color", "FF6F00", "[\\da-fA-F]+", "^[\\da-fA-F]{6}$", 6, "auraPingColor"),
+            new ConfigToggle("Disable everything", "Disabled", "disableAll")
     };
     public static TerritoryDataApi territoryData;
     public static OnlinePlayers onlinePlayers;

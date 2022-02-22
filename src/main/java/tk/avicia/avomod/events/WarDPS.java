@@ -44,7 +44,7 @@ public class WarDPS {
                 territoryName.append(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[i])).append(" ");
             }
             if (!territoryName.toString().equals(previousTerritoryName)) {
-                resetValues();
+                newWar();
                 previousTerritoryName = territoryName.toString();
                 warStartTime = System.currentTimeMillis();
             }
@@ -133,10 +133,10 @@ public class WarDPS {
     public static void warEnded(boolean warWon) {
         Avomod.getMC().player.sendMessage(new TextComponentString("The war lasted for: " + TextFormatting.AQUA + ((System.currentTimeMillis() - warStartTime) / 1000) + TextFormatting.WHITE + " Seconds"));
         Avomod.getMC().player.sendMessage(new TextComponentString("Average DPS: " + String.format("%,.1f", (warWon ? maxEhp : maxEhp - previousEhp) / ((System.currentTimeMillis() - firstDamageTime) / 1000))));
-        resetValues();
+        newWar();
     }
 
-    private static void resetValues() {
+    private static void newWar() {
         warStartTime = -1;
         firstDamageTime = -1;
         previousTime = 0;
@@ -148,6 +148,9 @@ public class WarDPS {
         maxEhp = 0;
         timeRemaining = 0;
         previousTerritoryName = "";
+
+        AuraHandler.firstAura = 0;
+        AuraHandler.auraTimer = 0;
     }
 
     public static void draw(long time, double towerEhp, double lowerTowerDps, double upperTowerDps) {

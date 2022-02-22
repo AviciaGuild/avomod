@@ -6,6 +6,7 @@ import tk.avicia.avomod.utils.CustomFile;
 
 public class ConfigsSection {
     public ConfigsButton button;
+    public ConfigsTextField textField;
     public String title;
     private CustomFile customFile;
     private String configsKey;
@@ -16,6 +17,15 @@ public class ConfigsSection {
         this.configsKey = configsKey;
 
         this.button.setConfigsSection(this);
+        this.customFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/configs.json");
+    }
+
+    public ConfigsSection(String title, ConfigsTextField textField, String configsKey) {
+        this.title = title;
+        this.textField = textField;
+        this.configsKey = configsKey;
+
+        this.textField.setConfigsSection(this);
         this.customFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/configs.json");
     }
 
