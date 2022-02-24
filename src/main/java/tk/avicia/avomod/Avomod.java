@@ -14,7 +14,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.lwjgl.input.Keyboard;
 import tk.avicia.avomod.commands.AvomodCommand;
 import tk.avicia.avomod.commands.Command;
-import tk.avicia.avomod.commands.GetTokenCommand;
 import tk.avicia.avomod.commands.subcommands.*;
 import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.configs.ConfigInput;
@@ -133,10 +132,8 @@ public class Avomod {
         territoryData = new TerritoryDataApi();
 
         MinecraftForge.EVENT_BUS.register(new EventHandlerClass());
-//        MinecraftForge.EVENT_BUS.register(new WarTrackerEvents());
 
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
-        ClientCommandHandler.instance.registerCommand(new GetTokenCommand());
 
         this.initializeAliases();
         updateKeybinds();
