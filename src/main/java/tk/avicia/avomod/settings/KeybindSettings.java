@@ -5,8 +5,6 @@ import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.CustomFile;
 
 public class KeybindSettings {
-    private static String[] configsList = new String[]{"keybinds"};
-
     public static JsonObject getSettings() {
         CustomFile avomodKeybinds = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/keybinds.json");
 

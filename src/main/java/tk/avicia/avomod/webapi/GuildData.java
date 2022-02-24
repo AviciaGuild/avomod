@@ -78,23 +78,23 @@ public class GuildData {
 //        rankStars.put("RECRUIT", "");
         for (JsonElement jsonElement : members) {
             JsonObject memberData = jsonElement.getAsJsonObject();
-            if(memberData.get("name").getAsString().equals(member)){
+            if (memberData.get("name").getAsString().equals(member)) {
                 return rankStars.get(memberData.get("rank").getAsString()) + memberData.get("name").getAsString();
             }
         }
         return member;
     }
 
-    public String getOwner(){
-        JsonArray members = this.guildData.getAsJsonArray("members");
-        for (JsonElement member : members) {
-            System.out.println(member.getAsJsonObject().get("rank").toString());
-            System.out.println(member.getAsJsonObject().get("rank").toString().equals("OWNER"));
-            if(member.getAsJsonObject().get("rank").getAsString().equals("OWNER")){
-                return member.getAsJsonObject().get("name").getAsString();
-            }
-        }
-
-        return "No Owner";
-    }
+//    public String getOwner(){
+//        JsonArray members = this.guildData.getAsJsonArray("members");
+//        for (JsonElement member : members) {
+//            System.out.println(member.getAsJsonObject().get("rank").toString());
+//            System.out.println(member.getAsJsonObject().get("rank").toString().equals("OWNER"));
+//            if(member.getAsJsonObject().get("rank").getAsString().equals("OWNER")){
+//                return member.getAsJsonObject().get("name").getAsString();
+//            }
+//        }
+//
+//        return "No Owner";
+//    }
 }

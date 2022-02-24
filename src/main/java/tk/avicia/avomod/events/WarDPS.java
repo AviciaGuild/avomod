@@ -1,6 +1,5 @@
 package tk.avicia.avomod.events;
 
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
@@ -154,7 +153,6 @@ public class WarDPS {
     }
 
     public static void draw(long time, double towerEhp, double lowerTowerDps, double upperTowerDps) {
-        ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
         int baseHeight = 10;
 
         String[] stats = new String[]{

@@ -32,7 +32,10 @@ public class AttacksMenu {
         List<String> upcomingAttackTerritories = new ArrayList<>();
 
         for (String upcomingAttack : upcomingAttacks) {
-            String[] words = TextFormatting.getTextWithoutFormattingCodes(upcomingAttack).split(" ");
+            String upcomingAttackUnformatted = TextFormatting.getTextWithoutFormattingCodes(upcomingAttack);
+            if (upcomingAttackUnformatted == null) return;
+
+            String[] words = upcomingAttackUnformatted.split(" ");
             if (words.length < 3) return;
 
             String time = words[1];

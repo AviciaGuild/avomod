@@ -9,13 +9,14 @@ import tk.avicia.avomod.commands.PlayerTabCompletionCommand;
 import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.PlayerData;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 
 public class PlayerGuildCommand extends PlayerTabCompletionCommand {
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        String outputMessage = "";
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] params) throws CommandException {
+        String outputMessage;
         if (params.length >= 1) {
             String username = params[0];
             try {
@@ -43,12 +44,14 @@ public class PlayerGuildCommand extends PlayerTabCompletionCommand {
     }
 
     @Override
-    public String getName() {
+    public @Nonnull
+    String getName() {
         return "playerguild";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public @Nonnull
+    String getUsage(@Nonnull ICommandSender sender) {
         return "playerguild <username>";
     }
 
@@ -58,7 +61,8 @@ public class PlayerGuildCommand extends PlayerTabCompletionCommand {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Arrays.asList("pg");
+    public @Nonnull
+    List<String> getAliases() {
+        return Collections.singletonList("pg");
     }
 }

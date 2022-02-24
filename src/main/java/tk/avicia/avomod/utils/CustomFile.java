@@ -21,10 +21,16 @@ public class CustomFile extends File {
                         String directory = String.join("/", directorySplit);
 
                         File file = new File(directory);
-                        file.mkdirs();
+                        boolean success = file.mkdirs();
+                        if (!success) {
+                            System.out.println("Didn't create file");
+                        }
                     }
                 }
-                super.createNewFile();
+                boolean success = super.createNewFile();
+                if (!success) {
+                    System.out.println("Didn't create file");
+                }
                 this.writeJson("{}");
             } catch (Exception e) {
                 e.printStackTrace();

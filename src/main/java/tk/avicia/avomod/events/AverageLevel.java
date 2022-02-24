@@ -43,6 +43,8 @@ public class AverageLevel {
 
                     if (itemLevel.isPresent()) {
                         String itemLevelUnformatted = TextFormatting.getTextWithoutFormattingCodes(itemLevel.get());
+                        if (itemLevelUnformatted == null) return;
+
                         try {
                             Pattern numberPattern = Pattern.compile("(^[0-9]+$)", Pattern.CASE_INSENSITIVE);
                             if (numberPattern.matcher(itemLevelUnformatted.split(": ")[1]).find()) {

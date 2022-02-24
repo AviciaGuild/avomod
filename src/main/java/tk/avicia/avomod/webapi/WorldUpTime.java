@@ -17,9 +17,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WorldUpTime {
-    JsonObject worldUpTimeData;
-    private java.util.Comparator<Map.Entry<String, JsonElement>> mapComparator =
+    private final java.util.Comparator<Map.Entry<String, JsonElement>> mapComparator =
             Comparator.comparingInt(m -> m.getValue().getAsJsonObject().get("age").getAsInt());
+    JsonObject worldUpTimeData;
 
     public WorldUpTime() {
         try {
@@ -59,7 +59,7 @@ public class WorldUpTime {
         Matcher matcher = pattern.matcher(world);
         boolean matchFound = matcher.find();
         if (matchFound) {
-            String wc = "";
+            String wc;
             if (world.toUpperCase(Locale.ROOT).startsWith("WC")) {
                 wc = world;
             } else {

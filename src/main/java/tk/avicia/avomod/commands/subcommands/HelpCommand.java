@@ -9,21 +9,22 @@ import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.commands.Command;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class HelpCommand extends Command {
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] params) throws CommandException {
         if (params.length == 0) {
-            String outputMessage = TextFormatting.BLUE + "Help for AVOMod:";
+            StringBuilder outputMessage = new StringBuilder(TextFormatting.BLUE + "Help for AVOMod:");
 
             for (Map.Entry<String, Command> command : Avomod.commands.entrySet()) {
-                outputMessage += "\n" + TextFormatting.GOLD + "/avomod " + command.getKey() + ": " + TextFormatting.GREEN + command.getValue().getDescription();
+                outputMessage.append("\n").append(TextFormatting.GOLD).append("/avomod ").append(command.getKey()).append(": ").append(TextFormatting.GREEN).append(command.getValue().getDescription());
             }
 
-            TextComponentString textComponent = new TextComponentString(outputMessage);
+            TextComponentString textComponent = new TextComponentString(outputMessage.toString());
             sender.sendMessage(textComponent);
         } else {
             if (Avomod.commands.containsKey(params[0])) {
@@ -35,12 +36,14 @@ public class HelpCommand extends Command {
     }
 
     @Override
-    public String getName() {
+    public @Nonnull
+    String getName() {
         return "help";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public @Nonnull
+    String getUsage(@Nonnull ICommandSender sender) {
         return "help <command>";
     }
 
@@ -50,12 +53,14 @@ public class HelpCommand extends Command {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Arrays.asList("h");
+    public @Nonnull
+    List<String> getAliases() {
+        return Collections.singletonList("h");
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
+    public @Nonnull
+    List<String> getTabCompletions(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args, BlockPos targetPos) {
         return getListOfStringsMatchingLastWord(args, Avomod.commands.keySet());
     }
 }

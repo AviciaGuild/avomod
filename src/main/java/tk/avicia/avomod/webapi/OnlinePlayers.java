@@ -64,9 +64,9 @@ public class OnlinePlayers {
         }
     }
 
-    public JsonObject getOnlinePlayerData() {
-        return onlinePlayerData;
-    }
+//    public JsonObject getOnlinePlayerData() {
+//        return onlinePlayerData;
+//    }
 
     public boolean isPlayerOnline(String username) {
         Set<Map.Entry<String, JsonElement>> worlds = onlinePlayerData.entrySet();

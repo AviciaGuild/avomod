@@ -10,17 +10,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TerritoryData {
-    private static Map<String, String> defenses = new HashMap<>();
+    private final static Map<String, String> defenses = new HashMap<>();
 
     public static void updateTerritoryData() {
         try {
+            if (Avomod.getMC().getConnection() == null) return;
+
             for (Advancement advancement : Avomod.getMC().getConnection().getAdvancementManager().getAdvancementList().getAdvancements()) {
                 if (advancement.getDisplay() != null) {
                     try {
                         String territoryName = advancement.getDisplay().getTitle().getUnformattedText().trim();
-                        String territoryData = TextFormatting
-                                .getTextWithoutFormattingCodes(advancement.getDisplay().getDescription().getUnformattedText())
-                                .trim().replaceAll("\\s+", " ").replaceAll("\\n", " ");
+                        String territoryDataFormatted = TextFormatting.getTextWithoutFormattingCodes(advancement.getDisplay().getDescription().getUnformattedText());
+                        if (territoryDataFormatted == null) return;
+
+                        String territoryData = territoryDataFormatted.trim().replaceAll("\\s+", " ").replaceAll("\\n", " ");
 
                         int index1 = territoryData.indexOf("Territory Defences: ");
                         int index2 = territoryData.indexOf(" Trading Routes");
@@ -45,6 +48,8 @@ public class TerritoryData {
             try {
                 Thread.sleep(3000);
                 String result = ApiRequest.get(String.format("https://script.google.com/macros/s/AKfycbw7lRN6tojW1RjsPeC7bhVNsGETBl_LZEc6bZKXAHG95HB_UC4NKQMm9LGmuvT8KU-R-A/exec?territory=%s&timestamp=%s", territoryName.replace(" ", "%20"), System.currentTimeMillis()));
+                if (result == null) throw new NullPointerException();
+
                 String defense = result.split("\\|")[0];
                 Long savedWarTimestamp = Long.parseLong(result.split("\\|")[1]);
 

@@ -24,9 +24,9 @@ public class TradeMarketAutoSearch {
                 scaledMouseX > leftEdge && scaledMouseX < leftEdge + (9 * slotDimensions)) {
             event.setCanceled(true);
 
-            int slotNumber = 0;
-            int slotX = (int) Math.floor((scaledMouseX - leftEdge) / slotDimensions);
-            int slotY = (int) Math.ceil((topEdge - scaledMouseY) / slotDimensions);
+            int slotNumber;
+            int slotX = (int) Math.floor((double) (scaledMouseX - leftEdge) / slotDimensions);
+            int slotY = (int) Math.ceil((double) (topEdge - scaledMouseY) / slotDimensions);
             InventoryPlayer inventory = Avomod.getMC().player.inventory;
 
             if (slotY == 3) {
@@ -37,6 +37,7 @@ public class TradeMarketAutoSearch {
 
             ItemStack itemInSlot = inventory.getStackInSlot(slotNumber);
             String name = TextFormatting.getTextWithoutFormattingCodes(itemInSlot.getDisplayName());
+            if (name == null) return;
 
             if (!name.equals("Air")) {
                 ItemStack compass = openContainer.inventorySlots.get(35).getStack();
@@ -47,6 +48,8 @@ public class TradeMarketAutoSearch {
                     Thread thread = new Thread(() -> {
                         CPacketClickWindow compassPacket = new CPacketClickWindow(openContainer.windowId, 35, 0,
                                 ClickType.PICKUP, compass, openContainer.getNextTransactionID(inventory));
+                        if (Avomod.getMC().getConnection() == null) return;
+
                         Avomod.getMC().getConnection().sendPacket(compassPacket);
 
                         for (int i = 0; i < 5; i++) {
@@ -72,7 +75,7 @@ public class TradeMarketAutoSearch {
                             e.printStackTrace();
                         }
 
-                        CPacketChatMessage chatPacket = new CPacketChatMessage(name.replaceAll(" \\[.*\\]", ""));
+                        CPacketChatMessage chatPacket = new CPacketChatMessage(name.replaceAll(" \\[.*]", ""));
                         Avomod.getMC().getConnection().sendPacket(chatPacket);
 
                         for (int i = 0; i < 5; i++) {

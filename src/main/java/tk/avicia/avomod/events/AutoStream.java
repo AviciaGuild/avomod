@@ -8,7 +8,10 @@ public class AutoStream {
     public static long lastStream = 0;
 
     public static void checkIfStreaming(String bossbarName) {
-        if (TextFormatting.getTextWithoutFormattingCodes(bossbarName).contains("Streamer mode enabled")) {
+        String bossbarNameUnformatted = TextFormatting.getTextWithoutFormattingCodes(bossbarName);
+        if (bossbarNameUnformatted == null) return;
+
+        if (bossbarNameUnformatted.contains("Streamer mode enabled")) {
             lastStream = System.currentTimeMillis();
         }
     }

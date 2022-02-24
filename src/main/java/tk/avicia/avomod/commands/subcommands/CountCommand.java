@@ -12,14 +12,15 @@ import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.commands.Command;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class CountCommand extends Command {
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        String outputMessage = "";
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] params) throws CommandException {
+        String outputMessage;
 
         EntityPlayerSP userObject = Avomod.getMC().player;
         InventoryPlayer inventory = userObject.inventory;
@@ -62,12 +63,14 @@ public class CountCommand extends Command {
     }
 
     @Override
-    public String getName() {
+    public @Nonnull
+    String getName() {
         return "count";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public @Nonnull
+    String getUsage(@Nonnull ICommandSender sender) {
         return "count";
     }
 
@@ -77,7 +80,8 @@ public class CountCommand extends Command {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Arrays.asList("c");
+    public @Nonnull
+    List<String> getAliases() {
+        return Collections.singletonList("c");
     }
 }

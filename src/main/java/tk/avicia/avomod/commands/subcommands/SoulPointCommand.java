@@ -11,14 +11,15 @@ import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.WorldUpTime;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class SoulPointCommand extends Command {
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] params) throws CommandException {
         int amount = 5;
         if (params.length >= 1) {
             try {
@@ -58,12 +59,14 @@ public class SoulPointCommand extends Command {
     }
 
     @Override
-    public String getName() {
+    public @Nonnull
+    String getName() {
         return "soulpoints";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public @Nonnull
+    String getUsage(@Nonnull ICommandSender sender) {
         return "soulpoints <amount>";
     }
 
@@ -73,7 +76,8 @@ public class SoulPointCommand extends Command {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Arrays.asList("sp");
+    public @Nonnull
+    List<String> getAliases() {
+        return Collections.singletonList("sp");
     }
 }

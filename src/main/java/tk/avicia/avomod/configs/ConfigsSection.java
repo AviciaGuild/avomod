@@ -5,11 +5,11 @@ import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.CustomFile;
 
 public class ConfigsSection {
+    private final CustomFile customFile;
+    private final String configsKey;
     public ConfigsButton button;
     public ConfigsTextField textField;
     public String title;
-    private CustomFile customFile;
-    private String configsKey;
 
     public ConfigsSection(String title, ConfigsButton button, String configsKey) {
         this.title = title;

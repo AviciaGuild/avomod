@@ -36,23 +36,10 @@ public class ConfigsTextField extends GuiTextField {
     }
 
     @Override
-    public void setText(String text) {
-//        System.out.println(text);
-        super.setText(text);
-    }
-
-    @Override
     public void writeText(String text) {
         if (text.length() == 0 || Pattern.matches(this.allowedInputs, text)) {
             super.writeText(text);
         }
-    }
-
-    @Override
-    public boolean textboxKeyTyped(char typedChar, int keyCode) {
-//        System.out.println(typedChar);
-
-        return super.textboxKeyTyped(typedChar, keyCode);
     }
 
     public void setConfigsSection(ConfigsSection configsSection) {

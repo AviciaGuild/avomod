@@ -1,7 +1,7 @@
 package tk.avicia.avomod.utils;
 
 public class ScreenCoordinates {
-    private int startX, startY, endX, endY;
+    private final int startX, startY, endX, endY;
 
     public ScreenCoordinates(int startX, int startY, int endX, int endY) {
         this.startX = startX;

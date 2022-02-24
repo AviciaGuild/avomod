@@ -3,6 +3,7 @@ package tk.avicia.avomod.events;
 import com.google.gson.JsonElement;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.text.ITextComponent;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Renderer;
 import tk.avicia.avomod.utils.Utils;
@@ -53,9 +54,15 @@ public class WorldInfo {
 
     public static void updateCurrentWorld() {
         try {
-            String name = Avomod.getMC().getConnection().getPlayerInfo(UUID.fromString("16ff7452-714f-3752-b3cd-c3cb2068f6af")).getDisplayName().getUnformattedText();
+            if (Avomod.getMC().getConnection() == null) return;
+
+            ITextComponent nameFormatted = Avomod.getMC().getConnection().getPlayerInfo(UUID.fromString("16ff7452-714f-3752-b3cd-c3cb2068f6af")).getDisplayName();
+            if (nameFormatted == null) return;
+
+            String name = nameFormatted.getUnformattedText();
             currentWorld = name.substring(name.indexOf("[") + 1, name.indexOf("]"));
-        } catch (NullPointerException | StringIndexOutOfBoundsException ignored) {} // If the current world can't be found on tab it gets caught here ignore to prevent console spam in lobby
+        } catch (NullPointerException | StringIndexOutOfBoundsException ignored) {
+        } // If the current world can't be found on tab it gets caught here ignore to prevent console spam in lobby
     }
 
     public static void updateWorldData() {

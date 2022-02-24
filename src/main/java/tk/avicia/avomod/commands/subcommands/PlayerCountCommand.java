@@ -9,13 +9,14 @@ import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.webapi.OnlinePlayers;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 
 public class PlayerCountCommand extends Command {
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        String outputMessage = "";
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] params) throws CommandException {
+        String outputMessage;
         if (params.length >= 1) {
             String world = params[0];
             if (world.matches("^\\d+")) {
@@ -37,12 +38,14 @@ public class PlayerCountCommand extends Command {
     }
 
     @Override
-    public String getName() {
+    public @Nonnull
+    String getName() {
         return "playercount";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public @Nonnull
+    String getUsage(@Nonnull ICommandSender sender) {
         return "playercount <world>";
     }
 
@@ -52,7 +55,8 @@ public class PlayerCountCommand extends Command {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Arrays.asList("pc");
+    public @Nonnull
+    List<String> getAliases() {
+        return Collections.singletonList("pc");
     }
 }

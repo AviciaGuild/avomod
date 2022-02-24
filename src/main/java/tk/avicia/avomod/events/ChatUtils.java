@@ -13,20 +13,19 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class ChatUtils {
-    private static ITextComponent fullMessage;
     private static String guildMessageSenderNickname = "";
 
     public static void execute(ClientChatReceivedEvent event) {
-        fullMessage = event.getMessage();
+        ITextComponent fullMessage = event.getMessage();
         guildMessageSenderNickname = "";
-        doChecks(event, event.getMessage());
+        doChecks(event.getMessage());
         for (ITextComponent textComponent : event.getMessage().getSiblings()) {
             if (textComponent.getSiblings().size() > 0) {
                 for (ITextComponent textComponent1 : textComponent.getSiblings()) {
-                    doChecks(event, textComponent1);
+                    doChecks(textComponent1);
                 }
             } else {
-                doChecks(event, textComponent);
+                doChecks(textComponent);
             }
         }
         if (!guildMessageSenderNickname.equals("")) {
@@ -48,7 +47,7 @@ public class ChatUtils {
 
     }
 
-    private static void doChecks(ClientChatReceivedEvent event, ITextComponent textComponent) {
+    private static void doChecks(ITextComponent textComponent) {
         if (checkIfNickHover(textComponent)) {
             addRealNameToTextComponent(textComponent);
         }
@@ -82,6 +81,8 @@ public class ChatUtils {
     private static void addRealNameToTextComponent(ITextComponent textComponent) {
         if (checkIfNickHover(textComponent)) {
             HoverEvent hover = textComponent.getStyle().getHoverEvent();
+            if (hover == null) return;
+
             String hoverText = hover.getValue().getUnformattedText();
             String realName = hoverText.split(" ")[hoverText.split(" ").length - 1];
 
@@ -101,12 +102,16 @@ public class ChatUtils {
     private static boolean checkIfDM(ITextComponent textComponent) {
         Pattern pattern = Pattern.compile("^\\[" + Avomod.getMC().player.getDisplayNameString() + " \u27a4 .*] .*", Pattern.CASE_INSENSITIVE);
         String messageString = TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedText());
+        if (messageString == null) return false;
+
         return pattern.matcher(messageString).find();
     }
 
     private static void makeDMClickWork(ITextComponent textComponent) {
         if (checkIfDM(textComponent)) {
             String messageString = TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedText());
+            if (messageString == null) return;
+
             String command = "/msg" + messageString.substring(messageString.indexOf("\u27a4") + 1, messageString.indexOf("]")).replaceAll(" \\(.*\\)", "") + " ";
 
             for (ITextComponent sibling : textComponent.getSiblings()) {
@@ -126,12 +131,16 @@ public class ChatUtils {
     private static boolean checkIfShout(ITextComponent textComponent) {
         Pattern pattern = Pattern.compile("^(.* \\[WC\\d*] shouts:) .*", Pattern.CASE_INSENSITIVE);
         String messageString = TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedText());
+        if (messageString == null) return false;
+
         return pattern.matcher(messageString).find();
     }
 
     private static void makeShoutClickSuggestMsg(ITextComponent textComponent) {
         if (checkIfShout(textComponent)) {
             String messageString = TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedText());
+            if (messageString == null) return;
+
             String command = "/msg " + messageString.substring(0, messageString.indexOf("[") - 1) + " ";
 
             for (ITextComponent sibling : textComponent.getSiblings()) {
@@ -148,44 +157,47 @@ public class ChatUtils {
         }
     }
 
-    private static void makeShoutsGreen(ClientChatReceivedEvent event, ITextComponent textComponent) {
-        TextComponentString outputComponent;
-
-        if (textComponent.getUnformattedComponentText().startsWith(TextFormatting.AQUA + "")) {
-            outputComponent = new TextComponentString(TextFormatting.GREEN + TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedComponentText()));
-            outputComponent.setStyle(textComponent.getStyle());
-
-        } else if (textComponent.getUnformattedComponentText().startsWith(TextFormatting.DARK_AQUA + "")) {
-            outputComponent = new TextComponentString(TextFormatting.DARK_GREEN + TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedComponentText()));
-            outputComponent.setStyle(textComponent.getStyle());
-        } else {
-            outputComponent = new TextComponentString(textComponent.getUnformattedComponentText());
-            outputComponent.setStyle(textComponent.getStyle());
-        }
-
-        for (ITextComponent sibling : textComponent.getSiblings()) {
-            if (sibling.getFormattedText().startsWith(TextFormatting.AQUA + "")) {
-                TextComponentString newComponent = new TextComponentString(TextFormatting.GREEN + TextFormatting.getTextWithoutFormattingCodes(sibling.getFormattedText()));
-                newComponent.setStyle(sibling.getStyle());
-                outputComponent.appendSibling(newComponent);
-            } else if (sibling.getFormattedText().startsWith(TextFormatting.DARK_AQUA + "")) {
-                TextComponentString newComponent = new TextComponentString(TextFormatting.DARK_GREEN + TextFormatting.getTextWithoutFormattingCodes(sibling.getFormattedText()));
-                newComponent.setStyle(sibling.getStyle());
-                outputComponent.appendSibling(newComponent);
-            } else {
-                outputComponent.appendSibling(sibling);
-            }
-        }
-
-        event.setCanceled(true);
-        Avomod.getMC().player.sendMessage(outputComponent);
-    }
+//    private static void makeShoutsGreen(ClientChatReceivedEvent event, ITextComponent textComponent) {
+//        TextComponentString outputComponent;
+//
+//        if (textComponent.getUnformattedComponentText().startsWith(TextFormatting.AQUA + "")) {
+//            outputComponent = new TextComponentString(TextFormatting.GREEN + TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedComponentText()));
+//            outputComponent.setStyle(textComponent.getStyle());
+//
+//        } else if (textComponent.getUnformattedComponentText().startsWith(TextFormatting.DARK_AQUA + "")) {
+//            outputComponent = new TextComponentString(TextFormatting.DARK_GREEN + TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedComponentText()));
+//            outputComponent.setStyle(textComponent.getStyle());
+//        } else {
+//            outputComponent = new TextComponentString(textComponent.getUnformattedComponentText());
+//            outputComponent.setStyle(textComponent.getStyle());
+//        }
+//
+//        for (ITextComponent sibling : textComponent.getSiblings()) {
+//            if (sibling.getFormattedText().startsWith(TextFormatting.AQUA + "")) {
+//                TextComponentString newComponent = new TextComponentString(TextFormatting.GREEN + TextFormatting.getTextWithoutFormattingCodes(sibling.getFormattedText()));
+//                newComponent.setStyle(sibling.getStyle());
+//                outputComponent.appendSibling(newComponent);
+//            } else if (sibling.getFormattedText().startsWith(TextFormatting.DARK_AQUA + "")) {
+//                TextComponentString newComponent = new TextComponentString(TextFormatting.DARK_GREEN + TextFormatting.getTextWithoutFormattingCodes(sibling.getFormattedText()));
+//                newComponent.setStyle(sibling.getStyle());
+//                outputComponent.appendSibling(newComponent);
+//            } else {
+//                outputComponent.appendSibling(sibling);
+//            }
+//        }
+//
+//        event.setCanceled(true);
+//        Avomod.getMC().player.sendMessage(outputComponent);
+//    }
 
     private static boolean checkIfGuildChat(ITextComponent textComponent) {
         if (!textComponent.getUnformattedComponentText().startsWith("\u00A73")) return false;
         if (textComponent.getSiblings().size() == 0) return false;
+
         Pattern pattern = Pattern.compile("^(\\[\u2605*[A-Za-z_]*]) .*", Pattern.CASE_INSENSITIVE);
         String messageString = TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedText());
+        if (messageString == null) return false;
+
         if (messageString.startsWith("[Info]")) return false;
         return pattern.matcher(messageString).find();
     }
@@ -197,16 +209,21 @@ public class ChatUtils {
             ITextComponent sibling = textComponent.getSiblings().get(textComponent.getSiblings().size() - 1);
             String siblingText = TextFormatting.getTextWithoutFormattingCodes(sibling.getUnformattedText());
             ITextComponent temp = new TextComponentString("");
+            if (siblingText == null) return;
+
             // If there is a standalone "here" in the string
-            if (Arrays.stream(siblingText.split(" ")).anyMatch("here"::equals)) {
+            if (Arrays.asList(siblingText.split(" ")).contains("here")) {
                 String splitString = " here ";
                 if (siblingText.endsWith(" here")) splitString = " here";
-                if (!siblingText.contains(splitString)) return;
+                if (!siblingText.contains(splitString) || fullMessage == null) return;
+
                 temp.appendSibling(new TextComponentString(TextFormatting.AQUA + siblingText.substring(0, siblingText.indexOf(splitString))));
                 String command = "/find " + (fullMessage.substring(fullMessage.lastIndexOf("\u2605") == -1 ?
                         1 : fullMessage.lastIndexOf("\u2605") + 1, fullMessage.indexOf("]")));
                 // If the person typing "here" is nicked
                 HoverEvent hover = textComponent.getStyle().getHoverEvent();
+                if (hover == null) return;
+
                 String hoverText = hover.getValue().getUnformattedText();
                 if (hoverText.contains("real username") && hoverText.contains("Rank:")) {
                     String realName = hoverText.split(" ")[hoverText.split(" ").length - 1];
@@ -215,7 +232,7 @@ public class ChatUtils {
 
                 ITextComponent hereComponent = new TextComponentString(TextFormatting.UNDERLINE + splitString + TextFormatting.RESET);
                 hereComponent.getStyle().setHoverEvent(
-                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)))
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)))
                         .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
                 temp.appendSibling(hereComponent);
                 temp.appendSibling(new TextComponentString(TextFormatting.AQUA + siblingText.substring(siblingText.indexOf(splitString) + splitString.length())));

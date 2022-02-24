@@ -11,14 +11,15 @@ import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.WorldUpTime;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class UpCommand extends Command {
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] params) throws CommandException {
         int amount = 5;
         int minAge = 0;
         int maxAge = Integer.MAX_VALUE;
@@ -57,18 +58,20 @@ public class UpCommand extends Command {
                     amount++;
             }
         }
-        if(sentWorlds == 0){
+        if (sentWorlds == 0) {
             sender.sendMessage(new TextComponentString(TextFormatting.RED + "No worlds found with that criteria"));
         }
     }
 
     @Override
-    public String getName() {
+    public @Nonnull
+    String getName() {
         return "up";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public @Nonnull
+    String getUsage(@Nonnull ICommandSender sender) {
         return "up <amount> <minAge(minutes)> <maxAge(minutes)>";
     }
 
@@ -78,7 +81,8 @@ public class UpCommand extends Command {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Arrays.asList();
+    public @Nonnull
+    List<String> getAliases() {
+        return Collections.emptyList();
     }
 }

@@ -8,15 +8,17 @@ import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.commands.PlayerTabCompletionCommand;
 import tk.avicia.avomod.webapi.PlayerData;
 
-import java.util.*;
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 public class ChestCountCommand extends PlayerTabCompletionCommand {
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        String outputMessage = "";
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] params) throws CommandException {
+        String outputMessage;
         PlayerData player;
-        String username = "";
-        if (params != null && params.length >= 1) {
+        String username;
+        if (params.length >= 1) {
             username = params[0];
         } else {
             username = sender.getName();
@@ -35,12 +37,14 @@ public class ChestCountCommand extends PlayerTabCompletionCommand {
     }
 
     @Override
-    public String getName() {
+    public @Nonnull
+    String getName() {
         return "chestcount";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public @Nonnull
+    String getUsage(@Nonnull ICommandSender sender) {
         return "chestcount <username>";
     }
 
@@ -50,7 +54,8 @@ public class ChestCountCommand extends PlayerTabCompletionCommand {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Arrays.asList("cc");
+    public @Nonnull
+    List<String> getAliases() {
+        return Collections.singletonList("cc");
     }
 }

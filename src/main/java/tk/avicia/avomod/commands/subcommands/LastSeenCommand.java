@@ -5,20 +5,20 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.commands.PlayerTabCompletionCommand;
 import tk.avicia.avomod.webapi.PlayerData;
 
+import javax.annotation.Nonnull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
 public class LastSeenCommand extends PlayerTabCompletionCommand {
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] params) throws CommandException {
         String outputMessage = "";
         if (params.length >= 1) {
             String username = params[0];
@@ -30,8 +30,8 @@ public class LastSeenCommand extends PlayerTabCompletionCommand {
                     simpleDateObject.setTimeZone(TimeZone.getTimeZone("UTC"));
                     Date playerLastJoinDateObject = simpleDateObject.parse(playerLastJoin.replace("T", " ").split("[.]")[0]);
                     long lastSeenMilliseconds = new Date().getTime() - playerLastJoinDateObject.getTime();
-                    int lastSeenDays = (int) Math.floor(lastSeenMilliseconds / 86400000);
-                    int lastSeenHours = (int) Math.floor(lastSeenMilliseconds / 3600000) % 24;
+                    int lastSeenDays = (int) Math.floor(lastSeenMilliseconds / 86400000.0);
+                    int lastSeenHours = (int) Math.floor(lastSeenMilliseconds / 3600000.0) % 24;
 
                     outputMessage = TextFormatting.DARK_RED + playerData.getPlayerName() + TextFormatting.RED + " was last seen "
                             + lastSeenDays + " days, and " + lastSeenHours + " hours ago";
@@ -43,7 +43,7 @@ public class LastSeenCommand extends PlayerTabCompletionCommand {
                 outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a Wynncraft player.";
 
             }
-        } else{
+        } else {
             outputMessage = TextFormatting.RED + "Correct usage: /am lastseen <username>";
         }
 
@@ -52,12 +52,14 @@ public class LastSeenCommand extends PlayerTabCompletionCommand {
     }
 
     @Override
-    public String getName() {
+    public @Nonnull
+    String getName() {
         return "lastseen";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public @Nonnull
+    String getUsage(@Nonnull ICommandSender sender) {
         return "lastseen <username>";
     }
 
@@ -67,7 +69,8 @@ public class LastSeenCommand extends PlayerTabCompletionCommand {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Arrays.asList("ls");
+    public @Nonnull
+    List<String> getAliases() {
+        return Collections.singletonList("ls");
     }
 }

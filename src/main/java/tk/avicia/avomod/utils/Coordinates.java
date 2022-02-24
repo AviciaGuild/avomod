@@ -1,7 +1,7 @@
 package tk.avicia.avomod.utils;
 
 public class Coordinates {
-    private int x, y, z;
+    private final int x, y, z;
 
     public Coordinates(int x, int y, int z) {
         this.x = x;

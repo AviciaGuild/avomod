@@ -44,20 +44,20 @@ public class Renderer {
         fontRenderer.drawString(text, x, y, color.getRGB());
     }
 
-    public static void drawStringWithShadow(String text, int x, int y, Color color, int maxWidth) {
-        FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
-        String newText = text;
-        if (!text.equals(fontRenderer.trimStringToWidth(text, maxWidth))) {
-            newText = fontRenderer.trimStringToWidth(text, maxWidth - 3) + "..";
-        }
-        fontRenderer.drawString(newText, x + 1, y + 1, Utils.getContrastColor(color).getRGB());
-        fontRenderer.drawString(newText, x, y, color.getRGB());
-    }
-
-    public static void drawCenteredString(String text, int x, int y, Color color) {
-        FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
-        fontRenderer.drawString(text, x - fontRenderer.getStringWidth(text) / 2, y, color.getRGB());
-    }
+//    public static void drawStringWithShadow(String text, int x, int y, Color color, int maxWidth) {
+//        FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
+//        String newText = text;
+//        if (!text.equals(fontRenderer.trimStringToWidth(text, maxWidth))) {
+//            newText = fontRenderer.trimStringToWidth(text, maxWidth - 3) + "..";
+//        }
+//        fontRenderer.drawString(newText, x + 1, y + 1, Utils.getContrastColor(color).getRGB());
+//        fontRenderer.drawString(newText, x, y, color.getRGB());
+//    }
+//
+//    public static void drawCenteredString(String text, int x, int y, Color color) {
+//        FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
+//        fontRenderer.drawString(text, x - fontRenderer.getStringWidth(text) / 2, y, color.getRGB());
+//    }
 
     public static void drawCenteredShadowedString(String text, int x, int y, Color color) {
         FontRenderer fontRenderer = Avomod.getMC().fontRenderer;

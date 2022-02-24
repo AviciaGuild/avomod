@@ -1,5 +1,6 @@
 package tk.avicia.avomod.utils;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -62,7 +63,7 @@ public class BeaconManager {
             Avomod.getMC().renderEngine.bindTexture(beamResource);  // binds the texture
             GlStateManager.glTexParameteri(3553, 10242, 10497);
 
-            float time = Avomod.getMC().getSystemTime() / 50F;
+            float time = Minecraft.getSystemTime() / 50F;
             float offset = -(-time * 0.2F - MathHelper.fastFloor(-time * 0.1F)) * 0.6F;
 
             double d1 = 256.0F * alpha;
@@ -111,6 +112,8 @@ public class BeaconManager {
         GlStateManager.alphaFunc(516, 0.1f);
         GlStateManager.pushMatrix();
         Entity viewer = Avomod.getMC().getRenderViewEntity();
+        if (viewer == null) return;
+
         double viewerX = viewer.lastTickPosX + (viewer.posX - viewer.lastTickPosX) * partialTicks;
         double viewerY = viewer.lastTickPosY + (viewer.posY - viewer.lastTickPosY) * partialTicks;
         double viewerZ = viewer.lastTickPosZ + (viewer.posZ - viewer.lastTickPosZ) * partialTicks;
@@ -154,7 +157,7 @@ public class BeaconManager {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder worldrenderer = tessellator.getBuffer();
         int i = 0;
-        double j = fontRenderer.getStringWidth(text) / 2;
+        double j = fontRenderer.getStringWidth(text) / 2.0;
         GlStateManager.disableTexture2D();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
         worldrenderer.pos((-j - 1), (-1 + i), 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();

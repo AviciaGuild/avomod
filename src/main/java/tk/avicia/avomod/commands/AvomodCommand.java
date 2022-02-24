@@ -10,6 +10,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.IClientCommand;
 import tk.avicia.avomod.Avomod;
 
+import javax.annotation.Nonnull;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -24,7 +25,9 @@ public class AvomodCommand extends CommandBase implements IClientCommand {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] params) throws CommandException {
+        if (params.length < 1) return;
+
         if (params[0].contains("configs")) {
             Command commandToExecute = Avomod.commands.get("configs");
 
@@ -38,43 +41,44 @@ public class AvomodCommand extends CommandBase implements IClientCommand {
 
             return;
         }
+
         Thread thread = new Thread(() -> {
-            if (params.length >= 1) {
-                Command commandToExecute = Avomod.commands.get(params[0]);
+            Command commandToExecute = Avomod.commands.get(params[0]);
 
-                if (commandToExecute == null) {
-                    commandToExecute = Avomod.aliases.get(params[0]);
-                }
+            if (commandToExecute == null) {
+                commandToExecute = Avomod.aliases.get(params[0]);
+            }
 
-                if (commandToExecute != null) {
-                    try {
-                        commandToExecute.execute(server, sender, Arrays.copyOfRange(params, 1, params.length));
-                    } catch (Exception e) {
-                        TextComponentString textComponent = new TextComponentString(TextFormatting.RED + "Command Failed");
+            if (commandToExecute != null) {
+                try {
+                    commandToExecute.execute(server, sender, Arrays.copyOfRange(params, 1, params.length));
+                } catch (Exception e) {
+                    TextComponentString textComponent;
 
-                        StringWriter sw = new StringWriter();
-                        e.printStackTrace(new PrintWriter(sw));
-                        String exceptionAsString = sw.toString();
-                        textComponent = new TextComponentString(TextFormatting.RED + "Command Failed: " + exceptionAsString);
+                    StringWriter sw = new StringWriter();
+                    e.printStackTrace(new PrintWriter(sw));
+                    String exceptionAsString = sw.toString();
+                    textComponent = new TextComponentString(TextFormatting.RED + "Command Failed: " + exceptionAsString);
 
-                        sender.sendMessage(textComponent);
-                    }
-                } else {
-                    TextComponentString textComponent = new TextComponentString("That command does not exist.");
                     sender.sendMessage(textComponent);
                 }
+            } else {
+                TextComponentString textComponent = new TextComponentString("That command does not exist.");
+                sender.sendMessage(textComponent);
             }
         });
         thread.start();
     }
 
     @Override
-    public String getName() {
+    public @Nonnull
+    String getName() {
         return "avomod";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public @Nonnull
+    String getUsage(@Nonnull ICommandSender sender) {
         return "/avomod <command>";
     }
 
@@ -84,7 +88,8 @@ public class AvomodCommand extends CommandBase implements IClientCommand {
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
+    public @Nonnull
+    List<String> getTabCompletions(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 1) {
             return getListOfStringsMatchingLastWord(args, Avomod.commands.keySet());
         } else {
@@ -107,7 +112,8 @@ public class AvomodCommand extends CommandBase implements IClientCommand {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Arrays.asList("am");
+    public @Nonnull
+    List<String> getAliases() {
+        return Collections.singletonList("am");
     }
 }

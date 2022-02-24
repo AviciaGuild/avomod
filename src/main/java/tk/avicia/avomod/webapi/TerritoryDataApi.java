@@ -10,12 +10,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 public class TerritoryDataApi {
+    public static List<String> territoryList;
     private JsonObject territoryData;
 
     public TerritoryDataApi() {
@@ -41,6 +41,7 @@ public class TerritoryDataApi {
                 in.close();
 
                 this.territoryData = new JsonParser().parse(response.toString()).getAsJsonObject();
+                territoryList = this.territoryData.getAsJsonObject("territories").entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList());
             } else {
                 System.out.println("GET request not worked");
             }
@@ -85,28 +86,5 @@ public class TerritoryDataApi {
         int middleX = (locationObject.get("startX").getAsInt() + locationObject.get("endX").getAsInt()) / 2;
         int middleZ = (locationObject.get("startY").getAsInt() + locationObject.get("endY").getAsInt()) / 2;
         return new Coordinates(middleX, 0, middleZ);
-    }
-
-    public Tuple<String, Double>[] getTerritoriesOnCooldown() {
-        if (this.territoryData == null) return null;
-        for (Map.Entry<String, JsonElement> territory : this.territoryData.getAsJsonObject("territories").entrySet()) {
-            String acquired = territory.getValue().getAsJsonObject().get("acquired").getAsString();
-
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                Date acquiredDate = sdf.parse(acquired);
-                long cooldownMS = System.currentTimeMillis() - acquiredDate.getTime();
-                double cooldownMinutes = Math.floor(cooldownMS / 60000.0 * 100) / 100;
-
-                if (territory.getKey().equals("Light Forest Entrance")) {
-                    System.out.println(cooldownMinutes);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
     }
 }

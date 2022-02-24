@@ -7,10 +7,12 @@ import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Renderer;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class ConfigsGui extends GuiScreen {
     private final int settingLineHeight = 27;
@@ -87,7 +89,7 @@ public class ConfigsGui extends GuiScreen {
     }
 
     @Override
-    public void onResize(Minecraft mineIn, int w, int h) {
+    public void onResize(@Nonnull Minecraft mineIn, int w, int h) {
         super.onResize(mineIn, w, h);
 
         this.initGui();
@@ -140,7 +142,7 @@ public class ConfigsGui extends GuiScreen {
     public void scroll(int amount) {
         if (this.totalSectionsList.size() == this.sectionList.size()) return;
 
-        int totalAllowed = (int) Math.floor(this.height / settingLineHeight);
+        int totalAllowed = (int) Math.floor((double) this.height / settingLineHeight);
         int startingIndex = this.totalSectionsList.indexOf(this.sectionList.get(0));
         if (amount < 0 && startingIndex + totalAllowed < this.totalSectionsList.size()) {
             startingIndex++;
@@ -178,7 +180,11 @@ public class ConfigsGui extends GuiScreen {
         ConfigsSection sectionToAdd;
 
         if (config instanceof ConfigToggle) {
-            ConfigsButton configButton = new ConfigsButton(this.sectionList.size(), this.sectionList.size() * settingLineHeight + startingHeight, new String[]{"Enabled", "Disabled"}, config.defaultValue, this.width);
+            String[] choices = new String[]{"Enabled", "Disabled"};
+            int x = this.width - (this.width / 4) - (Stream.of(choices).mapToInt((String choice) -> Avomod.getMC().fontRenderer.getStringWidth(choice)).max().getAsInt() + 10);
+            int width = Stream.of(choices).mapToInt((String choice) -> Avomod.getMC().fontRenderer.getStringWidth(choice)).max().getAsInt() + 10;
+
+            ConfigsButton configButton = new ConfigsButton(this.sectionList.size(), x, this.sectionList.size() * settingLineHeight + startingHeight, width, choices, config.defaultValue);
             sectionToAdd = new ConfigsSection(config.sectionText, configButton, config.configsKey);
         } else {
             ConfigsTextField textField = new ConfigsTextField(this.sectionList.size(), ((ConfigInput) config).allowedInputs, ((ConfigInput) config).finalValidation, Avomod.getMC().fontRenderer, this.sectionList.size() * settingLineHeight + startingHeight + 2, 80, 16, this.width);

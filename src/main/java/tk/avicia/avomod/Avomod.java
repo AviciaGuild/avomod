@@ -25,12 +25,15 @@ import tk.avicia.avomod.settings.KeybindSettings;
 import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Utils;
+import tk.avicia.avomod.war.WarTrackerEvents;
 import tk.avicia.avomod.webapi.OnlinePlayers;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
-import tk.avicia.avomod.webapi.UpdateChecker;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Mod(modid = Avomod.MODID, name = Avomod.NAME, version = Avomod.VERSION)
 public class Avomod {
@@ -70,6 +73,7 @@ public class Avomod {
             new ConfigToggle("Hide entities in wars", "Disabled", "hideEntitiesInWar"),
             new ConfigToggle("Auto /stream on world swap", "Disabled", "autoStream"),
             new ConfigToggle("Aura Ping", "Enabled", "auraPing"),
+            new ConfigToggle("Notify for avomod BETA version (may have bugs)", "Disabled", "betaNotification"),
             new ConfigInput("Aura Ping Color", "FF6F00", "[\\da-fA-F]+", "^[\\da-fA-F]{6}$", 6, "auraPingColor"),
             new ConfigToggle("Disable everything", "Disabled", "disableAll")
     };
@@ -93,6 +97,7 @@ public class Avomod {
             }
         }
 
+        if (settings == null) return;
         keybinds.entrySet().removeIf(entry -> !settings.has(entry.getKey()));
     }
 
@@ -115,27 +120,34 @@ public class Avomod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         this.initializeConfigs();
-        UpdateChecker.checkUpdate();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        Thread thread = new Thread(() -> {
-            do {
-                onlinePlayers = new OnlinePlayers();
-                WorldInfo.updateWorldData();
-                try {
-                    Thread.sleep(60 * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } while (true);
-        });
-        thread.start();
+//        new Thread(() -> {
+//            do {
+//                onlinePlayers = new OnlinePlayers();
+//                WorldInfo.updateWorldData();
+//                try {
+//                    Thread.sleep(60 * 1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            } while (true);
+//        }).start();
+
+        Runnable worldDataUpdater = () -> {
+            onlinePlayers = new OnlinePlayers();
+            WorldInfo.updateWorldData();
+        };
+        ScheduledExecutorService worldDataUpdaterService = Executors.newScheduledThreadPool(1);
+        worldDataUpdaterService.scheduleAtFixedRate(worldDataUpdater, 0, 60, TimeUnit.SECONDS);
 
         territoryData = new TerritoryDataApi();
 
         MinecraftForge.EVENT_BUS.register(new EventHandlerClass());
+        MinecraftForge.EVENT_BUS.register(new WarTrackerEvents());
+
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
         ClientCommandHandler.instance.registerCommand(new GetTokenCommand());
 
@@ -148,7 +160,7 @@ public class Avomod {
         JsonObject configsJson = configsFile.readJson();
         boolean changed = false;
 
-        for (Config config : this.configsArray) {
+        for (Config config : configsArray) {
             JsonElement configElement = configsJson.get(config.configsKey);
 
             if (configElement == null || configElement.isJsonNull()) {

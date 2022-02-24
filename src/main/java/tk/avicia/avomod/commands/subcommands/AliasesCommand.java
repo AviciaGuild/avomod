@@ -8,31 +8,34 @@ import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.commands.Command;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class AliasesCommand extends Command {
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] params) throws CommandException {
-        String outputMessage = TextFormatting.BLUE + "Aliases for AVOMod:";
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] params) throws CommandException {
+        StringBuilder outputMessage = new StringBuilder(TextFormatting.BLUE + "Aliases for AVOMod:");
 
         for (Map.Entry<String, Command> command : Avomod.commands.entrySet()) {
             String aliases = String.join(", ", command.getValue().getAliases());
-            outputMessage += "\n" + TextFormatting.GOLD + command.getKey() + ": " + TextFormatting.GREEN + aliases;
+            outputMessage.append("\n").append(TextFormatting.GOLD).append(command.getKey()).append(": ").append(TextFormatting.GREEN).append(aliases);
         }
 
-        TextComponentString textComponent = new TextComponentString(outputMessage);
+        TextComponentString textComponent = new TextComponentString(outputMessage.toString());
         sender.sendMessage(textComponent);
     }
 
     @Override
-    public String getName() {
+    public @Nonnull
+    String getName() {
         return "aliases";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public @Nonnull
+    String getUsage(@Nonnull ICommandSender sender) {
         return "aliases <command>";
     }
 
@@ -42,7 +45,8 @@ public class AliasesCommand extends Command {
     }
 
     @Override
-    public List<String> getAliases() {
-        return Arrays.asList("al");
+    public @Nonnull
+    List<String> getAliases() {
+        return Collections.singletonList("al");
     }
 }

@@ -31,7 +31,6 @@ import java.util.Map;
 
 public class EventHandlerClass {
     private int tick = 0;
-    private boolean guiOpen = false;
     private boolean guiJustOpened = false;
 
     @SubscribeEvent
@@ -74,9 +73,15 @@ public class EventHandlerClass {
         }
 
         if (message.trim().startsWith("Loading Resource Pack...")) {
-            Thread thread = new Thread(UpdateChecker::checkUpdate);
-            thread.start();
+            new Thread(() -> {
+                UpdateChecker.checkStableUpdate();
+
+                if (Avomod.getConfigBoolean("betaNotification")) {
+                    UpdateChecker.checkBetaUpdate();
+                }
+            }).start();
         }
+
         if (Avomod.getConfigBoolean("dpsInWars") && System.currentTimeMillis() - WarDPS.lastTimeInWar < 5000 && message.contains(WarDPS.previousTerritoryName)) {
             // If you saw a tower health bar less than 5 seconds ago (if you're in a war)
             if (message.startsWith("[WAR] You have taken control of ")) {
@@ -224,7 +229,7 @@ public class EventHandlerClass {
         if (!(openContainer instanceof ContainerChest)) {
             AverageLevel.isChestNew = true;
         }
-        ToolTipState.isTooltipRendering = false;
+//        ToolTipState.isTooltipRendering = false;
 
         tick++;
         if (tick % 60000 == 0) {
@@ -236,8 +241,6 @@ public class EventHandlerClass {
                 AutoStream.execute();
             }
         }
-
-        guiOpen = false;
     }
 
     @SubscribeEvent
@@ -305,31 +308,16 @@ public class EventHandlerClass {
 
     }
 
-    @SubscribeEvent
-    public void onScreenDraw(GuiScreenEvent.DrawScreenEvent.Post event) {
-        if (Avomod.getConfigBoolean("disableAll")) return;
+//    @SubscribeEvent
+//    public void onTooltipRender(RenderTooltipEvent.PostBackground event) {
+//        if (Avomod.getConfigBoolean("disableAll")) return;
 
-        if (Avomod.getMC().player == null || event.getGui() == null) {
-            return;
-        }
-
-        // Stuff you draw here appears above the chest slots and behind the items z-levels, so you can use this for
-        // highlights
-        if (!(event.getGui() instanceof GuiChat)) {
-            guiOpen = true;
-        }
-    }
-
-    @SubscribeEvent
-    public void onTooltipRender(RenderTooltipEvent.PostBackground event) {
-        if (Avomod.getConfigBoolean("disableAll")) return;
-
-        ToolTipState.isTooltipRendering = true;
-        ToolTipState.toolTipX = event.getX();
-        ToolTipState.toolTipY = event.getY();
-        ToolTipState.toolTipWidth = event.getWidth();
-        ToolTipState.toolTipHeight = event.getHeight();
-    }
+//        ToolTipState.isTooltipRendering = true;
+//        ToolTipState.toolTipX = event.getX();
+//        ToolTipState.toolTipY = event.getY();
+//        ToolTipState.toolTipWidth = event.getWidth();
+//        ToolTipState.toolTipHeight = event.getHeight();
+//    }
 
     @SubscribeEvent
     public void bossInfo(RenderGameOverlayEvent.BossInfo event) {
@@ -356,14 +344,12 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void entityRender(RenderLivingEvent.Pre<EntityLivingBase> event) {
-//        if (!Avomod.getConfigBoolean("hideEntitiesInWar") || (System.currentTimeMillis() - WarDPS.lastTimeInWar) > 2000)
-//            return;
+        if (!Avomod.getConfigBoolean("hideEntitiesInWar") || (System.currentTimeMillis() - WarDPS.lastTimeInWar) > 2000)
+            return;
 
         EntityLivingBase entity = event.getEntity();
-//        if (entity.getTeam() == null) {
-//            event.setCanceled(true);
-//        }
-
-//        System.out.println(entity);
+        if (entity.getTeam() == null) {
+            event.setCanceled(true);
+        }
     }
 }
