@@ -25,7 +25,6 @@ import tk.avicia.avomod.settings.KeybindSettings;
 import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Utils;
-import tk.avicia.avomod.war.WarTrackerEvents;
 import tk.avicia.avomod.webapi.OnlinePlayers;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
 
@@ -124,18 +123,6 @@ public class Avomod {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-//        new Thread(() -> {
-//            do {
-//                onlinePlayers = new OnlinePlayers();
-//                WorldInfo.updateWorldData();
-//                try {
-//                    Thread.sleep(60 * 1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            } while (true);
-//        }).start();
-
         Runnable worldDataUpdater = () -> {
             onlinePlayers = new OnlinePlayers();
             WorldInfo.updateWorldData();
@@ -146,7 +133,7 @@ public class Avomod {
         territoryData = new TerritoryDataApi();
 
         MinecraftForge.EVENT_BUS.register(new EventHandlerClass());
-        MinecraftForge.EVENT_BUS.register(new WarTrackerEvents());
+//        MinecraftForge.EVENT_BUS.register(new WarTrackerEvents());
 
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
         ClientCommandHandler.instance.registerCommand(new GetTokenCommand());
