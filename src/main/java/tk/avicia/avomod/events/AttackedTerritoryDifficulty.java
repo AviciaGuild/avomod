@@ -38,9 +38,13 @@ public class AttackedTerritoryDifficulty {
 
         if (timerSplit.length < 2) return;
         String timer = TextFormatting.getTextWithoutFormattingCodes(timerSplit[1].split("m")[0]);
+        if (timer == null) return;
 
         if (territoryDefenseMessage.contains("Territory Defences")) {
-            territoryDefense = TextFormatting.getTextWithoutFormattingCodes(territoryDefenseMessage).split(": ")[1];
+            String unformattedTerritoryDefenseMessage = TextFormatting.getTextWithoutFormattingCodes(territoryDefenseMessage);
+            if (unformattedTerritoryDefenseMessage == null) return;
+
+            territoryDefense = unformattedTerritoryDefenseMessage.split(": ")[1];
         }
 
         if (territoryDefense == null) return;
@@ -52,7 +56,7 @@ public class AttackedTerritoryDifficulty {
     }
 
     public static void receivedChatMessage(String message, String territory) {
-        if (System.currentTimeMillis() - currentTime < 5000 && territory.equals((currentTerritory))) {
+        if (System.currentTimeMillis() - currentTime < 5000 && territory.equals(currentTerritory)) {
             if (Avomod.getConfigBoolean("terrDefenseInChat")) {
                 Avomod.getMC().player.sendChatMessage("/g " + currentTerritory + " defense is " + currentDefense);
             }

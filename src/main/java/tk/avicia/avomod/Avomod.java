@@ -24,6 +24,8 @@ import tk.avicia.avomod.settings.KeybindSettings;
 import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.Keybind;
 import tk.avicia.avomod.utils.Utils;
+import tk.avicia.avomod.war.WarEvents;
+import tk.avicia.avomod.war.WarsCommand;
 import tk.avicia.avomod.webapi.OnlinePlayers;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
 
@@ -37,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 public class Avomod {
     public static final String MODID = "avomod";
     public static final String NAME = "avomod";
-    public static final String VERSION = "1.3.4";
+    public static final String VERSION = "1.3.5";
     public static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("help", new HelpCommand());
         put("chestcount", new ChestCountCommand());
@@ -53,6 +55,7 @@ public class Avomod {
         put("keybinds", new KeybindsCommand());
         put("configs", new ConfigsCommand());
         put("soulpoints", new SoulPointCommand());
+        put("wars", new WarsCommand());
     }};
     public static Map<String, Command> aliases = new HashMap<>();
     public static Map<String, Keybind> keybinds = new HashMap<>();
@@ -73,6 +76,7 @@ public class Avomod {
             new ConfigToggle("Aura Ping", "Enabled", "auraPing"),
             new ConfigToggle("Notify for avomod BETA version (may have bugs)", "Disabled", "betaNotification"),
             new ConfigInput("Aura Ping Color", "FF6F00", "[\\da-fA-F]+", "^[\\da-fA-F]{6}$", 6, "auraPingColor"),
+            new ConfigToggle("Display weekly warcount on screen", "Disabled", "displayWeeklyWarcount"),
             new ConfigToggle("Disable everything", "Disabled", "disableAll")
     };
     public static TerritoryDataApi territoryData;
@@ -132,6 +136,7 @@ public class Avomod {
         territoryData = new TerritoryDataApi();
 
         MinecraftForge.EVENT_BUS.register(new EventHandlerClass());
+        MinecraftForge.EVENT_BUS.register(new WarEvents());
 
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
 
