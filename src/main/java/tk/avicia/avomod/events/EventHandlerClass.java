@@ -179,6 +179,9 @@ public class EventHandlerClass {
                     e.printStackTrace();
                 }
             }
+            if (containerName.equals("Trade Overview")) {
+                TradeMarketOverviewHelper.execute(openContainer);
+            }
         }
 
         guiJustOpened = false;
