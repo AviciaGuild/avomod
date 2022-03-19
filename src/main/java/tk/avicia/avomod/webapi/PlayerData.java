@@ -62,6 +62,11 @@ public class PlayerData {
         return totalChestCount;
     }
 
+    public boolean isPlayerOnline() {
+        JsonObject locationData = this.playerData.getAsJsonObject("meta").getAsJsonObject("location");
+        return locationData.get("online").getAsBoolean();
+    }
+
     public String getWorld() {
         JsonObject locationData = this.playerData.getAsJsonObject("meta").getAsJsonObject("location");
 

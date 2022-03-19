@@ -18,7 +18,7 @@ public class Utils {
     }
 
     public static String getReadableTime(int minutes) {
-        return (int) (Math.floor(minutes / 60.0)) + " h " + minutes % 60 + " m";
+        return (minutes >= 3600 ? (int) Math.floor((minutes / 1440.0)) + "d ": "") + (int) (Math.floor((minutes % 1440) / 60.0)) + "h " + minutes % 60 + "m";
     }
 
 //    public static void sendClickPacket(Container container, int slotId, ClickType clickType, int clickButton, ItemStack itemStack) {

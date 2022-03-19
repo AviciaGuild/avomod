@@ -49,12 +49,12 @@ public class WarsCommand extends Command {
     @Override
     public @Nonnull
     String getUsage(@Nonnull ICommandSender sender) {
-        return "age <world>";
+        return "wars <past n days>";
     }
 
     @Override
     public String getDescription() {
-        return "Shows the age of a specific world";
+        return "Shows how many wars you have done with avomod active";
     }
 
     @Override

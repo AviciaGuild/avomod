@@ -7,6 +7,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.commands.PlayerTabCompletionCommand;
 import tk.avicia.avomod.utils.Utils;
+import tk.avicia.avomod.webapi.GuildData;
 import tk.avicia.avomod.webapi.PlayerData;
 
 import javax.annotation.Nonnull;
@@ -26,8 +27,9 @@ public class PlayerGuildCommand extends PlayerTabCompletionCommand {
                 String playerGuildRank = playerData.getGuildRank();
 
                 if (playerGuild != null && playerGuildRank != null) {
+                    GuildData guildData = new GuildData(playerGuild);
                     outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is a " + TextFormatting.AQUA +
-                            Utils.firstLetterCapital(playerGuildRank) + TextFormatting.GRAY + " in the guild " + TextFormatting.AQUA + playerGuild;
+                            Utils.firstLetterCapital(playerGuildRank) + TextFormatting.GRAY + " in the guild " + TextFormatting.AQUA + playerGuild + TextFormatting.GRAY + ". They have been in the guild for " + TextFormatting.AQUA + guildData.getTimeInGuild(playerData.getPlayerName());
                 } else {
                     outputMessage = TextFormatting.AQUA + playerData.getPlayerName() + TextFormatting.GRAY + " is not in a guild.";
                 }

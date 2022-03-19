@@ -26,7 +26,7 @@ public class AgeCommand extends Command {
             String world = params[0];
             try {
                 Tuple<String, Integer> worldAge = worldUpTime.getAge(world);
-                outputMessage = TextFormatting.GOLD + worldAge.x + " : " + TextFormatting.DARK_AQUA +
+                outputMessage = TextFormatting.GOLD + worldAge.x + ": " + TextFormatting.DARK_AQUA +
                         Utils.getReadableTime(worldAge.y);
             } catch (NoSuchFieldException NoSuchFieldException) {
                 outputMessage = TextFormatting.DARK_RED + params[0] + TextFormatting.RED + " Could not be found!";

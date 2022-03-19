@@ -4,11 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import tk.avicia.avomod.utils.Utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,6 +85,18 @@ public class GuildData {
             }
         }
         return member;
+    }
+
+    public String getTimeInGuild(String member) {
+        JsonArray members = getMembers();
+        for (JsonElement jsonElement : members) {
+            JsonObject memberData = jsonElement.getAsJsonObject();
+            if (memberData.get("name").getAsString().equals(member)) {
+                Instant instant = Instant.parse(memberData.get("joined").getAsString());
+                return Utils.getReadableTime((int) ((System.currentTimeMillis() - instant.toEpochMilli()) / 60000));
+            }
+        }
+        return "0 minutes";
     }
 
 //    public String getOwner(){

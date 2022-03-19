@@ -26,10 +26,10 @@ public class WorldInfo {
             String newestWorldString = "";
             try {
                 Map.Entry<String, JsonElement> newestWorld = worldData.getWorldUpTimeData().get(0);
-                newestWorldString = "Newest world " + newestWorld.getKey() + " : " +
+                newestWorldString = "Newest world " + newestWorld.getKey() + ": " +
                         Utils.getReadableTime(Integer.parseInt(newestWorld.getValue().getAsJsonObject().get("age").getAsString()));
                 if (currentWorld.length() > 1) { // Not in streamer mode or lobby
-                    currentWorldString = "Your world " + currentWorld + " : " + Utils.getReadableTime(worldData.getAge(currentWorld).y);
+                    currentWorldString = "Your world " + currentWorld + ": " + Utils.getReadableTime(worldData.getAge(currentWorld).y);
                 }
             } catch (NoSuchFieldException | NullPointerException e) {
                 e.printStackTrace();
