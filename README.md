@@ -77,3 +77,6 @@ Way for you to create your own chat keybinds, in which a command is executed on 
 * Hide entities (mobs and damages) in wars
 * Display war info (time in war, tower EHP/DPS, team DPS)
 * More intuitive trade menu sell menu
+    * Green plus means finished buy order
+    * Green checkmark means finished sell order
+    * Yellow checkmark means sell order that ran out of time
