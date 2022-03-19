@@ -22,13 +22,13 @@ public class TradeMarketOverviewHelper {
             if (itemStack.getUnlocalizedName().equals("item.shovelGold")) {
                 if (itemStack.getDisplayName().contains("Selling")) {
                     if (soldOut.isPresent()) {
-                        itemStack.setItemDamage(20);
+                        itemStack.setItemDamage(20); // Green Checkmark
                     } else {
-                        itemStack.setItemDamage(19);
+                        itemStack.setItemDamage(19); // Yellow Checkmark
                     }
                 }
                 if (itemStack.getDisplayName().contains("Buying")) {
-                    itemStack.setItemDamage(22);
+                    itemStack.setItemDamage(22); // Green Plus
                 }
             }
         }
