@@ -30,10 +30,14 @@ notify Albb_n or newracket and provide the crash-report, so we can fix it. Thank
     * /avomod onlinemembers &lt;guild name or tag>
 * Player count command (lists player count of world)
     * /avomod playercount &lt;world>
-* Player guild command (lists guild that player is in)
+* Player guild command (lists guild that player is in and time in guild)
     * /avomod playerguild &lt;ign>
 * Active worlds command (lists most recent worlds and their age)
     * /avomod up &lt;amount to show (optional, defaults to 5)>
+* Warcount command (only displays wars done while avomod is active)
+    * /avomod wars <past n days (OPTIONAL, defaults to infinity)
+* Soulpoints command (shows which worlds will soon get soulpoints)
+    * /am soulpoints
 
 ## **<span style="text-decoration:underline;">Custom Keybinds:</span>**
 
@@ -46,15 +50,18 @@ Way for you to create your own chat keybinds, in which a command is executed on 
 * Remove keybind command (removes keybind from list)
     * /avomod keybinds remove &lt;keybind letter>
 
-## **<span style="text-decoration:underline;">Custom Attack Timers Display:</span>**
+## **<span style="text-decoration:underline;">War Features:</span>**
 
-Custom attack timers display in the top right, which sorts attack timers and displays their defense.
-
-* Sorts timers soonest to latest
-* Shows defense of territory
-* Click to create beacon at territory and post coordinates in chat
-* Highlights what territory you're in
+* Custom War Timer Display
+    * Sorts timers soonest to latest
+    * Shows defense of territory
+    * Highlights what territory you're in
+    * Click to create beacon at territory and post coordinates in chat
 * Green beacon at soonest war
+* War Tracker (completely local, no data leaves your pc) *only counts wars done with avomod enabled*
+    * Displays wars done in past week in bottom right
+    * View wars done since certain date using /am wars
+* Aura ping
 
 ## **<span style="text-decoration:underline;">Other Features:</span>**
 
@@ -69,3 +76,4 @@ Custom attack timers display in the top right, which sorts attack timers and dis
 * Auto /stream on world switch
 * Hide entities (mobs and damages) in wars
 * Display war info (time in war, tower EHP/DPS, team DPS)
+* More intuitive trade menu sell menu
