@@ -75,8 +75,10 @@ public class UpdateChecker {
                 JsonObject updateData = new JsonParser().parse(response.toString()).getAsJsonObject();
                 String currentBetaVersion = Avomod.VERSION.split("\\.")[2];
                 String newestBetaVersion = updateData.get("version").getAsString().split("\\.")[2];
+                String currentStableVersion = Avomod.VERSION.split("\\.")[1];
+                String newestStableVersion = updateData.get("version").getAsString().split("\\.")[1];
 
-                if (Double.parseDouble(newestBetaVersion) > Double.parseDouble(currentBetaVersion)) {
+                if (currentStableVersion.equals(newestStableVersion) && Double.parseDouble(newestBetaVersion) > Double.parseDouble(currentBetaVersion)) {
                     UpdateChecker.betaUpdateData = updateData;
                     updateBetaMessage();
                 }
