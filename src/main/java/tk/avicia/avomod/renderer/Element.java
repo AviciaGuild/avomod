@@ -28,6 +28,8 @@ public abstract class Element {
         setY(getY() + (changeY / scale));
     }
 
+    public abstract void draw();
+
     public float getTopEdge() {
         return getY() * getScale();
     }

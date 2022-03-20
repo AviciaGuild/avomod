@@ -40,6 +40,11 @@ public class Rectangle extends Element {
         return (getY() + getHeight()) * getScale();
     }
 
+    public boolean inRectangle(int mouseX, int mouseY) {
+        return mouseX >= getLeftEdge() && mouseX <= getRightEdge() &&
+                mouseY >= getTopEdge() && mouseY <= getBottomEdge();
+    }
+
     public float getWidth() {
         return width;
     }

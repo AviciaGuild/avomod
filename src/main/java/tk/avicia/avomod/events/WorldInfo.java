@@ -5,11 +5,15 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.text.ITextComponent;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.utils.Renderer;
+import tk.avicia.avomod.renderer.Element;
+import tk.avicia.avomod.renderer.MultipleElements;
+import tk.avicia.avomod.renderer.Rectangle;
+import tk.avicia.avomod.renderer.Text;
 import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.WorldUpTime;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,39 +21,52 @@ public class WorldInfo {
     private static String currentWorld = "";
     private static WorldUpTime worldData;
 
-    public static void draw() {
-        final int screenWidth = new ScaledResolution(Avomod.getMC()).getScaledWidth();
-        final int screenHeight = new ScaledResolution(Avomod.getMC()).getScaledHeight();
-        if (worldData != null) {
-            updateCurrentWorld();
-            String currentWorldString = "";
-            String newestWorldString = "";
-            try {
-                Map.Entry<String, JsonElement> newestWorld = worldData.getWorldUpTimeData().get(0);
-                newestWorldString = "Newest world " + newestWorld.getKey() + ": " +
-                        Utils.getReadableTime(Integer.parseInt(newestWorld.getValue().getAsJsonObject().get("age").getAsString()));
-                if (currentWorld.length() > 1) { // Not in streamer mode or lobby
-                    currentWorldString = "Your world " + currentWorld + ": " + Utils.getReadableTime(worldData.getAge(currentWorld).y);
-                }
-            } catch (NoSuchFieldException | NullPointerException e) {
-                e.printStackTrace();
-            }
+    public static MultipleElements getElementsToDraw() {
+        if (worldData == null) return null;
 
-
-            FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
-            if (!currentWorldString.equals("")) {
-                Renderer.drawRect(new Color(0, 0, 255, 100),
-                        screenWidth - fontRenderer.getStringWidth(currentWorldString) - 2, screenHeight / 2f + 100,
-                        fontRenderer.getStringWidth(currentWorldString) + 4, 12);
-                fontRenderer.drawString(currentWorldString, screenWidth - fontRenderer.getStringWidth(currentWorldString)
-                        , screenHeight / 2 + 102, Color.WHITE.getRGB());
+        updateCurrentWorld();
+        String currentWorldString = "";
+        String newestWorldString = "";
+        try {
+            Map.Entry<String, JsonElement> newestWorld = worldData.getWorldUpTimeData().get(0);
+            newestWorldString = "Newest world " + newestWorld.getKey() + ": " +
+                    Utils.getReadableTime(Integer.parseInt(newestWorld.getValue().getAsJsonObject().get("age").getAsString()));
+            if (currentWorld.length() > 1) { // Not in streamer mode or lobby
+                currentWorldString = "Your world " + currentWorld + ": " + Utils.getReadableTime(worldData.getAge(currentWorld).y);
             }
-            Renderer.drawRect(new Color(0, 0, 255, 100),
-                    screenWidth - fontRenderer.getStringWidth(newestWorldString) - 2, screenHeight / 2f + 88,
-                    fontRenderer.getStringWidth(newestWorldString) + 4, 12);
-            fontRenderer.drawString(newestWorldString, screenWidth - fontRenderer.getStringWidth(newestWorldString)
-                    , screenHeight / 2 + 90, Color.WHITE.getRGB());
+        } catch (NoSuchFieldException | NullPointerException e) {
+            e.printStackTrace();
         }
+
+        FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
+        ArrayList<Element> elementsList = new ArrayList<>();
+
+        int rectangleWidth = Math.max(fontRenderer.getStringWidth(currentWorldString) + 4, fontRenderer.getStringWidth(newestWorldString) + 4);
+        int rectangleHeight = 12;
+        float scale = 1.5F;
+        String locationText = Avomod.getLocation("worldInfo");
+        if (locationText == null) return null;
+
+        float screenWidth = new ScaledResolution(Avomod.getMC()).getScaledWidth() / scale - rectangleWidth;
+        float screenHeight = new ScaledResolution(Avomod.getMC()).getScaledHeight() / scale - rectangleHeight;
+        float x = (Float.parseFloat(locationText.split(",")[0]) * screenWidth);
+        float y = (Float.parseFloat(locationText.split(",")[1]) * screenHeight);
+
+        if (!currentWorldString.equals("")) {
+            elementsList.add(new Rectangle(x + rectangleWidth - fontRenderer.getStringWidth(currentWorldString) - 4,
+                    y + rectangleHeight, fontRenderer.getStringWidth(currentWorldString) + 4, rectangleHeight, scale,
+                    new Color(0, 0, 255, 100)));
+            elementsList.add(new Text(currentWorldString, x + rectangleWidth - fontRenderer.getStringWidth(currentWorldString) - 2,
+                    y + 2 + rectangleHeight, scale, Color.WHITE));
+        }
+
+        elementsList.add(new Rectangle(x + rectangleWidth - fontRenderer.getStringWidth(newestWorldString) - 4,
+                y, fontRenderer.getStringWidth(newestWorldString) + 4, rectangleHeight, scale,
+                new Color(0, 0, 255, 100)));
+        elementsList.add(new Text(newestWorldString, x + rectangleWidth - fontRenderer.getStringWidth(newestWorldString) - 2,
+                y + 2, scale, Color.WHITE));
+
+        return new MultipleElements("worldInfo", 1F, elementsList);
     }
 
     public static void updateCurrentWorld() {

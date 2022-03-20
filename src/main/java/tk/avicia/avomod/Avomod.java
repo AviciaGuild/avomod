@@ -60,6 +60,7 @@ public class Avomod {
     }};
     public static Map<String, String> defaultLocations = new HashMap<String, String>() {{
         put("weeklyWars", "0.98,0.98");
+        put("worldInfo", "1,0.7");
     }};
     public static Map<String, Command> aliases = new HashMap<>();
     public static Map<String, Keybind> keybinds = new HashMap<>();

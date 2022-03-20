@@ -13,13 +13,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.events.AttacksMenu;
 import tk.avicia.avomod.events.AuraHandler;
+import tk.avicia.avomod.renderer.MultipleElements;
 import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class WarEvents {
@@ -106,10 +106,9 @@ public class WarEvents {
             AuraHandler.draw();
         }
         if (Avomod.getConfigBoolean("displayWeeklyWarcount")) {
-            try {
-                Objects.requireNonNull(WarTracker.getRectangleText()).draw();
-            } catch (Exception e) {
-                e.printStackTrace();
+            MultipleElements elements = WarTracker.getElementsToDraw();
+            if (elements != null) {
+                elements.draw();
             }
         }
     }

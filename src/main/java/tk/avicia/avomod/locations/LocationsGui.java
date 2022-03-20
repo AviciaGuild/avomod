@@ -4,15 +4,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
-import tk.avicia.avomod.renderer.RectangleText;
+import tk.avicia.avomod.events.WorldInfo;
+import tk.avicia.avomod.renderer.MultipleElements;
 import tk.avicia.avomod.war.WarTracker;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class LocationsGui extends GuiScreen {
-    private ArrayList<RectangleText> items = new ArrayList<>();
+    private List<MultipleElements> items;
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -25,29 +27,12 @@ public class LocationsGui extends GuiScreen {
         this.drawCenteredString(this.fontRenderer, "Avomod Locations", this.width / 4, 5, 0x1B33CF);
         GlStateManager.popMatrix();
 
-        items.forEach(RectangleText::draw);
+        items.forEach(MultipleElements::draw);
     }
 
     @Override
     public void initGui() {
-        //Wars
-//        GlStateManager.pushMatrix();
-//        GlStateManager.scale(1.5F, 1.5F, 1.5F);
-//        ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
-//
-//        int stringWidth = Avomod.getMC().fontRenderer.getStringWidth("200 wars");
-//        int x = (int) (scaledResolution.getScaledWidth() / 1.5) - (stringWidth + 10);
-//        int y = (int) (scaledResolution.getScaledHeight() / 1.5) - 15;
-//        Rectangle rectangle = new Rectangle(x - 2, y - 2, stringWidth + 4, 12, 1.5F, new Color(100, 100, 100, 255));
-//        Text text = new Text("200 wars", x, y, 1.5F, Color.MAGENTA);
-
-//        items.add(new LocationsItem("weeklyWars", rectangle, text));
-        try {
-            items.add(WarTracker.getRectangleText());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        GlStateManager.popMatrix();
+        items = Arrays.asList(WarTracker.getElementsToDraw(), WorldInfo.getElementsToDraw());
     }
 
     @Override
@@ -55,15 +40,6 @@ public class LocationsGui extends GuiScreen {
         super.onResize(mineIn, w, h);
 
         this.initGui();
-    }
-
-    @Override
-    public void handleMouseInput() throws IOException {
-//        if (Mouse.getEventButtonState() && Mouse.getEventButton() == 1) {
-//            items.forEach(e -> e.move(Mouse.getX() / 2, height - (Mouse.getY() / 2)));
-//        }
-
-        super.handleMouseInput();
     }
 
     @Override
@@ -88,13 +64,8 @@ public class LocationsGui extends GuiScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        super.keyTyped(typedChar, keyCode);
-    }
-
-    @Override
     public void onGuiClosed() {
-        items.forEach(RectangleText::save);
+        items.forEach(MultipleElements::save);
 
         super.onGuiClosed();
     }

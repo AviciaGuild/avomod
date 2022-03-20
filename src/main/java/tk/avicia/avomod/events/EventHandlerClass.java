@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.renderer.MultipleElements;
 import tk.avicia.avomod.utils.*;
 import tk.avicia.avomod.webapi.UpdateChecker;
 
@@ -265,7 +266,10 @@ public class EventHandlerClass {
         if (Avomod.getConfigBoolean("disableAll")) return;
 
         if (Avomod.getMC().gameSettings.keyBindPlayerList.isKeyDown()) {
-            WorldInfo.draw();
+            MultipleElements elements = WorldInfo.getElementsToDraw();
+            if (elements != null) {
+                elements.draw();
+            }
         }
 
         if (!Avomod.getConfigBoolean("auraPing")) return;

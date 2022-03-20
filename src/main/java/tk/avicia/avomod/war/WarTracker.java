@@ -2,11 +2,12 @@ package tk.avicia.avomod.war;
 
 import net.minecraft.client.gui.ScaledResolution;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.renderer.MultipleElements;
 import tk.avicia.avomod.renderer.Rectangle;
-import tk.avicia.avomod.renderer.RectangleText;
 import tk.avicia.avomod.renderer.Text;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +18,7 @@ public class WarTracker {
         WarTrackerFile.addWar(currentWarObject);
     }
 
-    public static RectangleText getRectangleText() {
+    public static MultipleElements getElementsToDraw() {
         long weeklyWars = WarTrackerFile.getWars(System.currentTimeMillis() - 604800000L);
 
         String plural = "";
@@ -28,19 +29,20 @@ public class WarTracker {
         String text = String.format("%s war%s", weeklyWars, plural);
         int rectangleWidth = Avomod.getMC().fontRenderer.getStringWidth(text) + 4;
         int rectangleHeight = 12;
+        float scale = 1.5F;
 
         String locationText = Avomod.getLocation("weeklyWars");
         if (locationText == null) return null;
 
-        final float screenWidth = new ScaledResolution(Avomod.getMC()).getScaledWidth() / 1.5F - rectangleWidth;
-        final float screenHeight = new ScaledResolution(Avomod.getMC()).getScaledHeight() / 1.5F - rectangleHeight;
+        final float screenWidth = new ScaledResolution(Avomod.getMC()).getScaledWidth() / scale - rectangleWidth;
+        final float screenHeight = new ScaledResolution(Avomod.getMC()).getScaledHeight() / scale - rectangleHeight;
         float x = (Float.parseFloat(locationText.split(",")[0]) * screenWidth);
         float y = (Float.parseFloat(locationText.split(",")[1]) * screenHeight);
 
         Rectangle newRectangle = new Rectangle(x, y,
-                rectangleWidth, rectangleHeight, 1.5F, new Color(100, 100, 100, 100));
-        Text newText = new Text(text, x + 2, y + 2, 1.5F, Color.MAGENTA);
+                rectangleWidth, rectangleHeight, scale, new Color(100, 100, 100, 100));
+        Text newText = new Text(text, x + 2, y + 2, scale, Color.MAGENTA);
 
-        return new RectangleText("weeklyWars", newRectangle, newText);
+        return new MultipleElements("weeklyWars", scale, Arrays.asList(newRectangle, newText));
     }
 }
