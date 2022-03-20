@@ -19,6 +19,7 @@ import tk.avicia.avomod.webapi.TerritoryDataApi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class WarEvents {
@@ -105,7 +106,11 @@ public class WarEvents {
             AuraHandler.draw();
         }
         if (Avomod.getConfigBoolean("displayWeeklyWarcount")) {
-            WarTracker.draw();
+            try {
+                Objects.requireNonNull(WarTracker.getRectangleText()).draw();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

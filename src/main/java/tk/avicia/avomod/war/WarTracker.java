@@ -1,9 +1,10 @@
 package tk.avicia.avomod.war;
 
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.utils.Renderer;
+import tk.avicia.avomod.renderer.Rectangle;
+import tk.avicia.avomod.renderer.RectangleText;
+import tk.avicia.avomod.renderer.Text;
 
 import java.awt.*;
 import java.util.List;
@@ -16,24 +17,30 @@ public class WarTracker {
         WarTrackerFile.addWar(currentWarObject);
     }
 
-    public static void draw() {
+    public static RectangleText getRectangleText() {
         long weeklyWars = WarTrackerFile.getWars(System.currentTimeMillis() - 604800000L);
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(1.5F, 1.5F, 1.5F);
-        ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
 
         String plural = "";
         if (weeklyWars != 1) {
             plural = "s";
         }
 
-        int stringWidth = Avomod.getMC().fontRenderer.getStringWidth(weeklyWars + " war" + plural);
-        int x = (int) (scaledResolution.getScaledWidth() / 1.5) - (stringWidth + 10);
-        int y = (int) (scaledResolution.getScaledHeight() / 1.5) - 15;
+        String text = String.format("%s war%s", weeklyWars, plural);
+        int rectangleWidth = Avomod.getMC().fontRenderer.getStringWidth(text) + 4;
+        int rectangleHeight = 12;
 
-        Renderer.drawRect(new Color(100, 100, 100, 100), x - 2, y - 2, stringWidth + 4, 12);
-        Renderer.drawString(weeklyWars + " war" + plural, x, y, Color.MAGENTA);
+        String locationText = Avomod.getLocation("weeklyWars");
+        if (locationText == null) return null;
 
-        GlStateManager.popMatrix();
+        final float screenWidth = new ScaledResolution(Avomod.getMC()).getScaledWidth() / 1.5F - rectangleWidth;
+        final float screenHeight = new ScaledResolution(Avomod.getMC()).getScaledHeight() / 1.5F - rectangleHeight;
+        float x = (Float.parseFloat(locationText.split(",")[0]) * screenWidth);
+        float y = (Float.parseFloat(locationText.split(",")[1]) * screenHeight);
+
+        Rectangle newRectangle = new Rectangle(x, y,
+                rectangleWidth, rectangleHeight, 1.5F, new Color(100, 100, 100, 100));
+        Text newText = new Text(text, x + 2, y + 2, 1.5F, Color.MAGENTA);
+
+        return new RectangleText("weeklyWars", newRectangle, newText);
     }
 }

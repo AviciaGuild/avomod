@@ -56,11 +56,16 @@ public class Avomod {
         put("configs", new ConfigsCommand());
         put("soulpoints", new SoulPointCommand());
         put("wars", new WarsCommand());
+        put("locations", new LocationsCommand());
+    }};
+    public static Map<String, String> defaultLocations = new HashMap<String, String>() {{
+        put("weeklyWars", "0.98,0.98");
     }};
     public static Map<String, Command> aliases = new HashMap<>();
     public static Map<String, Keybind> keybinds = new HashMap<>();
     public static GuiScreen guiToDraw = null;
     public static JsonObject configs = null;
+    public static JsonObject locations = null;
     public static Config[] configsArray = new Config[]{
             new ConfigToggle("Prevent moving armor/accessories", "Disabled", "disableMovingArmor"),
             new ConfigToggle("Filter out bank messages", "Disabled", "filterBankMessages"),
@@ -101,6 +106,16 @@ public class Avomod {
 
         if (settings == null) return;
         keybinds.entrySet().removeIf(entry -> !settings.has(entry.getKey()));
+    }
+
+    public static String getLocation(String locationKey) {
+        JsonElement locationElement = Avomod.locations.get(locationKey);
+
+        if (locationElement == null || locationElement.isJsonNull()) {
+            return defaultLocations.get(locationKey);
+        } else {
+            return locationElement.getAsString();
+        }
     }
 
     public static String getConfig(String configKey) {
@@ -147,22 +162,39 @@ public class Avomod {
     private void initializeConfigs() {
         CustomFile configsFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/configs.json");
         JsonObject configsJson = configsFile.readJson();
-        boolean changed = false;
+        boolean configsChanged = false;
 
         for (Config config : configsArray) {
             JsonElement configElement = configsJson.get(config.configsKey);
 
             if (configElement == null || configElement.isJsonNull()) {
                 configsJson.addProperty(config.configsKey, config.defaultValue);
-                changed = true;
+                configsChanged = true;
             }
         }
 
-        if (changed) {
+        if (configsChanged) {
             configsFile.writeJson(configsJson);
         }
-
         Avomod.configs = configsJson;
+
+        CustomFile locationsFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/locations.json");
+        JsonObject locationsJson = locationsFile.readJson();
+        boolean locationsChanged = false;
+
+        for (Map.Entry<String, String> locationData : defaultLocations.entrySet()) {
+            JsonElement locationsElement = locationsJson.get(locationData.getKey());
+
+            if (locationsElement == null || locationsElement.isJsonNull()) {
+                locationsJson.addProperty(locationData.getKey(), locationData.getValue());
+                locationsChanged = true;
+            }
+        }
+
+        if (locationsChanged) {
+            locationsFile.writeJson(locationsJson);
+        }
+        Avomod.locations = locationsFile.readJson();
     }
 
     private void initializeAliases() {
