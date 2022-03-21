@@ -3,6 +3,10 @@ package tk.avicia.avomod.events;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.renderer.Element;
+import tk.avicia.avomod.renderer.MultipleElements;
+import tk.avicia.avomod.renderer.Rectangle;
+import tk.avicia.avomod.renderer.TextWithShadow;
 import tk.avicia.avomod.utils.Renderer;
 import tk.avicia.avomod.utils.Utils;
 
@@ -108,7 +112,7 @@ public class WarDPS {
             }
 
             previousTime = time;
-            draw(time, ehp, lowerDps, higherDps);
+            getElementsToDraw(time, ehp, lowerDps, higherDps).draw();
 
 //                List<String> newMessageWords = new ArrayList<>(Arrays.asList(bossbarWords.clone()));
 //                newMessageWords.set(startIndex1 + 3, TextFormatting.GRAY + "(" + TextFormatting.GOLD + defense + "%" + TextFormatting.GRAY + ")"
@@ -152,9 +156,7 @@ public class WarDPS {
         AuraHandler.auraTimer = 0;
     }
 
-    public static void draw(long time, double towerEhp, double lowerTowerDps, double upperTowerDps) {
-        int baseHeight = 10;
-
+    public static MultipleElements getElementsToDraw(long time, double towerEhp, double lowerTowerDps, double upperTowerDps) {
         String[] stats = new String[]{
                 String.format("%s Seconds", time),
                 String.format("Tower EHP: %s", Utils.parseReadableNumber(towerEhp)),
@@ -170,13 +172,20 @@ public class WarDPS {
         }
 
         int maxWidth = Collections.max(Arrays.stream(stats).map(Renderer::getStringWidth).collect(Collectors.toList()));
-        Renderer.drawRect(new Color(0, 0, 0, 100), 0, baseHeight - 5, maxWidth + 10, 20 + (10 * stats.length));
-        Renderer.drawStringWithShadow(TextFormatting.BOLD + "War Info", 5, baseHeight, Color.CYAN);
+        List<Element> elementList = new ArrayList<>();
+        float y = Utils.getStartY("warDPS", 1F, 18 + (10 * stats.length));
+        float x = Utils.getStartX("warDPS", maxWidth + 10, 1F);
 
-        int additionalHeight = 10;
+        elementList.add(new Rectangle(x, y, maxWidth + 10, 18 + (10 * stats.length), new Color(0, 0, 0, 100)));
+        elementList.add(new TextWithShadow(TextFormatting.BOLD + "War Info", x + 4, y + 4, Color.CYAN));
+
+        int additionalHeight = 15;
         for (String stat : stats) {
-            Renderer.drawStringWithShadow(stat, 5, baseHeight + additionalHeight, Color.WHITE);
+            x = Utils.getStartX("warDPS", Avomod.getMC().fontRenderer.getStringWidth(stat), 1F);
+            elementList.add(new TextWithShadow(stat, x + 4, y + additionalHeight, Color.WHITE));
             additionalHeight += 10;
         }
+
+        return new MultipleElements("warDPS", 1F, elementList);
     }
 }

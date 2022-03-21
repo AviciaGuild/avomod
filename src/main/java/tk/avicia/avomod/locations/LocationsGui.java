@@ -4,6 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
+import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.events.AttacksMenu;
+import tk.avicia.avomod.events.WarDPS;
 import tk.avicia.avomod.events.WorldInfo;
 import tk.avicia.avomod.renderer.MultipleElements;
 import tk.avicia.avomod.war.WarTracker;
@@ -28,11 +31,18 @@ public class LocationsGui extends GuiScreen {
         GlStateManager.popMatrix();
 
         items.forEach(MultipleElements::draw);
+        buttonList.forEach(button -> button.drawButton(Avomod.getMC(), mouseX, mouseY, partialTicks));
     }
 
     @Override
     public void initGui() {
-        items = Arrays.asList(WarTracker.getElementsToDraw(), WorldInfo.getElementsToDraw());
+        items = Arrays.asList(
+                WarTracker.getElementsToDraw(),
+                WorldInfo.getElementsToDraw(),
+                AttacksMenu.getElementsToDraw(Arrays.asList("- 13:47 Otherwordly Monolith", "- 5:23 Detlas", "- 9:52 Guild Hall"), true),
+                WarDPS.getElementsToDraw(224, 12523563, 24400, 36000)
+        );
+        buttonList.add(new ResetToDefault(0, this.width / 2 - 50, this.height - 30, 100, 20, "Reset to Defaults", this));
     }
 
     @Override

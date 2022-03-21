@@ -100,16 +100,16 @@ public class WarEvents {
         // inventory is open and you can make stuff transparent
         List<String> upcomingAttacks = Utils.getUpcomingAttacks();
         if (Avomod.getConfigBoolean("attacksMenu")) {
-            AttacksMenu.draw(upcomingAttacks);
+            MultipleElements elementsToDraw = AttacksMenu.getElementsToDraw(upcomingAttacks, false);
+            if (elementsToDraw != null) {
+                elementsToDraw.draw();
+            }
         }
         if (Avomod.getConfigBoolean("auraPing")) {
             AuraHandler.draw();
         }
         if (Avomod.getConfigBoolean("displayWeeklyWarcount")) {
-            MultipleElements elements = WarTracker.getElementsToDraw();
-            if (elements != null) {
-                elements.draw();
-            }
+            WarTracker.getElementsToDraw().draw();
         }
     }
 }

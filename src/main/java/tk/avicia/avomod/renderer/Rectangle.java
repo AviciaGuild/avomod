@@ -18,13 +18,6 @@ public class Rectangle extends Element {
         this(x, y, width, height, 1F, color);
     }
 
-    public Rectangle(String fileData) {
-        super(fileData);
-
-        width = Float.parseFloat(fileData.split(",")[4]);
-        height = Float.parseFloat(fileData.split(",")[5]);
-    }
-
     public void draw() {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, scale);

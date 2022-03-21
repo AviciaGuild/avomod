@@ -1,5 +1,6 @@
 package tk.avicia.avomod.utils;
 
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.Scoreboard;
@@ -18,7 +19,7 @@ public class Utils {
     }
 
     public static String getReadableTime(int minutes) {
-        return (minutes >= 3600 ? (int) Math.floor((minutes / 1440.0)) + "d ": "") + (int) (Math.floor((minutes % 1440) / 60.0)) + "h " + minutes % 60 + "m";
+        return (minutes >= 3600 ? (int) Math.floor((minutes / 1440.0)) + "d " : "") + (int) (Math.floor((minutes % 1440) / 60.0)) + "h " + minutes % 60 + "m";
     }
 
 //    public static void sendClickPacket(Container container, int slotId, ClickType clickType, int clickButton, ItemStack itemStack) {
@@ -99,5 +100,34 @@ public class Utils {
         InventoryPlayer inventoryPlayer = Avomod.getMC().player.inventory;
 
         return inventoryPlayer.getStackInSlot(8).toString().contains("netherStar");
+    }
+
+    public static float getStartX(String key, int rectangleWidth, float scale) {
+        String locationText = Avomod.getLocation(key);
+        if (locationText == null) return (float) 0;
+
+        float screenWidth = new ScaledResolution(Avomod.getMC()).getScaledWidth() / scale;
+        float x = (Float.parseFloat(locationText.split(",")[0]) * screenWidth);
+        boolean alignment = Boolean.parseBoolean(locationText.split(",")[2]);
+
+        return alignment ? x : x - rectangleWidth;
+    }
+
+    public static float getStartY(String key, int numRectangles, float scale) {
+        int rectangleHeight = 12;
+
+        String locationText = Avomod.getLocation(key);
+        if (locationText == null) return (float) 0;
+
+        float screenHeight = (new ScaledResolution(Avomod.getMC()).getScaledHeight() / scale) - (rectangleHeight * numRectangles);
+        return Float.parseFloat(locationText.split(",")[1]) * screenHeight;
+    }
+
+    public static float getStartY(String key, float scale, int totalHeight) {
+        String locationText = Avomod.getLocation(key);
+        if (locationText == null) return (float) 0;
+
+        float screenHeight = (new ScaledResolution(Avomod.getMC()).getScaledHeight() / scale) - totalHeight;
+        return Float.parseFloat(locationText.split(",")[1]) * screenHeight;
     }
 }

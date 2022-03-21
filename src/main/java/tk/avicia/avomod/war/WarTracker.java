@@ -1,10 +1,11 @@
 package tk.avicia.avomod.war;
 
-import net.minecraft.client.gui.ScaledResolution;
+
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.renderer.MultipleElements;
 import tk.avicia.avomod.renderer.Rectangle;
 import tk.avicia.avomod.renderer.Text;
+import tk.avicia.avomod.utils.Utils;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -31,13 +32,8 @@ public class WarTracker {
         int rectangleHeight = 12;
         float scale = 1.5F;
 
-        String locationText = Avomod.getLocation("weeklyWars");
-        if (locationText == null) return null;
-
-        final float screenWidth = new ScaledResolution(Avomod.getMC()).getScaledWidth() / scale - rectangleWidth;
-        final float screenHeight = new ScaledResolution(Avomod.getMC()).getScaledHeight() / scale - rectangleHeight;
-        float x = (Float.parseFloat(locationText.split(",")[0]) * screenWidth);
-        float y = (Float.parseFloat(locationText.split(",")[1]) * screenHeight);
+        float x = Utils.getStartX("weeklyWars", rectangleWidth, scale);
+        float y = Utils.getStartY("weeklyWars", 1, scale);
 
         Rectangle newRectangle = new Rectangle(x, y,
                 rectangleWidth, rectangleHeight, scale, new Color(100, 100, 100, 100));

@@ -2,7 +2,6 @@ package tk.avicia.avomod.events;
 
 import com.google.gson.JsonElement;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.text.ITextComponent;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.renderer.Element;
@@ -41,32 +40,27 @@ public class WorldInfo {
         FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
         ArrayList<Element> elementsList = new ArrayList<>();
 
-        int rectangleWidth = Math.max(fontRenderer.getStringWidth(currentWorldString) + 4, fontRenderer.getStringWidth(newestWorldString) + 4);
         int rectangleHeight = 12;
         float scale = 1.5F;
-        String locationText = Avomod.getLocation("worldInfo");
-        if (locationText == null) return null;
-
-        float screenWidth = new ScaledResolution(Avomod.getMC()).getScaledWidth() / scale - rectangleWidth;
-        float screenHeight = new ScaledResolution(Avomod.getMC()).getScaledHeight() / scale - rectangleHeight;
-        float x = (Float.parseFloat(locationText.split(",")[0]) * screenWidth);
-        float y = (Float.parseFloat(locationText.split(",")[1]) * screenHeight);
+        float y = Utils.getStartY("worldInfo", 2, 1.5F);
 
         if (!currentWorldString.equals("")) {
-            elementsList.add(new Rectangle(x + rectangleWidth - fontRenderer.getStringWidth(currentWorldString) - 4,
-                    y + rectangleHeight, fontRenderer.getStringWidth(currentWorldString) + 4, rectangleHeight, scale,
+            int rectangleWidth = fontRenderer.getStringWidth(currentWorldString) + 4;
+            float startX = Utils.getStartX("worldInfo", rectangleWidth, scale);
+
+            elementsList.add(new Rectangle(startX, y + rectangleHeight, rectangleWidth, rectangleHeight, scale,
                     new Color(0, 0, 255, 100)));
-            elementsList.add(new Text(currentWorldString, x + rectangleWidth - fontRenderer.getStringWidth(currentWorldString) - 2,
-                    y + 2 + rectangleHeight, scale, Color.WHITE));
+            elementsList.add(new Text(currentWorldString, startX + 2, y + 2 + rectangleHeight, scale, Color.WHITE));
         }
 
-        elementsList.add(new Rectangle(x + rectangleWidth - fontRenderer.getStringWidth(newestWorldString) - 4,
-                y, fontRenderer.getStringWidth(newestWorldString) + 4, rectangleHeight, scale,
-                new Color(0, 0, 255, 100)));
-        elementsList.add(new Text(newestWorldString, x + rectangleWidth - fontRenderer.getStringWidth(newestWorldString) - 2,
-                y + 2, scale, Color.WHITE));
+        int rectangleWidth = fontRenderer.getStringWidth(newestWorldString) + 4;
+        float startX = Utils.getStartX("worldInfo", rectangleWidth, scale);
 
-        return new MultipleElements("worldInfo", 1F, elementsList);
+        elementsList.add(new Rectangle(startX, y, rectangleWidth, rectangleHeight, scale,
+                new Color(0, 0, 255, 100)));
+        elementsList.add(new Text(newestWorldString, startX + 2, y + 2, scale, Color.WHITE));
+
+        return new MultipleElements("worldInfo", 1.5F, elementsList);
     }
 
     public static void updateCurrentWorld() {

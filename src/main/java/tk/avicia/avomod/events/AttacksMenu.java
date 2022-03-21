@@ -1,8 +1,11 @@
 package tk.avicia.avomod.events;
 
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.renderer.Element;
+import tk.avicia.avomod.renderer.MultipleElements;
+import tk.avicia.avomod.renderer.Rectangle;
+import tk.avicia.avomod.renderer.Text;
 import tk.avicia.avomod.utils.*;
 
 import java.awt.*;
@@ -14,14 +17,14 @@ public class AttacksMenu {
     public static HashMap<String, ScreenCoordinates> attackCoordinates = new HashMap<>();
     public static HashMap<String, Tuple<String, Long>> savedDefenses = new HashMap<>();
 
-    public static void draw(List<String> upcomingAttacks) {
+    public static MultipleElements getElementsToDraw(List<String> upcomingAttacks, boolean sample) {
         if (upcomingAttacks.size() == 0) {
             BeaconManager.soonestTerritory = null;
             BeaconManager.soonestTerritoryLocation = null;
             BeaconManager.compassTerritory = null;
             BeaconManager.compassLocation = null;
 
-            return;
+            return null;
         }
 
         if (!TerritoryData.hasValues()) {
@@ -33,10 +36,10 @@ public class AttacksMenu {
 
         for (String upcomingAttack : upcomingAttacks) {
             String upcomingAttackUnformatted = TextFormatting.getTextWithoutFormattingCodes(upcomingAttack);
-            if (upcomingAttackUnformatted == null) return;
+            if (upcomingAttackUnformatted == null) return null;
 
             String[] words = upcomingAttackUnformatted.split(" ");
-            if (words.length < 3) return;
+            if (words.length < 3) return null;
 
             String time = words[1];
             String territory = String.join(" ", Arrays.copyOfRange(words, 2, words.length));
@@ -52,13 +55,15 @@ public class AttacksMenu {
             }
         }
 
-        for (String terrToRemove : terrsToRemove) {
-            savedDefenses.remove(terrToRemove);
-            attackCoordinates.remove(terrToRemove);
+        if (!sample) {
+            for (String terrToRemove : terrsToRemove) {
+                savedDefenses.remove(terrToRemove);
+                attackCoordinates.remove(terrToRemove);
 
-            if (terrToRemove.equals(BeaconManager.compassTerritory)) {
-                BeaconManager.compassTerritory = null;
-                BeaconManager.compassLocation = null;
+                if (terrToRemove.equals(BeaconManager.compassTerritory)) {
+                    BeaconManager.compassTerritory = null;
+                    BeaconManager.compassLocation = null;
+                }
             }
         }
 
@@ -74,18 +79,17 @@ public class AttacksMenu {
             }
         });
 
-        if (!upcomingAttacksSplit.get(0).y.equals(BeaconManager.soonestTerritory)) {
-            BeaconManager.soonestTerritory = upcomingAttacksSplit.get(0).y;
-            BeaconManager.soonestTerritoryLocation = Avomod.territoryData.getMiddleOfTerritory(upcomingAttacksSplit.get(0).y);
+        if (!sample) {
+            if (!upcomingAttacksSplit.get(0).y.equals(BeaconManager.soonestTerritory)) {
+                BeaconManager.soonestTerritory = upcomingAttacksSplit.get(0).y;
+                BeaconManager.soonestTerritoryLocation = Avomod.territoryData.getMiddleOfTerritory(upcomingAttacksSplit.get(0).y);
+            }
         }
-
-        ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
-        int screenWidth = scaledResolution.getScaledWidth();
-        int y = 35;
 
         int xPos = Avomod.getMC().player.getPosition().getX();
         int zPos = Avomod.getMC().player.getPosition().getZ();
         String currentTerritory = Avomod.territoryData.coordinatesInTerritory(new Tuple<>(xPos, zPos));
+        ArrayList<String> messagesList = new ArrayList<>();
 
         for (Tuple<String, String> attack : upcomingAttacksSplit) {
             Tuple<String, Long> savedDefense = savedDefenses.get(attack.y);
@@ -93,7 +97,9 @@ public class AttacksMenu {
             int seconds = Integer.parseInt(attack.x.split(":")[1]);
             Long warTimestamp = (minutes * 60000L + seconds * 1000L) + System.currentTimeMillis();
 
-            if (savedDefense == null || Math.abs(savedDefense.y - warTimestamp) > 10000) {
+            if (sample) {
+                savedDefense = new Tuple<>("Retrieving...", warTimestamp);
+            } else if (savedDefense == null || Math.abs(savedDefense.y - warTimestamp) > 10000) {
                 if (System.currentTimeMillis() - AttackedTerritoryDifficulty.currentTime < 5000 && attack.y.equals((AttackedTerritoryDifficulty.currentTerritory))) {
                     savedDefense = new Tuple<>(AttackedTerritoryDifficulty.currentDefense, (AttackedTerritoryDifficulty.currentTimer * 60000L) + System.currentTimeMillis());
                 } else {
@@ -117,12 +123,24 @@ public class AttacksMenu {
                 message = TextFormatting.LIGHT_PURPLE + "" + TextFormatting.BOLD + attack.y + TextFormatting.RESET + TextFormatting.GOLD + " (" + terrDefense + TextFormatting.GOLD + ") " + TextFormatting.AQUA + attack.x;
             }
 
-            int width = Avomod.getMC().fontRenderer.getStringWidth(message);
-            int x = screenWidth - width - 2;
-            attackCoordinates.put(attack.y, new ScreenCoordinates(x - 2, y, x + width + 2, y + 12));
-            Renderer.drawRect(new Color(100, 100, 100, 100), x - 2, y, width + 2, 12);
-            Renderer.drawString(message, x, y + 2, new Color(255, 170, 0));
-            y += 12;
+            messagesList.add(message);
         }
+
+        ArrayList<Element> elementsList = new ArrayList<>();
+
+        int rectangleHeight = 12;
+        float scale = 1F;
+        float y = Utils.getStartY("attacksMenu", messagesList.size(), scale);
+
+        for (String message : messagesList) {
+            int rectangleWidth = Avomod.getMC().fontRenderer.getStringWidth(message) + 4;
+            float x = Utils.getStartX("attacksMenu", rectangleWidth, scale);
+
+            elementsList.add(new Rectangle(x, y, rectangleWidth, rectangleHeight, new Color(100, 100, 100, 100)));
+            elementsList.add(new Text(message, x + 2, y + 2, new Color(255, 170, 0)));
+            y += rectangleHeight;
+        }
+
+        return new MultipleElements("attacksMenu", 1F, elementsList);
     }
 }

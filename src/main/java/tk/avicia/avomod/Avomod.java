@@ -59,8 +59,10 @@ public class Avomod {
         put("locations", new LocationsCommand());
     }};
     public static Map<String, String> defaultLocations = new HashMap<String, String>() {{
-        put("weeklyWars", "0.98,0.98");
-        put("worldInfo", "1,0.7");
+        put("weeklyWars", "1,0.98,false");
+        put("worldInfo", "1,0.7,false");
+        put("attacksMenu", "1,0.1,false");
+        put("warDPS", "0,0.2,true");
     }};
     public static Map<String, Command> aliases = new HashMap<>();
     public static Map<String, Keybind> keybinds = new HashMap<>();
