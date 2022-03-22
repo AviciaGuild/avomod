@@ -19,6 +19,7 @@ import java.util.List;
 
 public class LocationsGui extends GuiScreen {
     private List<MultipleElements> items;
+    private static boolean isOpen = false;
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -31,7 +32,7 @@ public class LocationsGui extends GuiScreen {
         this.drawCenteredString(this.fontRenderer, "Avomod Locations", this.width / 4, 5, 0x1B33CF);
         GlStateManager.popMatrix();
 
-        items.forEach(MultipleElements::draw);
+        items.forEach(MultipleElements::drawGuiElement);
         buttonList.forEach(button -> button.drawButton(Avomod.getMC(), mouseX, mouseY, partialTicks));
     }
 
@@ -44,6 +45,7 @@ public class LocationsGui extends GuiScreen {
                 WarDPS.getElementsToDraw(224, 12523563, 24400, 36000)
         );
         buttonList.add(new ResetToDefault(0, this.width / 2 - 50, this.height - 30, 100, 20, "Reset to Defaults", this));
+        isOpen = true;
     }
 
     @Override
@@ -80,7 +82,11 @@ public class LocationsGui extends GuiScreen {
     @Override
     public void onGuiClosed() {
         items.forEach(MultipleElements::save);
-
+        isOpen = false;
         super.onGuiClosed();
+    }
+
+    public static boolean isOpen() {
+        return isOpen;
     }
 }

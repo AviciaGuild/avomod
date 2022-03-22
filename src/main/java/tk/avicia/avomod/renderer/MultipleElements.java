@@ -4,6 +4,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.locations.LocationsFile;
+import tk.avicia.avomod.locations.LocationsGui;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,12 @@ public class MultipleElements {
     }
 
     public void draw() {
+        if(!LocationsGui.isOpen()) {
+            elementsList.forEach(Element::draw);
+        }
+    }
+
+    public void drawGuiElement() {
         elementsList.forEach(Element::draw);
     }
 
