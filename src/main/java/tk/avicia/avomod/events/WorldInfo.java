@@ -41,8 +41,8 @@ public class WorldInfo {
         ArrayList<Element> elementsList = new ArrayList<>();
 
         int rectangleHeight = 12;
-        float scale = 1.5F;
-        float y = Utils.getStartY("worldInfo", 2, 1.5F);
+        float scale = 1F;
+        float y = Utils.getStartY("worldInfo", 2, scale);
 
         if (!currentWorldString.equals("")) {
             int rectangleWidth = fontRenderer.getStringWidth(currentWorldString) + 4;
@@ -60,7 +60,7 @@ public class WorldInfo {
                 new Color(0, 0, 255, 100)));
         elementsList.add(new Text(newestWorldString, startX + 2, y + 2, scale, Color.WHITE));
 
-        return new MultipleElements("worldInfo", 1.5F, elementsList);
+        return new MultipleElements("worldInfo", scale, elementsList);
     }
 
     public static void updateCurrentWorld() {

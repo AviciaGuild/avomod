@@ -2,6 +2,7 @@ package tk.avicia.avomod.configs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
@@ -140,13 +141,15 @@ public class ConfigsGui extends GuiScreen {
     }
 
     public void scroll(int amount) {
-        if (this.totalSectionsList.size() == this.sectionList.size()) return;
+        if (this.totalSectionsList.size() == this.sectionList.size()) return; // Disable scrolling if all settings fit on screen
 
-        int totalAllowed = (int) Math.floor((double) this.height / settingLineHeight);
-        int startingIndex = this.totalSectionsList.indexOf(this.sectionList.get(0));
-        if (amount < 0 && startingIndex + totalAllowed < this.totalSectionsList.size()) {
+        int totalAllowed = (int) Math.floor((double) this.height / settingLineHeight); // How many settings can fit on screen
+        int startingIndex = this.totalSectionsList.indexOf(this.sectionList.get(0)); // Take the current top setting as the top setting
+        if (amount < 0 && startingIndex + totalAllowed <= this.totalSectionsList.size()) {
+            // Scrolling down and checking if we've reached the least setting
             startingIndex++;
         } else if (amount > 0 && startingIndex > 0) {
+            // Scrolling up and checking if we've reached the first setting
             startingIndex--;
         }
 
@@ -154,18 +157,19 @@ public class ConfigsGui extends GuiScreen {
         this.buttonList = new ArrayList<>();
         this.textFieldsList = new ArrayList<>();
 
-        for (int i = startingIndex; i < startingIndex + totalAllowed; i++) {
+        for (int i = startingIndex; i < startingIndex + totalAllowed - 1; i++) {
+            // Gets all the settings for this section
             this.sectionList.add(this.totalSectionsList.get(i));
         }
 
         for (ConfigsSection configsSection : this.sectionList) {
             if (configsSection.button != null) {
-                configsSection.button.y = this.sectionList.indexOf(configsSection) * settingLineHeight + 15;
+                configsSection.button.y = (this.sectionList.indexOf(configsSection) + 1) * settingLineHeight + 3;
                 this.buttonList.add(configsSection.button);
             }
 
             if (configsSection.textField != null) {
-                configsSection.textField.y = this.sectionList.indexOf(configsSection) * settingLineHeight + 21;
+                configsSection.textField.y = (this.sectionList.indexOf(configsSection) + 1) * settingLineHeight + 9;
                 this.textFieldsList.add(configsSection.textField);
             }
         }

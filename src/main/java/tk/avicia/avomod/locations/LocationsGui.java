@@ -2,6 +2,7 @@ package tk.avicia.avomod.locations;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
@@ -54,21 +55,24 @@ public class LocationsGui extends GuiScreen {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        items.forEach(e -> e.pickup(Mouse.getX() / 2, height - (Mouse.getY() / 2)));
+        int guiScale = new ScaledResolution(Avomod.getMC()).getScaleFactor();
+        items.forEach(e -> e.pickup((Mouse.getX() / guiScale), height - ((Mouse.getY() / guiScale))));
 
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        items.forEach(e -> e.move(Mouse.getX() / 2, height - (Mouse.getY() / 2)));
+        int guiScale = new ScaledResolution(Avomod.getMC()).getScaleFactor();
+        items.forEach(e -> e.move(Mouse.getX() / guiScale, height - (Mouse.getY() / guiScale)));
 
         super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
-        items.forEach(e -> e.release(Mouse.getX() / 2, height - (Mouse.getY() / 2)));
+        int guiScale = new ScaledResolution(Avomod.getMC()).getScaleFactor();
+        items.forEach(e -> e.release(Mouse.getX() / guiScale, height - (Mouse.getY() / guiScale)));
 
         super.mouseReleased(mouseX, mouseY, state);
     }
