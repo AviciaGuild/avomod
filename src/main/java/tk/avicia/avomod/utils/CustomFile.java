@@ -2,6 +2,7 @@ package tk.avicia.avomod.utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -39,22 +40,17 @@ public class CustomFile extends File {
     }
 
     public JsonObject readJson() {
-        StringBuilder output = new StringBuilder();
         try {
             InputStreamReader reader = new InputStreamReader(new FileInputStream(this), StandardCharsets.UTF_8);
+            JsonReader jsonReader = new JsonReader(reader);
+            jsonReader.setLenient(true);
 
-            int currentChar;
-            while ((currentChar = reader.read()) != -1) {
-                output.append((char) currentChar);
-            }
-
-            reader.close();
+            return new JsonParser().parse(jsonReader).getAsJsonObject();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            this.writeJson("{}");
+            return new JsonParser().parse("{}").getAsJsonObject();
         }
-
-        return new JsonParser().parse(output.toString()).getAsJsonObject();
     }
 
     public void writeJson(JsonObject jsonObject) {
