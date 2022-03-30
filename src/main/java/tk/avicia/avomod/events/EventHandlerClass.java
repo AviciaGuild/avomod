@@ -26,7 +26,9 @@ import tk.avicia.avomod.utils.*;
 import tk.avicia.avomod.webapi.UpdateChecker;
 
 import java.awt.*;
+import java.util.Calendar;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class EventHandlerClass {
     private int tick = 0;
@@ -88,6 +90,34 @@ public class EventHandlerClass {
             }
             if (message.startsWith("[WAR] Your guild has lost the war for ") || message.startsWith("Your active attack was canceled and refunded to your headquarter")) {
                 WarDPS.warEnded(false);
+            }
+        }
+
+        if (Avomod.getConfigBoolean("autogg") && message.startsWith("[!] Congratulations")) {
+            String[] firstSplit = message.split(" for")[0].split("to ");
+            if (firstSplit.length <= 1) return;
+
+            String username = firstSplit[1];
+            new Thread(() -> {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Avomod.getMC().player.sendChatMessage(String.format("/msg %s gg", username));
+            }).start();
+        }
+
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        
+        if (month == 3 && dayOfMonth == 1 && ChatUtils.checkIfGuildChat(event.getMessage())) {
+            Pattern pattern = Pattern.compile("(i'm )|(im )|(i am )", Pattern.CASE_INSENSITIVE);
+            String[] textToSend = pattern.split(message);
+
+            if (textToSend.length > 1) {
+                Avomod.getMC().player.sendChatMessage(String.format("/g Hi %s", textToSend[1]));
+                Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "April fools! This avomod feature will automatically turn off on April 2nd"));
             }
         }
     }
@@ -341,5 +371,6 @@ public class EventHandlerClass {
         if (entity.getTeam() == null) {
             event.setCanceled(true);
         }
+
     }
 }

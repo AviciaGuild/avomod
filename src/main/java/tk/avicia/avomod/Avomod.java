@@ -19,6 +19,8 @@ import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.configs.ConfigInput;
 import tk.avicia.avomod.configs.ConfigToggle;
 import tk.avicia.avomod.events.EventHandlerClass;
+import tk.avicia.avomod.events.GuildBankKeybind;
+import tk.avicia.avomod.events.MobHealthSimplifier;
 import tk.avicia.avomod.events.WorldInfo;
 import tk.avicia.avomod.settings.KeybindSettings;
 import tk.avicia.avomod.utils.CustomFile;
@@ -29,6 +31,7 @@ import tk.avicia.avomod.war.WarsCommand;
 import tk.avicia.avomod.webapi.OnlinePlayers;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -85,6 +88,8 @@ public class Avomod {
             new ConfigToggle("Notify for avomod BETA version (may have bugs)", "Disabled", "betaNotification"),
             new ConfigInput("Aura Ping Color", "FF6F00", "[\\da-fA-F]+", "^[\\da-fA-F]{6}$", 6, "auraPingColor"),
             new ConfigToggle("Display weekly warcount on screen", "Disabled", "displayWeeklyWarcount"),
+            new ConfigToggle("Auto gg global level up messages", "Disabled", "autogg"),
+            new ConfigToggle("Make mob health bars more readable", "Disabled", "readableHealth"),
             new ConfigToggle("Disable everything", "Disabled", "disableAll")
     };
     public static TerritoryDataApi territoryData;
@@ -95,6 +100,8 @@ public class Avomod {
     }
 
     public static void updateKeybinds() {
+        GuildBankKeybind.init();
+
         JsonObject settings = KeybindSettings.getSettings();
         if (settings != null) {
             for (Map.Entry<String, JsonElement> e : settings.entrySet()) {
@@ -153,8 +160,10 @@ public class Avomod {
 
         territoryData = new TerritoryDataApi();
 
-        MinecraftForge.EVENT_BUS.register(new EventHandlerClass());
-        MinecraftForge.EVENT_BUS.register(new WarEvents());
+        Arrays.asList(new EventHandlerClass(),
+                new WarEvents(),
+                new GuildBankKeybind(),
+                new MobHealthSimplifier()).forEach(MinecraftForge.EVENT_BUS::register);
 
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
 

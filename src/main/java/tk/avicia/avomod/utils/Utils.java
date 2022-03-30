@@ -1,7 +1,12 @@
 package tk.avicia.avomod.utils;
 
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.CPacketClickWindow;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.Scoreboard;
 import tk.avicia.avomod.Avomod;
@@ -22,15 +27,15 @@ public class Utils {
         return (minutes >= 3600 ? (int) Math.floor((minutes / 1440.0)) + "d " : "") + (int) (Math.floor((minutes % 1440) / 60.0)) + "h " + minutes % 60 + "m";
     }
 
-//    public static void sendClickPacket(Container container, int slotId, ClickType clickType, int clickButton, ItemStack itemStack) {
-//        CPacketClickWindow compassPacket = new CPacketClickWindow(container.windowId, slotId, clickButton,
-//                clickType, itemStack, container.getNextTransactionID(Avomod.getMC().player.inventory));
-//        NetHandlerPlayClient connection = Avomod.getMC().getConnection();
-//
-//        if (connection != null) {
-//            connection.sendPacket(compassPacket);
-//        }
-//    }
+    public static void sendClickPacket(Container container, int slotId, ClickType clickType, int clickButton, ItemStack itemStack) {
+        CPacketClickWindow compassPacket = new CPacketClickWindow(container.windowId, slotId, clickButton,
+                clickType, itemStack, container.getNextTransactionID(Avomod.getMC().player.inventory));
+        NetHandlerPlayClient connection = Avomod.getMC().getConnection();
+
+        if (connection != null) {
+            connection.sendPacket(compassPacket);
+        }
+    }
 
 //    public static Tuple<Integer, Integer> getTopLeftCornerOfSlot(int slot) {
 //        if (Avomod.getMC().player == null) {
@@ -84,16 +89,16 @@ public class Utils {
         return new ArrayList<>();
     }
 
-    public static String parseReadableNumber(double number) {
+    public static String parseReadableNumber(double number, int decimals) {
         if (number >= 1000000000) {
-            return String.format("%sB", Math.floor(number / 10000000) / 100);
+            return String.format("%sB", Math.round(number / (1000000000 / Math.pow(10, decimals))) / Math.pow(10, decimals));
         } else if (number >= 1000000) {
-            return String.format("%sM", Math.floor(number / 10000) / 100);
+            return String.format("%sM", Math.round(number / (1000000 / Math.pow(10, decimals))) / Math.pow(10, decimals));
         } else if (number >= 1000) {
-            return String.format("%sK", Math.floor(number / 10) / 100);
+            return String.format("%sK", Math.round(number / (1000 / Math.pow(10, decimals))) / Math.pow(10, decimals));
         }
 
-        return String.valueOf(Math.floor(number));
+        return String.valueOf((int) number);
     }
 
     public static boolean inWorld() {

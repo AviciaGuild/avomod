@@ -159,11 +159,11 @@ public class WarDPS {
     public static MultipleElements getElementsToDraw(long time, double towerEhp, double lowerTowerDps, double upperTowerDps) {
         String[] stats = new String[]{
                 String.format("%s Seconds", time),
-                String.format("Tower EHP: %s", Utils.parseReadableNumber(towerEhp)),
-                String.format("Tower DPS: %s-%s", Utils.parseReadableNumber(lowerTowerDps), Utils.parseReadableNumber(upperTowerDps)),
-                String.format("Team DPS/1s: %s", Utils.parseReadableNumber(dps)),
-                String.format("Team DPS/5s: %s", Utils.parseReadableNumber(dpsFiveSec)),
-                String.format("Team DPS (total): %s", Utils.parseReadableNumber(dpsSinceStart)),
+                String.format("Tower EHP: %s", Utils.parseReadableNumber(towerEhp, 2)),
+                String.format("Tower DPS: %s-%s", Utils.parseReadableNumber(lowerTowerDps, 2), Utils.parseReadableNumber(upperTowerDps, 2)),
+                String.format("Team DPS/1s: %s", Utils.parseReadableNumber(dps, 2)),
+                String.format("Team DPS/5s: %s", Utils.parseReadableNumber(dpsFiveSec, 2)),
+                String.format("Team DPS (total): %s", Utils.parseReadableNumber(dpsSinceStart, 2)),
                 String.format("Estimated Time Remaining: %ss", (int) timeRemaining)
         };
 

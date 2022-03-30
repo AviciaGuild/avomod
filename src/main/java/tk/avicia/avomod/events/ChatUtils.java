@@ -190,7 +190,7 @@ public class ChatUtils {
 //        Avomod.getMC().player.sendMessage(outputComponent);
 //    }
 
-    private static boolean checkIfGuildChat(ITextComponent textComponent) {
+    public static boolean checkIfGuildChat(ITextComponent textComponent) {
         if (!textComponent.getUnformattedComponentText().startsWith("\u00A73")) return false;
         if (textComponent.getSiblings().size() == 0) return false;
 
