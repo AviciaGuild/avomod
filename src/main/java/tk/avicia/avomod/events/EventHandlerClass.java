@@ -93,20 +93,20 @@ public class EventHandlerClass {
             }
         }
 
-        if (Avomod.getConfigBoolean("autogg") && message.startsWith("[!] Congratulations")) {
-            String[] firstSplit = message.split(" for")[0].split("to ");
-            if (firstSplit.length <= 1) return;
-
-            String username = firstSplit[1];
-            new Thread(() -> {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Avomod.getMC().player.sendChatMessage(String.format("/msg %s gg", username));
-            }).start();
-        }
+//        if (Avomod.getConfigBoolean("autogg") && message.startsWith("[!] Congratulations")) {
+//            String[] firstSplit = message.split(" for")[0].split("to ");
+//            if (firstSplit.length <= 1) return;
+//
+//            String username = firstSplit[1];
+//            new Thread(() -> {
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                Avomod.getMC().player.sendChatMessage(String.format("/msg %s gg", username));
+//            }).start();
+//        }
 
         int month = Calendar.getInstance().get(Calendar.MONTH);
         int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);

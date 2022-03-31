@@ -88,7 +88,7 @@ public class Avomod {
             new ConfigToggle("Notify for avomod BETA version (may have bugs)", "Disabled", "betaNotification"),
             new ConfigInput("Aura Ping Color", "FF6F00", "[\\da-fA-F]+", "^[\\da-fA-F]{6}$", 6, "auraPingColor"),
             new ConfigToggle("Display weekly warcount on screen", "Disabled", "displayWeeklyWarcount"),
-            new ConfigToggle("Auto gg global level up messages", "Disabled", "autogg"),
+//            new ConfigToggle("Auto gg global level up messages", "Disabled", "autogg"),
             new ConfigToggle("Make mob health bars more readable", "Disabled", "readableHealth"),
             new ConfigToggle("Disable everything", "Disabled", "disableAll")
     };
