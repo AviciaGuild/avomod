@@ -1,9 +1,9 @@
 package tk.avicia.avomod.utils;
 
 public class ScreenCoordinates {
-    private final int startX, startY, endX, endY;
+    private final float startX, startY, endX, endY;
 
-    public ScreenCoordinates(int startX, int startY, int endX, int endY) {
+    public ScreenCoordinates(float startX, float startY, float endX, float endY) {
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class MobHealthSimplifier {
     @SubscribeEvent
     public void entityRender(RenderLivingEvent.Pre<EntityLivingBase> event) {
-        if (Avomod.getConfigBoolean("disableAll") || Avomod.getConfigBoolean("readableHealth")) return;
+        if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("readableHealth")) return;
 
         EntityLivingBase entity = event.getEntity();
         String tag = TextFormatting.getTextWithoutFormattingCodes(entity.getCustomNameTag());
@@ -77,7 +77,7 @@ public class MobHealthSimplifier {
 
     @SubscribeEvent
     public void bossInfo(RenderGameOverlayEvent.BossInfo event) {
-        if (Avomod.getConfigBoolean("disableAll") || Avomod.getConfigBoolean("readableHealth")) return;
+        if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("readableHealth")) return;
 
         String bossbarText = TextFormatting.getTextWithoutFormattingCodes(event.getBossInfo().getName().getUnformattedText());
         if (bossbarText == null) return;

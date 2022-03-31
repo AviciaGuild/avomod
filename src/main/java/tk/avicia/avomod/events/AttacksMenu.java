@@ -89,7 +89,11 @@ public class AttacksMenu {
         int xPos = Avomod.getMC().player.getPosition().getX();
         int zPos = Avomod.getMC().player.getPosition().getZ();
         String currentTerritory = Avomod.territoryData.coordinatesInTerritory(new Tuple<>(xPos, zPos));
-        ArrayList<String> messagesList = new ArrayList<>();
+
+        final int rectangleHeight = 12;
+        final float scale = 1F;
+        ArrayList<Element> elementsList = new ArrayList<>();
+        float y = Utils.getStartY("attacksMenu", upcomingAttacksSplit.size(), scale);
 
         for (Tuple<String, String> attack : upcomingAttacksSplit) {
             Tuple<String, Long> savedDefense = savedDefenses.get(attack.y);
@@ -123,23 +127,15 @@ public class AttacksMenu {
                 message = TextFormatting.LIGHT_PURPLE + "" + TextFormatting.BOLD + attack.y + TextFormatting.RESET + TextFormatting.GOLD + " (" + terrDefense + TextFormatting.GOLD + ") " + TextFormatting.AQUA + attack.x;
             }
 
-            messagesList.add(message);
-        }
-
-        ArrayList<Element> elementsList = new ArrayList<>();
-
-        int rectangleHeight = 12;
-        float scale = 1F;
-        float y = Utils.getStartY("attacksMenu", messagesList.size(), scale);
-
-        for (String message : messagesList) {
             int rectangleWidth = Avomod.getMC().fontRenderer.getStringWidth(message) + 4;
             float x = Utils.getStartX("attacksMenu", rectangleWidth, scale);
 
             elementsList.add(new Rectangle(x, y, rectangleWidth, rectangleHeight, new Color(100, 100, 100, 100)));
             elementsList.add(new Text(message, x + 2, y + 2, new Color(255, 170, 0)));
+            attackCoordinates.put(attack.y, new ScreenCoordinates(x, y, x + rectangleWidth, y + rectangleHeight));
             y += rectangleHeight;
         }
+
 
         return new MultipleElements("attacksMenu", 1F, elementsList);
     }
