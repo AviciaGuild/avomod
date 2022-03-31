@@ -38,6 +38,8 @@ notify Albb_n or newracket and provide the crash-report, so we can fix it. Thank
     * /avomod wars <past n days (OPTIONAL, defaults to infinity)
 * Soulpoints command (shows which worlds will soon get soulpoints)
     * /am soulpoints
+* Gui Locations command (changes the gui locations)
+    * /am locations
 
 ## **<span style="text-decoration:underline;">Custom Keybinds:</span>**
 
@@ -80,3 +82,5 @@ Way for you to create your own chat keybinds, in which a command is executed on 
     * Green plus means finished buy order
     * Green checkmark means finished sell order
     * Yellow checkmark means sell order that ran out of time
+* Guild bank keybind (opens guild bank if you're in range). Default is **Y**
+* Make mob health more readable (replaces numbers like 423,314 with 423.3k) 
