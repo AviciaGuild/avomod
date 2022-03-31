@@ -40,11 +40,8 @@ public class CustomFile extends File {
     }
 
     public JsonObject readJson() {
-        try {
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(this), StandardCharsets.UTF_8);
-            JsonReader jsonReader = new JsonReader(reader);
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(this), StandardCharsets.UTF_8); JsonReader jsonReader = new JsonReader(reader)) {
             jsonReader.setLenient(true);
-
             return new JsonParser().parse(jsonReader).getAsJsonObject();
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,10 +55,8 @@ public class CustomFile extends File {
     }
 
     public void writeJson(String text) {
-        try {
-            OutputStreamWriter fileWriter = new OutputStreamWriter(new FileOutputStream(this), StandardCharsets.UTF_8);
+        try (OutputStreamWriter fileWriter = new OutputStreamWriter(new FileOutputStream(this), StandardCharsets.UTF_8)) {
             fileWriter.write(text, 0, text.length());
-            fileWriter.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
