@@ -116,7 +116,7 @@ public class EventHandlerClass {
             String[] textToSend = pattern.split(message);
 
             if (textToSend.length > 1) {
-                Avomod.getMC().player.sendChatMessage(String.format("/g Hi %s", textToSend[1]));
+                Avomod.getMC().player.sendChatMessage(String.format("/g Hi %s", textToSend[1].replaceAll("[^a-zA-Z1-9,:_ .!\\-&()\"'?]","")));
                 Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "April fools! This avomod feature will automatically turn off on April 2nd"));
             }
         }
