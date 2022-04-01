@@ -194,7 +194,7 @@ public class ChatUtils {
         if (!textComponent.getUnformattedComponentText().startsWith("\u00A73")) return false;
         if (textComponent.getSiblings().size() == 0) return false;
 
-        Pattern pattern = Pattern.compile("^(\\[\u2605*[A-Za-z_1-9 ]*]).+", Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile("^(\\[\u2605*[A-Za-z_0-9 ]*]).+", Pattern.CASE_INSENSITIVE);
         String messageString = TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedText());
         if (messageString == null) return false;
 

@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.events.AttacksMenu;
+import tk.avicia.avomod.events.TabStatusDisplay;
 import tk.avicia.avomod.events.WarDPS;
 import tk.avicia.avomod.events.WorldInfo;
 import tk.avicia.avomod.renderer.MultipleElements;
@@ -42,6 +43,7 @@ public class LocationsGui extends GuiScreen {
                 WarTracker.getElementsToDraw(),
                 WorldInfo.getElementsToDraw(),
                 AttacksMenu.getElementsToDraw(Arrays.asList("- 13:47 Otherwordly Monolith", "- 5:23 Detlas", "- 9:52 Guild Hall"), true),
+                TabStatusDisplay.getElementsToDraw(Arrays.asList("Stealth Attack (00:01) x1", "90% Damage Bonus (00:04) x1")),
                 WarDPS.getElementsToDraw(224, 12523563, 24400, 36000)
         );
         buttonList.add(new ResetToDefault(0, this.width / 2 - 50, this.height - 30, 100, 20, "Reset to Defaults", this));

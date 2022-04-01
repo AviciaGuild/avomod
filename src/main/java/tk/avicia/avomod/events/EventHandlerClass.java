@@ -110,13 +110,13 @@ public class EventHandlerClass {
 
         int month = Calendar.getInstance().get(Calendar.MONTH);
         int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        
+
         if (month == 3 && dayOfMonth == 1 && ChatUtils.checkIfGuildChat(event.getMessage())) {
             Pattern pattern = Pattern.compile("(i'm )|(im )|(i am )", Pattern.CASE_INSENSITIVE);
             String[] textToSend = pattern.split(message);
 
             if (textToSend.length > 1) {
-                Avomod.getMC().player.sendChatMessage(String.format("/g Hi %s", textToSend[1].replaceAll("[^a-zA-Z1-9,:_ .!\\-&()\"'?]","")));
+                Avomod.getMC().player.sendChatMessage(String.format("/g Hi %s", textToSend[1].replaceAll("[^a-zA-Z0-9,:_ .!\\-&()\"'?]","")));
                 Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "April fools! This avomod feature will automatically turn off on April 2nd"));
             }
         }

@@ -18,10 +18,7 @@ import tk.avicia.avomod.commands.subcommands.*;
 import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.configs.ConfigInput;
 import tk.avicia.avomod.configs.ConfigToggle;
-import tk.avicia.avomod.events.EventHandlerClass;
-import tk.avicia.avomod.events.GuildBankKeybind;
-import tk.avicia.avomod.events.MobHealthSimplifier;
-import tk.avicia.avomod.events.WorldInfo;
+import tk.avicia.avomod.events.*;
 import tk.avicia.avomod.settings.KeybindSettings;
 import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.Keybind;
@@ -65,6 +62,7 @@ public class Avomod {
         put("weeklyWars", "1,0.98,false");
         put("worldInfo", "1,0.7,false");
         put("attacksMenu", "1,0.1,false");
+        put("tabStatusDisplay", "0.4,.1,true");
         put("warDPS", "0,0.2,true");
     }};
     public static Map<String, Command> aliases = new HashMap<>();
@@ -90,10 +88,13 @@ public class Avomod {
             new ConfigToggle("Display weekly warcount on screen", "Disabled", "displayWeeklyWarcount"),
 //            new ConfigToggle("Auto gg global level up messages", "Disabled", "autogg"),
             new ConfigToggle("Make mob health bars more readable", "Disabled", "readableHealth"),
+            new ConfigToggle("Display Some Tab Stats on Screen", "Disabled", "tabStatusDisplay"),
             new ConfigToggle("Disable everything", "Disabled", "disableAll")
     };
     public static TerritoryDataApi territoryData;
     public static OnlinePlayers onlinePlayers;
+    public static String[] statsFromTabToShow = new String[]{"Damage Bonus", "Stealth Attack"};
+
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
@@ -163,7 +164,8 @@ public class Avomod {
         Arrays.asList(new EventHandlerClass(),
                 new WarEvents(),
                 new GuildBankKeybind(),
-                new MobHealthSimplifier()).forEach(MinecraftForge.EVENT_BUS::register);
+                new MobHealthSimplifier(),
+                new TabStatusDisplay()).forEach(MinecraftForge.EVENT_BUS::register);
 
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
 
