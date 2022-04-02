@@ -1,7 +1,13 @@
-package tk.avicia.avomod.events;
+package tk.avicia.avomod.features;
 
+import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Renderer;
 
@@ -16,7 +22,7 @@ public class AuraHandler {
     public static long firstAura = 0;
     private static long lastAura = 0;
 
-    public static void auraPinged() {
+    private static void auraPinged() {
         long currentTime = System.currentTimeMillis();
 
         if (currentTime - lastAura > auraProcTime) {
@@ -41,12 +47,9 @@ public class AuraHandler {
         }
 
         lastAura = currentTime;
-
-        //Aura - 24s, 18s, 12s
-        //Volley - 20s, 15s, 10s
     }
 
-    public static void draw() {
+    private static void draw() {
         long currentTime = System.currentTimeMillis();
 
         if (currentTime - firstAura < auraProcTime) {
@@ -71,5 +74,25 @@ public class AuraHandler {
 
             GlStateManager.popMatrix();
         }
+    }
+
+    @SubscribeEvent
+    public void onRenderTick(TickEvent.RenderTickEvent event) {
+        if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("auraPing")) return;
+
+        try {
+            String subtitle = (String) ReflectionHelper.findField(GuiIngame.class, "displayedSubTitle", "field_175200_y").get(Avomod.getMC().ingameGUI);
+            if (subtitle.length() > 0 && subtitle.contains("Aura")) {
+                auraPinged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void renderOverlay(RenderGameOverlayEvent.Chat event) {
+        if (Avomod.getConfigBoolean("disableAll") | !Avomod.getConfigBoolean("auraPing")) return;
+        draw();
     }
 }

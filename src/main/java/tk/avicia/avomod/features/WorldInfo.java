@@ -1,4 +1,4 @@
-package tk.avicia.avomod.events;
+package tk.avicia.avomod.features;
 
 import com.google.gson.JsonElement;
 import net.minecraft.client.gui.FontRenderer;

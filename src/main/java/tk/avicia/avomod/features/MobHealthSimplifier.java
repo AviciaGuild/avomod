@@ -1,4 +1,4 @@
-package tk.avicia.avomod.events;
+package tk.avicia.avomod.features;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.text.TextComponentString;

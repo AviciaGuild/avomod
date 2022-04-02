@@ -18,7 +18,7 @@ import tk.avicia.avomod.commands.subcommands.*;
 import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.configs.ConfigInput;
 import tk.avicia.avomod.configs.ConfigToggle;
-import tk.avicia.avomod.events.*;
+import tk.avicia.avomod.features.*;
 import tk.avicia.avomod.settings.KeybindSettings;
 import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.Keybind;
@@ -161,11 +161,19 @@ public class Avomod {
 
         territoryData = new TerritoryDataApi();
 
-        Arrays.asList(new EventHandlerClass(),
-                new WarEvents(),
+        Arrays.asList(
+                new AttacksMenu(),
+                new AutoStream(),
+                new AuraHandler(),
+                new DisableMovingArmor(),
+                new EventHandlerClass(),
                 new GuildBankKeybind(),
                 new MobHealthSimplifier(),
-                new TabStatusDisplay()).forEach(MinecraftForge.EVENT_BUS::register);
+                new TabStatusDisplay(),
+                new TradeMarketAutoSearch(),
+                new WarDPS(),
+                new WarEvents()
+        ).forEach(MinecraftForge.EVENT_BUS::register);
 
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
 

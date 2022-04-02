@@ -3,7 +3,7 @@ package tk.avicia.avomod.utils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.events.AttacksMenu;
+import tk.avicia.avomod.features.AttacksMenu;
 import tk.avicia.avomod.webapi.ApiRequest;
 
 import java.util.HashMap;

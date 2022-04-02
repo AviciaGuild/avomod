@@ -1,7 +1,11 @@
-package tk.avicia.avomod.events;
+package tk.avicia.avomod.features;
 
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.BossInfo;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.renderer.Element;
 import tk.avicia.avomod.renderer.MultipleElements;
@@ -20,8 +24,6 @@ public class WarDPS {
     public static long firstDamageTime = -1;
     public static String previousTerritoryName = "";
     public static long lastTimeInWar = 0;
-    //    public static int num = 0;
-    //    public static double lastTime = 0;
     private static long previousTime = 0;
     private static double previousEhp = 0;
     private static double dps = 0;
@@ -30,7 +32,6 @@ public class WarDPS {
     private static double maxEhp = 0;
     private static double dpsSinceStart = 0;
     private static double timeRemaining = 0;
-//    private static double lastHealth = 0;
 
     public static void execute(String[] bossbarWords) {
         try {
@@ -58,37 +59,16 @@ public class WarDPS {
             String attacks = Objects.requireNonNull(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex2 + 3]))
                     .replace("(", "").split("\\)")[0].replace("x", "");
 
-//            System.out.println(bossbarWords);
-//                System.out.println(bossInfo.getName().getUnformattedText());
-//            System.out.println("Health: " + health + ", Defense: " + defense + ", Damage: " + damage + ", Attacks: " + attacks);
-
             double ehp = Math.round(Double.parseDouble(health) / (1.0 - (Double.parseDouble(defense) / 100.0)));
             double lowerDps = Double.parseDouble(damage.split("-")[0]) * Double.parseDouble(attacks);
             double higherDps = Double.parseDouble(damage.split("-")[1]) * Double.parseDouble(attacks);
 
-//            System.out.println(ehp);
             if (maxEhp == 0) {
                 maxEhp = ehp;
                 previousEhp = ehp;
                 previousFiveEhp.add(ehp);
-
-//                lastHealth = ehp;
             }
 
-//            if (ehp != lastHealth) {
-//                if (num == 0) {
-//                    lastTime = System.currentTimeMillis();
-//                }
-//
-//                lastHealth = ehp;
-//                num++;
-//
-//                System.out.println(System.currentTimeMillis() - lastTime);
-//                lastTime = System.currentTimeMillis();
-//            }
-//            System.out.println(ehp + "");
-//            System.out.println(lowerDps + "");
-//            System.out.println(higherDps + "");
             long time = (System.currentTimeMillis() - warStartTime) / 1000;
             if (time != previousTime) {
                 dps = previousEhp - ehp;
@@ -113,21 +93,6 @@ public class WarDPS {
 
             previousTime = time;
             getElementsToDraw(time, ehp, lowerDps, higherDps).draw();
-
-//                List<String> newMessageWords = new ArrayList<>(Arrays.asList(bossbarWords.clone()));
-//                newMessageWords.set(startIndex1 + 3, TextFormatting.GRAY + "(" + TextFormatting.GOLD + defense + "%" + TextFormatting.GRAY + ")"
-//                        + TextFormatting.DARK_PURPLE + " <3 " + (int) ehp + TextFormatting.GRAY);
-//                newMessageWords.set(startIndex2 + 3, TextFormatting.GRAY + "(" + TextFormatting.DARK_AQUA + attacks + "x" + TextFormatting.GRAY + ")"
-//                        + TextFormatting.DARK_PURPLE + " ☠ " + (int) lowerDps + "-" + (int) higherDps);
-
-//                for (int i = startIndex1 + 4; i < startIndex2; i++) {
-//                    newMessageWords.remove(i);
-//                }
-//                for (int i = startIndex2 + 4; i < newMessageWords.size(); i++) {
-//                    newMessageWords.remove(i);
-//                }
-
-//                bossInfo.setName(new TextComponentString(String.join(" ", newMessageWords)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -187,5 +152,44 @@ public class WarDPS {
         }
 
         return new MultipleElements("warDPS", 1F, elementList);
+    }
+
+    @SubscribeEvent
+    public void onChatEvent(ClientChatReceivedEvent event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
+        String message = TextFormatting.getTextWithoutFormattingCodes(event.getMessage().getUnformattedText());
+        if (message == null) return;
+
+        if (Avomod.getConfigBoolean("dpsInWars") && System.currentTimeMillis() - lastTimeInWar < 5000 && message.contains(previousTerritoryName)) {
+            // If you saw a tower health bar less than 5 seconds ago (if you're in a war)
+            if (message.startsWith("[WAR] You have taken control of ")) {
+                warEnded(true);
+            }
+            if (message.startsWith("[WAR] Your guild has lost the war for ") || message.startsWith("Your active attack was canceled and refunded to your headquarter")) {
+                warEnded(false);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void bossInfo(RenderGameOverlayEvent.BossInfo event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
+        try {
+            BossInfo bossInfo = event.getBossInfo();
+            String bossbarName = bossInfo.getName().getFormattedText();
+            String[] bossbarWords = bossbarName.split(" ");
+
+            if (Avomod.getConfigBoolean("dpsInWars") && bossbarName.contains("Tower") && bossbarWords.length >= 6) {
+                try {
+                    execute(bossbarWords);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

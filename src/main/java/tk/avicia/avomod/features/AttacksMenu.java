@@ -1,6 +1,16 @@
-package tk.avicia.avomod.events;
+package tk.avicia.avomod.features;
 
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.scoreboard.Score;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.renderer.Element;
 import tk.avicia.avomod.renderer.MultipleElements;
@@ -12,9 +22,10 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AttacksMenu {
-    public static HashMap<String, ScreenCoordinates> attackCoordinates = new HashMap<>();
+    private static final HashMap<String, ScreenCoordinates> attackCoordinates = new HashMap<>();
     public static HashMap<String, Tuple<String, Long>> savedDefenses = new HashMap<>();
 
     public static MultipleElements getElementsToDraw(List<String> upcomingAttacks, boolean sample) {
@@ -138,5 +149,70 @@ public class AttacksMenu {
 
 
         return new MultipleElements("attacksMenu", 1F, elementsList);
+    }
+
+    private static List<String> getUpcomingAttacks() {
+        if (Avomod.getMC().player == null || Avomod.getMC().world == null) return new ArrayList<>();
+
+        Scoreboard scoreboard = Avomod.getMC().world.getScoreboard();
+        Collection<Score> scores = scoreboard.getScores();
+        Optional<Score> titleScoreOptional = scores.stream().filter(e -> e.getPlayerName().contains("Upcoming Attacks")).findFirst();
+
+        if (titleScoreOptional.isPresent()) {
+            int titleScore = titleScoreOptional.get().getScorePoints();
+            List<Score> upcomingAttackScores = scores.stream().filter(e -> e.getScorePoints() < titleScore).collect(Collectors.toList());
+            List<String> upcomingAttacks = upcomingAttackScores.stream().map(Score::getPlayerName).collect(Collectors.toList());
+            List<String> duplicateTerritories = new ArrayList<>();
+
+            return upcomingAttacks.stream().filter(e -> {
+                if (!duplicateTerritories.contains(e)) {
+                    duplicateTerritories.add(e);
+                    return true;
+                }
+                return false;
+            }).collect(Collectors.toList());
+        }
+
+        return new ArrayList<>();
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void renderOverlay(RenderGameOverlayEvent.Chat event) {
+        if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("attacksMenu")) return;
+
+        // The Chat RenderGameOverlayEvent renders stuff normally, it disappears in f1, you can see it when your
+        // inventory is open and you can make stuff transparent
+        List<String> upcomingAttacks = getUpcomingAttacks();
+        MultipleElements elementsToDraw = AttacksMenu.getElementsToDraw(upcomingAttacks, false);
+        if (elementsToDraw != null) {
+            elementsToDraw.draw();
+        }
+    }
+
+    @SubscribeEvent
+    public void onGuiMouseInput(GuiScreenEvent.MouseInputEvent.Pre event) {
+        if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("attacksMenu")) return;
+
+        ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
+        int screenHeight = scaledResolution.getScaledHeight();
+        int scaleFactor = scaledResolution.getScaleFactor();
+        int scaledMouseX = Mouse.getX() / scaleFactor;
+        int scaledMouseY = Mouse.getY() / scaleFactor;
+
+        if (event.getGui() instanceof GuiChat && Mouse.getEventButtonState()) {
+            for (Map.Entry<String, ScreenCoordinates> attackCoordinates : attackCoordinates.entrySet()) {
+                if (attackCoordinates.getValue().mouseIn(scaledMouseX, screenHeight - scaledMouseY)) {
+                    Coordinates territoryLocation = Avomod.territoryData.getMiddleOfTerritory(attackCoordinates.getKey());
+                    BeaconManager.compassLocation = territoryLocation;
+
+                    if (BeaconManager.compassLocation != null) {
+                        Avomod.getMC().player.sendMessage(new TextComponentString("A blue beacon beam has been created in " + attackCoordinates.getKey() + " at (" + territoryLocation.getX() + ", " + territoryLocation.getZ() + ")"));
+                        BeaconManager.compassTerritory = attackCoordinates.getKey();
+                    } else {
+                        Avomod.getMC().player.sendMessage(new TextComponentString("Not a correct territory name (probably too long for the scoreboard)"));
+                    }
+                }
+            }
+        }
     }
 }

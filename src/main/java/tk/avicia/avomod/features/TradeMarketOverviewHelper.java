@@ -1,10 +1,8 @@
-package tk.avicia.avomod.events;
+package tk.avicia.avomod.features;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import tk.avicia.avomod.Avomod;
 
 import java.util.List;

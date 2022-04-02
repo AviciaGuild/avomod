@@ -1,4 +1,4 @@
-package tk.avicia.avomod.events;
+package tk.avicia.avomod.features;
 
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.settings.KeyBinding;

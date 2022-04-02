@@ -6,10 +6,10 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.events.AttacksMenu;
-import tk.avicia.avomod.events.TabStatusDisplay;
-import tk.avicia.avomod.events.WarDPS;
-import tk.avicia.avomod.events.WorldInfo;
+import tk.avicia.avomod.features.AttacksMenu;
+import tk.avicia.avomod.features.TabStatusDisplay;
+import tk.avicia.avomod.features.WarDPS;
+import tk.avicia.avomod.features.WorldInfo;
 import tk.avicia.avomod.renderer.MultipleElements;
 import tk.avicia.avomod.war.WarTracker;
 
@@ -19,8 +19,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LocationsGui extends GuiScreen {
-    private List<MultipleElements> items;
     private static boolean isOpen = false;
+    private List<MultipleElements> items;
+
+    public static boolean isOpen() {
+        return isOpen;
+    }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -86,9 +90,5 @@ public class LocationsGui extends GuiScreen {
         items.forEach(MultipleElements::save);
         isOpen = false;
         super.onGuiClosed();
-    }
-
-    public static boolean isOpen() {
-        return isOpen;
     }
 }

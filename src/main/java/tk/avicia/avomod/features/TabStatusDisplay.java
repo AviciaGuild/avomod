@@ -1,4 +1,4 @@
-package tk.avicia.avomod.events;
+package tk.avicia.avomod.features;
 
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.util.text.ITextComponent;
@@ -10,15 +10,31 @@ import tk.avicia.avomod.renderer.Element;
 import tk.avicia.avomod.renderer.MultipleElements;
 import tk.avicia.avomod.renderer.Rectangle;
 import tk.avicia.avomod.renderer.Text;
-import tk.avicia.avomod.utils.Renderer;
 import tk.avicia.avomod.utils.Utils;
 
 import java.awt.*;
 import java.lang.reflect.Field;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class TabStatusDisplay {
+    public static MultipleElements getElementsToDraw(List<String> stats) {
+        final float scale = 1F;
+        final int rectangleHeight = 12;
+        float y = Utils.getStartY("tabStatusDisplay", stats.size(), scale);
+        List<Element> elementsList = new ArrayList<>();
+
+        for (String stat : stats) {
+            int rectangleWidth = Avomod.getMC().fontRenderer.getStringWidth(stat) + 4;
+            float x = Utils.getStartX("tabStatusDisplay", rectangleWidth, scale);
+            elementsList.add(new Rectangle(x, y, rectangleWidth, rectangleHeight, new Color(100, 100, 100, 100)));
+            elementsList.add(new Text(stat, x + 2, y + 2, Color.WHITE));
+            y += rectangleHeight;
+        }
+
+        return new MultipleElements("tabStatusDisplay", scale, elementsList);
+    }
+
     @SubscribeEvent
     public void renderOverlay(RenderGameOverlayEvent.Chat event) {
         if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("tabStatusDisplay")) return;
@@ -70,22 +86,5 @@ public class TabStatusDisplay {
             e.printStackTrace();
         }
 
-    }
-
-    public static MultipleElements getElementsToDraw(List<String> stats) {
-        final float scale = 1F;
-        final int rectangleHeight = 12;
-        float y = Utils.getStartY("tabStatusDisplay", stats.size(), scale);
-        List<Element> elementsList = new ArrayList<>();
-
-        for (String stat : stats) {
-            int rectangleWidth = Avomod.getMC().fontRenderer.getStringWidth(stat) + 4;
-            float x = Utils.getStartX("tabStatusDisplay", rectangleWidth, scale);
-            elementsList.add(new Rectangle(x, y, rectangleWidth, rectangleHeight, new Color(100, 100, 100, 100)));
-            elementsList.add(new Text(stat, x + 2, y + 2, Color.WHITE));
-            y += rectangleHeight;
-        }
-
-        return new MultipleElements("tabStatusDisplay", scale, elementsList);
     }
 }
