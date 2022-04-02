@@ -6,7 +6,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,8 +20,6 @@ import tk.avicia.avomod.utils.TerritoryData;
 import tk.avicia.avomod.webapi.UpdateChecker;
 
 import java.awt.*;
-import java.util.Calendar;
-import java.util.regex.Pattern;
 
 public class EventHandlerClass {
     private int tick = 0;
@@ -91,19 +88,6 @@ public class EventHandlerClass {
 //                Avomod.getMC().player.sendChatMessage(String.format("/msg %s gg", username));
 //            }).start();
 //        }
-
-        int month = Calendar.getInstance().get(Calendar.MONTH);
-        int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-
-        if (month == 3 && dayOfMonth == 1 && ChatUtils.checkIfGuildChat(event.getMessage())) {
-            Pattern pattern = Pattern.compile("(i'm )|(im )|(i am )", Pattern.CASE_INSENSITIVE);
-            String[] textToSend = pattern.split(message);
-
-            if (textToSend.length > 1) {
-                Avomod.getMC().player.sendChatMessage(String.format("/g Hi %s", textToSend[1].replaceAll("[^a-zA-Z0-9,:_ .!\\-&()\"'?]", "")));
-                Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "April fools! This avomod feature will automatically turn off on April 2nd"));
-            }
-        }
     }
 
     @SubscribeEvent
