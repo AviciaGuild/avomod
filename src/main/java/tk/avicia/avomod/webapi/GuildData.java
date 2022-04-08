@@ -21,7 +21,7 @@ public class GuildData {
 
     public GuildData(String guildName) throws IllegalArgumentException {
         try {
-            URL urlObject = new URL("https://api.wynncraft.com/public_api.php?action=guildStats&command=" + guildName);
+            URL urlObject = new URL("https://api.wynncraft.com/public_api.php?action=guildStats&command=" + guildName.replaceAll(" ", "%20"));
             HttpURLConnection con = (HttpURLConnection) urlObject.openConnection();
             con.setRequestMethod("GET");
             int responseCode = con.getResponseCode();

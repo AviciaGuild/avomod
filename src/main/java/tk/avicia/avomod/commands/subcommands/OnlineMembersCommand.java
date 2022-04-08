@@ -45,7 +45,7 @@ public class OnlineMembersCommand extends Command {
                                     sender.sendMessage(tagMessage);
                                 }
                             }
-                            guildName = guildNameFromTag.getGuildName().replaceAll(" ", "%20");
+                            guildName = guildNameFromTag.getGuildName();
                         } else {
                             ITextComponent textComponent = new TextComponentString(TextFormatting.DARK_RED + guildName + TextFormatting.RED + " is not a guild");
                             sender.sendMessage(textComponent);
