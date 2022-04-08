@@ -1,11 +1,18 @@
 package tk.avicia.avomod.features;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 
 import java.awt.*;
@@ -17,6 +24,7 @@ public class AverageLevel {
     public static boolean isChestNew = true;
     private static int levelledItemCount = 0;
     private static int totalLevelItems = 0;
+    private boolean guiJustOpened;
 
     public static void execute(GuiScreenEvent.BackgroundDrawnEvent event, InventoryBasic lowerInventory) {
         if (isChestNew) {
@@ -73,5 +81,57 @@ public class AverageLevel {
         FontRenderer fontRenderer = Avomod.getMC().fontRenderer;
         fontRenderer.drawString(displayString, screenWidth / 2 - fontRenderer.getStringWidth(displayString) / 2
                 , screenHeight / 2 - 100, Color.WHITE.getRGB());
+    }
+
+    @SubscribeEvent
+    public void guiJustOpened(GuiOpenEvent event) {
+        guiJustOpened = true;
+    }
+
+    @SubscribeEvent
+    public void onGuiOpen(GuiScreenEvent.BackgroundDrawnEvent event) {
+        guiJustOpened = false;
+        if (Avomod.getConfigBoolean("disableAll") || Avomod.getMC().player == null || event.getGui() == null) return;
+
+        Container openContainer = Avomod.getMC().player.openContainer;
+        if (openContainer instanceof ContainerChest) {
+            InventoryBasic lowerInventory = (InventoryBasic) ((ContainerChest) openContainer).getLowerChestInventory();
+            String containerName = lowerInventory.getName();
+            if (containerName.contains("Loot Chest")) {
+                AverageLevel.execute(event, lowerInventory);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void guiInitialize(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (Avomod.getConfigBoolean("disableAll") || Avomod.getMC().player == null || event.getGui() == null) return;
+
+        Container openContainer = Avomod.getMC().player.openContainer;
+        if (openContainer instanceof ContainerChest) {
+            InventoryBasic lowerInventory = (InventoryBasic) ((ContainerChest) openContainer).getLowerChestInventory();
+            String containerName = lowerInventory.getName();
+            if (containerName.contains("Loot Chest")) {
+                ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
+                int screenHeight = scaledResolution.getScaledHeight();
+                int scaleFactor = scaledResolution.getScaleFactor();
+                int scaledMouseX = Mouse.getX() / scaleFactor;
+                int scaledMouseY = Mouse.getY() / scaleFactor;
+
+                if (guiJustOpened && scaledMouseY != Math.ceil(screenHeight / 2.0)) {
+                    Mouse.setCursorPosition(scaledMouseX * scaleFactor, ((int) Math.ceil(screenHeight / 2.0)) * scaleFactor);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (Avomod.getConfigBoolean("disableAll") || Avomod.getMC().player == null) return;
+
+        Container openContainer = Avomod.getMC().player.openContainer;
+        if (!(openContainer instanceof ContainerChest)) {
+            isChestNew = true;
+        }
     }
 }

@@ -1,4 +1,4 @@
-package tk.avicia.avomod.war;
+package tk.avicia.avomod.features.war;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

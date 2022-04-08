@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class ChatUtils {
     private static String guildMessageSenderNickname = "";
 
-    public static void execute(ClientChatReceivedEvent event) {
+    public static void revealNicks(ClientChatReceivedEvent event) {
         ITextComponent fullMessage = event.getMessage();
         guildMessageSenderNickname = "";
         doChecks(event.getMessage());

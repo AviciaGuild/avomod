@@ -7,6 +7,9 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.webapi.ApiRequest;
 
@@ -80,5 +83,37 @@ public class AttackedTerritoryDifficulty {
         ApiRequest.post("https://script.google.com/macros/s/AKfycbw7lRN6tojW1RjsPeC7bhVNsGETBl_LZEc6bZKXAHG95HB_UC4NKQMm9LGmuvT8KU-R-A/exec",
                 String.format("{`username`:`%s`,`territory`:`%s`,`timestamp`:%s,`playerUuid`:`%s`,`timer`:`%s`,`defense`:`%s`}",
                         username, territory, timestamp, uuid, timer, defense).replace('`', '"'));
+    }
+
+    @SubscribeEvent
+    public void onChatEvent(ClientChatReceivedEvent event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
+        String message = TextFormatting.getTextWithoutFormattingCodes(event.getMessage().getUnformattedText());
+        if (message == null) return;
+
+        if (message.contains("The war for") && message.endsWith("minutes.")) {
+            String territory = message.split("for ")[1].split(" will")[0];
+            receivedChatMessage(message, territory);
+        }
+    }
+
+    @SubscribeEvent
+    public void onGuiOpen(GuiScreenEvent.BackgroundDrawnEvent event) {
+        if (Avomod.getConfigBoolean("disableAll") || Avomod.getMC().player == null || event.getGui() == null) return;
+
+        Container openContainer = Avomod.getMC().player.openContainer;
+        if (openContainer instanceof ContainerChest) {
+            InventoryBasic lowerInventory = (InventoryBasic) ((ContainerChest) openContainer).getLowerChestInventory();
+            String containerName = lowerInventory.getName();
+
+            if (containerName.contains("Attacking: ")) {
+                try {
+                    inMenu();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

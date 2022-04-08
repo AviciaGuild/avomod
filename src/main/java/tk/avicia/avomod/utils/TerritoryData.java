@@ -2,6 +2,8 @@ package tk.avicia.avomod.utils;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.features.AttacksMenu;
 import tk.avicia.avomod.webapi.ApiRequest;
@@ -11,6 +13,7 @@ import java.util.Map;
 
 public class TerritoryData {
     private final static Map<String, String> defenses = new HashMap<>();
+    private int tick = 0;
 
     public static void updateTerritoryData() {
         try {
@@ -70,5 +73,16 @@ public class TerritoryData {
 
     public static boolean hasValues() {
         return !defenses.isEmpty();
+    }
+
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (Avomod.getConfigBoolean("disableAll") || Avomod.getMC().player == null) return;
+
+        tick++;
+        if (tick % 60000 == 0) {
+            updateTerritoryData();
+        }
     }
 }

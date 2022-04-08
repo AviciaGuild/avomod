@@ -10,8 +10,8 @@ import tk.avicia.avomod.features.AttacksMenu;
 import tk.avicia.avomod.features.TabStatusDisplay;
 import tk.avicia.avomod.features.WarDPS;
 import tk.avicia.avomod.features.WorldInfo;
+import tk.avicia.avomod.features.war.WarTracker;
 import tk.avicia.avomod.renderer.MultipleElements;
-import tk.avicia.avomod.war.WarTracker;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

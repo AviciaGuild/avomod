@@ -3,6 +3,8 @@ package tk.avicia.avomod.features;
 import com.google.gson.JsonElement;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.renderer.Element;
 import tk.avicia.avomod.renderer.MultipleElements;
@@ -78,6 +80,18 @@ public class WorldInfo {
 
     public static void updateWorldData() {
         worldData = new WorldUpTime();
+    }
+
+    @SubscribeEvent
+    public void onRenderTick(TickEvent.RenderTickEvent event) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
+        if (Avomod.getMC().gameSettings.keyBindPlayerList.isKeyDown()) {
+            MultipleElements elements = WorldInfo.getElementsToDraw();
+            if (elements != null) {
+                elements.draw();
+            }
+        }
     }
 
 }

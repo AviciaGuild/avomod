@@ -6,12 +6,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.lwjgl.input.Keyboard;
 import tk.avicia.avomod.commands.AvomodCommand;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.commands.subcommands.*;
@@ -19,12 +17,11 @@ import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.configs.ConfigInput;
 import tk.avicia.avomod.configs.ConfigToggle;
 import tk.avicia.avomod.features.*;
-import tk.avicia.avomod.settings.KeybindSettings;
+import tk.avicia.avomod.features.war.WarEvents;
+import tk.avicia.avomod.features.war.WarsCommand;
+import tk.avicia.avomod.utils.BeaconManager;
 import tk.avicia.avomod.utils.CustomFile;
-import tk.avicia.avomod.utils.Keybind;
-import tk.avicia.avomod.utils.Utils;
-import tk.avicia.avomod.war.WarEvents;
-import tk.avicia.avomod.war.WarsCommand;
+import tk.avicia.avomod.utils.TerritoryData;
 import tk.avicia.avomod.webapi.OnlinePlayers;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
 
@@ -66,7 +63,6 @@ public class Avomod {
         put("warDPS", "0,0.2,true");
     }};
     public static Map<String, Command> aliases = new HashMap<>();
-    public static Map<String, Keybind> keybinds = new HashMap<>();
     public static GuiScreen guiToDraw = null;
     public static JsonObject configs = null;
     public static JsonObject locations = null;
@@ -98,25 +94,6 @@ public class Avomod {
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
-    }
-
-    public static void updateKeybinds() {
-        GuildBankKeybind.init();
-
-        JsonObject settings = KeybindSettings.getSettings();
-        if (settings != null) {
-            for (Map.Entry<String, JsonElement> e : settings.entrySet()) {
-                if (!keybinds.containsKey(e.getKey()) || !keybinds.get(e.getKey()).getCommandToRun().equals(e.getValue().getAsString())) {
-                    Keybind keybind = new Keybind(Utils.firstLetterCapital(e.getValue().getAsString()), Keyboard.getKeyIndex(e.getKey().toUpperCase()), "Avomod", e.getValue().getAsString());
-                    keybinds.put(e.getKey(), keybind);
-
-                    ClientRegistry.registerKeyBinding(keybind);
-                }
-            }
-        }
-
-        if (settings == null) return;
-        keybinds.entrySet().removeIf(entry -> !settings.has(entry.getKey()));
     }
 
     public static String getLocation(String locationKey) {
@@ -162,23 +139,30 @@ public class Avomod {
         territoryData = new TerritoryDataApi();
 
         Arrays.asList(
+                new AttackedTerritoryDifficulty(),
                 new AttacksMenu(),
                 new AutoStream(),
                 new AuraHandler(),
+                new AverageLevel(),
+                new BeaconManager(),
+//                new BombBellTracker(),
+                new CustomKeybinds(),
                 new DisableMovingArmor(),
                 new EventHandlerClass(),
                 new GuildBankKeybind(),
                 new MobHealthSimplifier(),
                 new TabStatusDisplay(),
-                new TradeMarketAutoSearch(),
+                new TerritoryData(),
+                new TradeMarketFeatures(),
                 new WarDPS(),
-                new WarEvents()
+                new WarEvents(),
+                new WorldInfo()
         ).forEach(MinecraftForge.EVENT_BUS::register);
 
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
 
         this.initializeAliases();
-        updateKeybinds();
+        CustomKeybinds.updateKeybinds();
     }
 
     private void initializeConfigs() {

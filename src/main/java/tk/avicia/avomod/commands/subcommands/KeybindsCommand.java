@@ -8,9 +8,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.commands.Command;
-import tk.avicia.avomod.settings.KeybindSettings;
+import tk.avicia.avomod.features.CustomKeybinds;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -34,13 +33,13 @@ public class KeybindsCommand extends Command {
                         if (messageToExecute.startsWith("/")) {
                             messageToExecute = messageToExecute.substring(1);
                         }
-                        KeybindSettings.setSettings(params[1], messageToExecute);
+                        CustomKeybinds.setSettings(params[1], messageToExecute);
 
                         outputMessage = new StringBuilder(TextFormatting.BLUE + "Keybind added. " + TextFormatting.GREEN + params[1].toUpperCase() + " will execute " + TextFormatting.YELLOW + "/" + messageToExecute);
                     }
                     break;
                 case "list":
-                    JsonObject keybinds = KeybindSettings.getSettings();
+                    JsonObject keybinds = CustomKeybinds.getSettings();
                     outputMessage = new StringBuilder(TextFormatting.BLUE + "Current Avomod Keybinds:");
 
                     for (Map.Entry<String, JsonElement> e : keybinds.entrySet()) {
@@ -52,11 +51,11 @@ public class KeybindsCommand extends Command {
                         outputMessage = new StringBuilder(TextFormatting.RED + "Incorrect formatting. /avomod keybinds remove <key>");
                     } else if (params[1].length() != 1) {
                         outputMessage = new StringBuilder(TextFormatting.RED + "The keybind you're removing must be one letter.");
-                    } else if (!Avomod.keybinds.containsKey(params[1])) {
+                    } else if (!CustomKeybinds.keybinds.containsKey(params[1])) {
                         outputMessage = new StringBuilder(TextFormatting.RED + "The keybind you're removing does not exist.");
                     } else {
-                        Avomod.keybinds.get(params[1]).setKeyCode(0);
-                        KeybindSettings.removeSetting(params[1]);
+                        CustomKeybinds.keybinds.get(params[1]).setKeyCode(0);
+                        CustomKeybinds.removeSetting(params[1]);
 
                         outputMessage = new StringBuilder(TextFormatting.BLUE + "Keybind removed for " + TextFormatting.GREEN + params[1].toUpperCase() + ". Note: This keybind will show up in your controls until you restart your game.");
                     }

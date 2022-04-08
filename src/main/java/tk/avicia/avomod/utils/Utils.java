@@ -10,6 +10,9 @@ import net.minecraft.network.play.client.CPacketClickWindow;
 import tk.avicia.avomod.Avomod;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
     public static String firstLetterCapital(String input) {
@@ -31,6 +34,18 @@ public class Utils {
         if (connection != null) {
             connection.sendPacket(cPacketClickWindow);
         }
+    }
+
+    public static ArrayList<String> getMatches(String text, String regex) {
+        ArrayList<String> matches = new ArrayList<>();
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+
+        while (matcher.find()) {
+            matches.add(matcher.group());
+        }
+
+        return matches;
     }
 
 //    public static Tuple<Integer, Integer> getTopLeftCornerOfSlot(int slot) {

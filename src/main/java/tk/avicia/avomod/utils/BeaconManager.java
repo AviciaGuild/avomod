@@ -12,6 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import tk.avicia.avomod.Avomod;
 
@@ -173,5 +175,18 @@ public class BeaconManager {
         GlStateManager.enableBlend();
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         GlStateManager.popMatrix();
+    }
+
+    @SubscribeEvent
+    public void renderWorld(RenderWorldLastEvent e) {
+        if (Avomod.getConfigBoolean("disableAll")) return;
+
+        if (compassLocation != null) {
+            drawBeam(compassLocation, new Color(0, 50, 150, 255), e.getPartialTicks(), compassTerritory);
+        }
+
+        if (soonestTerritoryLocation != null && Avomod.getConfigBoolean("greenBeacon")) {
+            drawBeam(soonestTerritoryLocation, new Color(50, 150, 0, 255), e.getPartialTicks(), soonestTerritory);
+        }
     }
 }

@@ -1,10 +1,12 @@
 package tk.avicia.avomod.features;
 
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraft.util.text.TextFormatting;
@@ -14,8 +16,49 @@ import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.utils.Utils;
 
-public class TradeMarketAutoSearch {
+import java.util.List;
+import java.util.Optional;
+
+
+public class TradeMarketFeatures {
+
     private static boolean executing = false;
+
+    public static void execute(Container openContainer) {
+        for (ItemStack itemStack : openContainer.getInventory()) {
+            List<String> lore = itemStack.getTooltip(Avomod.getMC().player, ITooltipFlag.TooltipFlags.ADVANCED);
+            Optional<String> soldOut = lore.stream()
+                    .filter(line -> line.contains("Sold Out")).findFirst();
+
+            if (itemStack.getUnlocalizedName().equals("item.shovelGold")) {
+                if (itemStack.getDisplayName().contains("Selling")) {
+                    if (soldOut.isPresent()) {
+                        itemStack.setItemDamage(20); // Green Checkmark
+                    } else {
+                        itemStack.setItemDamage(19); // Yellow Checkmark
+                    }
+                }
+                if (itemStack.getDisplayName().contains("Buying")) {
+                    itemStack.setItemDamage(22); // Green Plus
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onGuiOpen(GuiScreenEvent.BackgroundDrawnEvent event) {
+        if (Avomod.getConfigBoolean("disableAll") || Avomod.getMC().player == null || event.getGui() == null) return;
+
+        Container openContainer = Avomod.getMC().player.openContainer;
+        if (openContainer instanceof ContainerChest) {
+            InventoryBasic lowerInventory = (InventoryBasic) ((ContainerChest) openContainer).getLowerChestInventory();
+            String containerName = lowerInventory.getName();
+
+            if (containerName.equals("Trade Overview")) {
+                execute(openContainer);
+            }
+        }
+    }
 
     @SubscribeEvent
     public void onGuiMouseInput(GuiScreenEvent.MouseInputEvent.Pre event) {
@@ -61,7 +104,7 @@ public class TradeMarketAutoSearch {
             if (name.equals("Air")) return;
             ItemStack compass = openContainer.inventorySlots.get(35).getStack();
 
-            if (!compass.getDisplayName().contains("Search Item") || TradeMarketAutoSearch.executing) return;
+            if (!compass.getDisplayName().contains("Search Item") || executing) return;
             executing = true;
 
             new Thread(() -> {
