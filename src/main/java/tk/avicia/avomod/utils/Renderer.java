@@ -69,6 +69,10 @@ public class Renderer {
         drawRect(color, startX, y, endX - startX, 1);
     }
 
+    public static void drawVerticalLine(int x, int startY, int endY, Color color) {
+        drawRect(color, x, startY, 1, endY - startY);
+    }
+
     public static int getStringWidth(String text) {
         return Avomod.getMC().fontRenderer.getStringWidth(text);
     }

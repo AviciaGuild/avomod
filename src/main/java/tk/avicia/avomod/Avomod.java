@@ -25,18 +25,20 @@ import tk.avicia.avomod.utils.TerritoryData;
 import tk.avicia.avomod.webapi.OnlinePlayers;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Mod(modid = Avomod.MODID, name = Avomod.NAME, version = Avomod.VERSION)
 public class Avomod {
     public static final String MODID = "avomod";
     public static final String NAME = "avomod";
-    public static final String VERSION = "1.5.1";
+    public static final String VERSION = "1.5.3";
     public static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("help", new HelpCommand());
         put("chestcount", new ChestCountCommand());
@@ -67,25 +69,25 @@ public class Avomod {
     public static JsonObject configs = null;
     public static JsonObject locations = null;
     public static Config[] configsArray = new Config[]{
-            new ConfigToggle("Prevent moving armor/accessories", "Disabled", "disableMovingArmor"),
-            new ConfigToggle("Filter out bank messages", "Disabled", "filterBankMessages"),
-            new ConfigToggle("Reveal nicknames", "Enabled", "revealNicks"),
-            new ConfigToggle("Auto skip quest dialogue", "Disabled", "skipDialogue"),
-            new ConfigToggle("Filter out all resource messages", "Disabled", "filterResourceMessages"),
-            new ConfigToggle("Custom attack timers display", "Enabled", "attacksMenu"),
-            new ConfigToggle("Green beacon at soonest war", "Enabled", "greenBeacon"),
-            new ConfigToggle("Say territory defense in chat", "Enabled", "terrDefenseInChat"),
-            new ConfigToggle("Display war info (dps, tower ehp, etc.)", "Enabled", "dpsInWars"),
-            new ConfigToggle("Hide entities in wars", "Disabled", "hideEntitiesInWar"),
-            new ConfigToggle("Auto /stream on world swap", "Disabled", "autoStream"),
-            new ConfigToggle("Aura Ping", "Enabled", "auraPing"),
-            new ConfigToggle("Notify for avomod BETA version (may have bugs)", "Disabled", "betaNotification"),
-            new ConfigInput("Aura Ping Color", "FF6F00", "[\\da-fA-F]+", "^[\\da-fA-F]{6}$", 6, "auraPingColor"),
-            new ConfigToggle("Display weekly warcount on screen", "Disabled", "displayWeeklyWarcount"),
-//            new ConfigToggle("Auto gg global level up messages", "Disabled", "autogg"),
-            new ConfigToggle("Make mob health bars more readable", "Disabled", "readableHealth"),
-            new ConfigToggle("Display Some Tab Stats on Screen", "Disabled", "tabStatusDisplay"),
-            new ConfigToggle("Disable everything", "Disabled", "disableAll")
+            new ConfigToggle("General","Disable Everything", "Disabled", "disableAll"),
+            new ConfigToggle("General","Notify for avomod BETA Version (may have bugs)", "Disabled", "betaNotification"),
+            new ConfigToggle("Guild","Filter Out Bank Messages", "Disabled", "filterBankMessages"),
+            new ConfigToggle("Guild","Filter Out All Resource Messages", "Disabled", "filterResourceMessages"),
+            new ConfigToggle("Chat","Reveal Nicknames", "Enabled", "revealNicks"),
+            new ConfigToggle("Chat","Auto Skip Quest Dialogue", "Disabled", "skipDialogue"),
+            //new ConfigToggle("Chat", "Auto GG Global Level Up Messages", "Disabled", "autogg"),
+            new ConfigToggle("War","Custom Attack Timers Display", "Enabled", "attacksMenu"),
+            new ConfigToggle("War","Green Beacon at Soonest War", "Enabled", "greenBeacon"),
+            new ConfigToggle("War","Announce Territory Defense in Chat", "Enabled", "terrDefenseInChat"),
+            new ConfigToggle("War","Display War Info (dps, tower ehp, etc.)", "Enabled", "dpsInWars"),
+            new ConfigToggle("War","Hide Entities in Wars", "Disabled", "hideEntitiesInWar"),
+            new ConfigToggle("War","Aura Ping", "Enabled", "auraPing"),
+            new ConfigInput("War","Aura Ping Color", "FF6F00", "[\\da-fA-F]+", "^[\\da-fA-F]{6}$", 6, "auraPingColor"),
+            new ConfigToggle("War","Display Weekly Warcount on Screen", "Disabled", "displayWeeklyWarcount"),
+            new ConfigToggle("Misc","Auto /stream on World Swap", "Disabled", "autoStream"),
+            new ConfigToggle("Misc","Prevent Moving Armor/Accessories", "Disabled", "disableMovingArmor"),
+            new ConfigToggle("Misc","Make Mob Health Bars More Readable", "Disabled", "readableHealth"),
+            new ConfigToggle("Misc", "Display Some Tab Stats on Screen", "Disabled", "tabStatusDisplay")
     };
     public static TerritoryDataApi territoryData;
     public static OnlinePlayers onlinePlayers;

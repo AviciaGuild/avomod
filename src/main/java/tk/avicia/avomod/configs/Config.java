@@ -1,9 +1,10 @@
 package tk.avicia.avomod.configs;
 
 public class Config {
-    public String sectionText, defaultValue, configsKey;
+    public String configsCategory, sectionText, defaultValue, configsKey;
 
-    public Config(String sectionText, String defaultValue, String configsKey) {
+    public Config(String configsCategory, String sectionText, String defaultValue, String configsKey) {
+        this.configsCategory = configsCategory;
         this.sectionText = sectionText;
         this.defaultValue = defaultValue;
         this.configsKey = configsKey;
