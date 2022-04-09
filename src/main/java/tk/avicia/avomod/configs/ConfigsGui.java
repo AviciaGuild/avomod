@@ -2,7 +2,6 @@ package tk.avicia.avomod.configs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
@@ -11,20 +10,23 @@ import tk.avicia.avomod.utils.Renderer;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ConfigsGui extends GuiScreen {
     private final int settingLineHeight = 27;
     private final int startingHeight = 65;
     private final int settingHeight = 23;
+    public ArrayList<ConfigsCategory> categories = new ArrayList<>();
     // buttonList exists too, doesn't need to be created
     ArrayList<ConfigsTextField> textFieldsList = new ArrayList<>();
-
     String selectedCategory;
     Map<String, ArrayList<ConfigsSection>> totalSections = new HashMap<>();
-    public ArrayList<ConfigsCategory> categories = new ArrayList<>();
     int scrollSections; // the index of the first section to be displayed
 
     public ConfigsGui() {
@@ -52,7 +54,8 @@ public class ConfigsGui extends GuiScreen {
 
             // Draws the actual string
             this.drawString(this.fontRenderer, configsSection.title, this.width / 16 + 121, (y * settingLineHeight) + (y * settingHeight) + 6 + startingHeight, color);
-            if (totalSections.get(selectedCategory).indexOf(configsSection) != totalSections.get(selectedCategory).size() - 1) Renderer.drawHorizontalLine(this.width / 16 + 118, this.width - (this.width / 16) - 21, (y * settingLineHeight) + ((y + 1) * settingHeight) + 23 + startingHeight, new Color(255, 255, 255));
+            if (totalSections.get(selectedCategory).indexOf(configsSection) != totalSections.get(selectedCategory).size() - 1)
+                Renderer.drawHorizontalLine(this.width / 16 + 118, this.width - (this.width / 16) - 21, (y * settingLineHeight) + ((y + 1) * settingHeight) + 23 + startingHeight, new Color(255, 255, 255));
         }
 
         // Draw all text field inputs
@@ -113,11 +116,16 @@ public class ConfigsGui extends GuiScreen {
         setCategory(categories.get(0).title);
     }
 
+    // Bug #1 - resizing changes category.
+    // Make tab change category
+
     @Override
     public void onResize(@Nonnull Minecraft mineIn, int w, int h) {
-        super.onResize(mineIn, w, h);
+        String oldCategory = selectedCategory;
 
+        super.onResize(mineIn, w, h);
         this.initGui();
+        setCategory(oldCategory);
     }
 
     @Override
@@ -151,6 +159,32 @@ public class ConfigsGui extends GuiScreen {
         for (ConfigsTextField textField : this.textFieldsList) {
             textField.textboxKeyTyped(typedChar, keyCode);
         }
+
+        if (keyCode == 15) {
+            if (isShiftKeyDown()) {
+                previousCategory();
+            } else {
+                nextCategory();
+            }
+        }
+    }
+
+    private void nextCategory() {
+        int currentIndex = categories.stream().map(e -> e.title).collect(Collectors.toList()).indexOf(selectedCategory);
+        if (currentIndex == categories.size() - 1) {
+            setCategory(categories.get(0).title);
+        } else {
+            setCategory(categories.get(currentIndex + 1).title);
+        }
+    }
+
+    private void previousCategory() {
+        int currentIndex = categories.stream().map(e -> e.title).collect(Collectors.toList()).indexOf(selectedCategory);
+        if (currentIndex == 0) {
+            setCategory(categories.get(categories.size() - 1).title);
+        } else {
+            setCategory(categories.get(currentIndex - 1).title);
+        }
     }
 
     @Override
@@ -172,7 +206,8 @@ public class ConfigsGui extends GuiScreen {
 
         scrollSections += -amount;
         if (scrollSections < 0) scrollSections = 0;
-        if (scrollSections > totalSections.get(selectedCategory).size() - settingsOnScreen) scrollSections = totalSections.get(selectedCategory).size() - settingsOnScreen;
+        if (scrollSections > totalSections.get(selectedCategory).size() - settingsOnScreen)
+            scrollSections = totalSections.get(selectedCategory).size() - settingsOnScreen;
 
         this.buttonList = new ArrayList<>();
         this.textFieldsList = new ArrayList<>();
@@ -213,7 +248,7 @@ public class ConfigsGui extends GuiScreen {
             ConfigsButton configButton = new ConfigsButton(configPlacement, this.width / 16 + 121, configPlacement * settingLineHeight + startingHeight - 4 + (settingHeight * (configPlacement + 1)), width, choices, config.defaultValue);
             sectionToAdd = new ConfigsSection(config.configsCategory, config.sectionText, configButton, config.configsKey);
         } else {
-            ConfigsTextField textField = new ConfigsTextField(configPlacement, ((ConfigInput) config).allowedInputs, ((ConfigInput) config).finalValidation, Avomod.getMC().fontRenderer, this.width / 16 + 122,configPlacement * settingLineHeight + startingHeight - 2 + (settingHeight * (configPlacement + 1)), 80, 16, this.width);
+            ConfigsTextField textField = new ConfigsTextField(configPlacement, ((ConfigInput) config).allowedInputs, ((ConfigInput) config).finalValidation, Avomod.getMC().fontRenderer, this.width / 16 + 122, configPlacement * settingLineHeight + startingHeight - 2 + (settingHeight * (configPlacement + 1)), 80, 16, this.width);
             textField.setText(config.defaultValue);
             if (((ConfigInput) config).maxLength != 0) {
                 textField.setMaxStringLength(((ConfigInput) config).maxLength);
