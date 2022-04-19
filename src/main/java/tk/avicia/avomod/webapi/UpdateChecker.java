@@ -128,10 +128,10 @@ public class UpdateChecker {
             message.append("\n").append(TextFormatting.YELLOW).append(element.getAsString());
         }
 
-        String linkMessage = TextFormatting.LIGHT_PURPLE + "You can find the newest beta version at " + TextFormatting.GOLD + TextFormatting.UNDERLINE + "https://avicia.tk/avomod";
+        String linkMessage = TextFormatting.LIGHT_PURPLE + "You can find the newest beta version at " + TextFormatting.GOLD + TextFormatting.UNDERLINE + "https://avicia.ml/avomod";
         ITextComponent linkComponent = new TextComponentString(linkMessage).setStyle(
                 new Style().setClickEvent(
-                        new ClickEvent(ClickEvent.Action.OPEN_URL, "https://avicia.tk/avomod")));
+                        new ClickEvent(ClickEvent.Action.OPEN_URL, "https://avicia.ml/avomod")));
 
         Avomod.getMC().player.sendMessage(new TextComponentString(message.toString()));
         Avomod.getMC().player.sendMessage(linkComponent);
