@@ -46,8 +46,8 @@ public class TerritoryData {
         }
     }
 
-    public static String getTerritoryDefense(String territoryName, Long warTimestamp) {
-        Thread thread = new Thread(() -> {
+    public static void getTerritoryDefense(String territoryName, Long warTimestamp) {
+        new Thread(() -> {
             try {
                 Thread.sleep(3000);
                 String result = ApiRequest.get(String.format("https://script.google.com/macros/s/AKfycbw7lRN6tojW1RjsPeC7bhVNsGETBl_LZEc6bZKXAHG95HB_UC4NKQMm9LGmuvT8KU-R-A/exec?territory=%s&timestamp=%s", territoryName.replace(" ", "%20"), System.currentTimeMillis()));
@@ -65,10 +65,7 @@ public class TerritoryData {
                 AttacksMenu.savedDefenses.put(territoryName, new Tuple<>(defenses.getOrDefault(territoryName, "Unknown"), warTimestamp));
                 e.printStackTrace();
             }
-        });
-        thread.start();
-
-        return "Retrieving...";
+        }).start();
     }
 
     public static boolean hasValues() {

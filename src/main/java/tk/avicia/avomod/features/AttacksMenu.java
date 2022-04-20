@@ -118,7 +118,8 @@ public class AttacksMenu {
                 if (System.currentTimeMillis() - AttackedTerritoryDifficulty.currentTime < 5000 && attack.y.equals((AttackedTerritoryDifficulty.currentTerritory))) {
                     savedDefense = new Tuple<>(AttackedTerritoryDifficulty.currentDefense, (AttackedTerritoryDifficulty.currentTimer * 60000L) + System.currentTimeMillis());
                 } else {
-                    savedDefense = new Tuple<>(TerritoryData.getTerritoryDefense(attack.y, warTimestamp), warTimestamp);
+                    savedDefense = new Tuple<>("Retrieving...", warTimestamp);
+                    TerritoryData.getTerritoryDefense(attack.y, warTimestamp);
                 }
 
                 savedDefenses.put(attack.y, savedDefense);
@@ -146,7 +147,6 @@ public class AttacksMenu {
             attackCoordinates.put(attack.y, new ScreenCoordinates(x, y, x + rectangleWidth, y + rectangleHeight));
             y += rectangleHeight;
         }
-
 
         return new MultipleElements("attacksMenu", 1F, elementsList);
     }
