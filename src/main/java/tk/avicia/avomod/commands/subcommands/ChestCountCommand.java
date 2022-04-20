@@ -27,7 +27,7 @@ public class ChestCountCommand extends PlayerTabCompletionCommand {
             player = new PlayerData(username);
             outputMessage = TextFormatting.AQUA + player.getPlayerName() + TextFormatting.GRAY + " has found " +
                     TextFormatting.AQUA + player.getChestCount() + TextFormatting.GRAY + " chests!";
-        } catch (NoSuchFieldException e) {
+        } catch (NoSuchFieldException | NullPointerException e) {
             outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a valid Wynncraft player";
         }
 
