@@ -64,8 +64,7 @@ public class BombBellTracker {
         if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("bombBellTracker")) return;
 
         String message = TextFormatting.getTextWithoutFormattingCodes(event.getMessage().getUnformattedText());
-//        if (message == null || !message.startsWith("[Bomb Bell]")) return;
-        //newracket has thrown a Loot Bomb on WC5
+        if (message == null || !message.startsWith("[Bomb Bell]")) return;
 
         ArrayList<String> matches = Utils.getMatches(message, "(?<= thrown a )[a-zA-Z ]+(?= Bomb on)|(?<= on WC)\\d+");
         if (matches.size() != 2) return;
