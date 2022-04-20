@@ -6,10 +6,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.renderer.Element;
-import tk.avicia.avomod.renderer.MultipleElements;
-import tk.avicia.avomod.renderer.Rectangle;
-import tk.avicia.avomod.renderer.Text;
+import tk.avicia.avomod.core.structures.render.Element;
+import tk.avicia.avomod.core.structures.render.MultipleElements;
+import tk.avicia.avomod.core.structures.render.Rectangle;
+import tk.avicia.avomod.core.structures.render.Text;
 import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.WorldUpTime;
 

@@ -16,11 +16,9 @@ import tk.avicia.avomod.commands.subcommands.*;
 import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.configs.ConfigInput;
 import tk.avicia.avomod.configs.ConfigToggle;
+import tk.avicia.avomod.core.structures.CustomFile;
 import tk.avicia.avomod.features.*;
-import tk.avicia.avomod.features.war.WarEvents;
-import tk.avicia.avomod.features.war.WarsCommand;
 import tk.avicia.avomod.utils.BeaconManager;
-import tk.avicia.avomod.utils.CustomFile;
 import tk.avicia.avomod.utils.TerritoryData;
 import tk.avicia.avomod.webapi.OnlinePlayers;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
@@ -157,7 +155,7 @@ public class Avomod {
                 new TerritoryData(),
                 new TradeMarketFeatures(),
                 new WarDPS(),
-                new WarEvents(),
+                new WarTracker(),
                 new WorldInfo()
         ).forEach(MinecraftForge.EVENT_BUS::register);
 

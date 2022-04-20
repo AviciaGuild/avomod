@@ -2,8 +2,8 @@ package tk.avicia.avomod.locations;
 
 import com.google.gson.JsonObject;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.renderer.MultipleElements;
-import tk.avicia.avomod.utils.CustomFile;
+import tk.avicia.avomod.core.structures.CustomFile;
+import tk.avicia.avomod.core.structures.render.MultipleElements;
 
 public class LocationsFile {
     public static void save(MultipleElements multipleElements) {

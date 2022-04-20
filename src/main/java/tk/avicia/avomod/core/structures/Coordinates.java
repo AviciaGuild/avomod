@@ -1,4 +1,4 @@
-package tk.avicia.avomod.utils;
+package tk.avicia.avomod.core.structures;
 
 public class Coordinates {
     private final int x, y, z;

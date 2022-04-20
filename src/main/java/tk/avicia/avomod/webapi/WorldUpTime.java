@@ -3,7 +3,7 @@ package tk.avicia.avomod.webapi;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import tk.avicia.avomod.utils.Tuple;
+import tk.avicia.avomod.core.structures.Tuple;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

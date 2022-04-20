@@ -5,6 +5,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.core.structures.Tuple;
 import tk.avicia.avomod.features.AttacksMenu;
 import tk.avicia.avomod.webapi.ApiRequest;
 

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.utils.CustomFile;
+import tk.avicia.avomod.core.structures.CustomFile;
 
 import java.util.Map;
 

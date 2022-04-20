@@ -1,4 +1,4 @@
-package tk.avicia.avomod.renderer;
+package tk.avicia.avomod.core.structures.render;
 
 import net.minecraft.client.renderer.GlStateManager;
 import tk.avicia.avomod.utils.Renderer;

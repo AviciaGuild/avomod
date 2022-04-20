@@ -6,9 +6,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.core.structures.render.MultipleElements;
 import tk.avicia.avomod.features.*;
-import tk.avicia.avomod.features.war.WarTracker;
-import tk.avicia.avomod.renderer.MultipleElements;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package tk.avicia.avomod.renderer;
+package tk.avicia.avomod.core.structures.render;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -26,7 +26,7 @@ public class MultipleElements {
     }
 
     public void draw() {
-        if(!LocationsGui.isOpen()) {
+        if (!LocationsGui.isOpen()) {
             elementsList.forEach(Element::draw);
         }
     }

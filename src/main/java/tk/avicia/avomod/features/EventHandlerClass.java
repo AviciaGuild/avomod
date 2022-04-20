@@ -8,7 +8,6 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.webapi.UpdateChecker;
 
 public class EventHandlerClass {
     private int tick = 0;

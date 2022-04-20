@@ -8,7 +8,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.commands.Command;
-import tk.avicia.avomod.utils.Tuple;
+import tk.avicia.avomod.core.structures.Tuple;
 import tk.avicia.avomod.utils.Utils;
 import tk.avicia.avomod.webapi.WorldUpTime;
 

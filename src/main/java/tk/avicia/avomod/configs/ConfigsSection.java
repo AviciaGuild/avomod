@@ -2,7 +2,7 @@ package tk.avicia.avomod.configs;
 
 import com.google.gson.JsonObject;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.utils.CustomFile;
+import tk.avicia.avomod.core.structures.CustomFile;
 
 public class ConfigsSection {
     private final CustomFile customFile;

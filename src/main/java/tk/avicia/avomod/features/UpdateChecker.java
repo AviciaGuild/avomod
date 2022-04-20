@@ -1,4 +1,4 @@
-package tk.avicia.avomod.webapi;
+package tk.avicia.avomod.features;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

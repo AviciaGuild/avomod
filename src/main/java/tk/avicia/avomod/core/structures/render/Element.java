@@ -1,4 +1,4 @@
-package tk.avicia.avomod.renderer;
+package tk.avicia.avomod.core.structures.render;
 
 import net.minecraft.client.gui.GuiScreen;
 import tk.avicia.avomod.Avomod;

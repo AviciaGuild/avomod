@@ -1,4 +1,4 @@
-package tk.avicia.avomod.utils;
+package tk.avicia.avomod.core.structures;
 
 public class ScreenCoordinates {
     private final float startX, startY, endX, endY;

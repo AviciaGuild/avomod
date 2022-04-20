@@ -1,4 +1,4 @@
-package tk.avicia.avomod.features.war;
+package tk.avicia.avomod.commands.subcommands;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import tk.avicia.avomod.commands.Command;
+import tk.avicia.avomod.features.WarTracker;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -16,18 +17,18 @@ public class WarsCommand extends Command {
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] params) throws CommandException {
         long wars;
-        long since = WarTrackerFile.timeOfFirstWar();
+        long since = WarTracker.timeOfFirstWar();
 
         if (params.length >= 1) {
             try {
                 int daysSince = Integer.parseInt(params[0]);
                 since = System.currentTimeMillis() - (daysSince * 86400000L);
-                wars = WarTrackerFile.getWars(since);
+                wars = WarTracker.getWars(since);
             } catch (NumberFormatException e) {
-                wars = WarTrackerFile.getWars(0);
+                wars = WarTracker.getWars(0);
             }
         } else {
-            wars = WarTrackerFile.getWars(0);
+            wars = WarTracker.getWars(0);
         }
         String plural = "";
         if (wars != 1) {

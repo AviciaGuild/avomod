@@ -1,4 +1,4 @@
-package tk.avicia.avomod.utils;
+package tk.avicia.avomod.core.structures;
 
 import net.minecraft.client.settings.KeyBinding;
 

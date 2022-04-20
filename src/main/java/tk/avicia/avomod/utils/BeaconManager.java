@@ -16,6 +16,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.core.structures.Coordinates;
 
 import java.awt.*;
 

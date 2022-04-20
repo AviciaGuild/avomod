@@ -1,4 +1,4 @@
-package tk.avicia.avomod.features.war;
+package tk.avicia.avomod.core.structures;
 
 import java.util.List;
 

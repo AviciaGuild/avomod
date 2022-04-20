@@ -7,8 +7,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 import tk.avicia.avomod.Avomod;
-import tk.avicia.avomod.utils.CustomFile;
-import tk.avicia.avomod.utils.Keybind;
+import tk.avicia.avomod.core.structures.CustomFile;
+import tk.avicia.avomod.core.structures.Keybind;
 import tk.avicia.avomod.utils.Utils;
 
 import java.util.HashMap;
