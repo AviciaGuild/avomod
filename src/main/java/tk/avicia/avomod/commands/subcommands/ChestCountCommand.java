@@ -23,6 +23,7 @@ public class ChestCountCommand extends PlayerTabCompletionCommand {
         } else {
             username = sender.getName();
         }
+
         try {
             player = new PlayerData(username);
             outputMessage = TextFormatting.AQUA + player.getPlayerName() + TextFormatting.GRAY + " has found " +
@@ -30,7 +31,6 @@ public class ChestCountCommand extends PlayerTabCompletionCommand {
         } catch (NoSuchFieldException | NullPointerException e) {
             outputMessage = TextFormatting.DARK_RED + username + TextFormatting.RED + " is not a valid Wynncraft player";
         }
-
 
         TextComponentString textComponent = new TextComponentString(outputMessage);
         sender.sendMessage(textComponent);

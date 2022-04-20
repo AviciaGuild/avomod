@@ -38,10 +38,9 @@ public class PlayerData {
                 System.out.println("GET request not worked");
                 throw new NoSuchFieldException();
             }
-        } catch (NoSuchFieldException ne) {
-            throw new NoSuchFieldException();
         } catch (Exception e) {
             e.printStackTrace();
+            throw new NoSuchFieldException();
         }
     }
 
