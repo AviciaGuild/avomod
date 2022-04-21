@@ -32,6 +32,7 @@ public class WarDPS {
     private static double maxEhp = 0;
     private static double dpsSinceStart = 0;
     private static double timeRemaining = 0;
+    private static String initialStats = "";
 
     public static void execute(String[] bossbarWords) {
         try {
@@ -40,6 +41,7 @@ public class WarDPS {
                 // in case you war the same territory twice in a row
                 previousTerritoryName = "";
             }
+
             lastTimeInWar = System.currentTimeMillis();
             int startIndex1 = Arrays.asList(bossbarWords).indexOf("-");
             int startIndex2 = Arrays.asList(bossbarWords).lastIndexOf("-");
@@ -47,11 +49,14 @@ public class WarDPS {
             for (int i = 1; i < startIndex1 - 1; i++) {
                 territoryName.append(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[i])).append(" ");
             }
+
             if (!territoryName.toString().equals(previousTerritoryName)) {
                 newWar();
                 previousTerritoryName = territoryName.toString();
                 warStartTime = System.currentTimeMillis();
+                initialStats = String.join(" ", bossbarWords);
             }
+
             String health = Objects.requireNonNull(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 2]));
             String defense = Objects.requireNonNull(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 3]))
                     .replace("(", "").split("\\)")[0].replace("%", "");
@@ -99,8 +104,16 @@ public class WarDPS {
     }
 
     public static void warEnded(boolean warWon) {
-        Avomod.getMC().player.sendMessage(new TextComponentString("The war lasted for: " + TextFormatting.AQUA + ((System.currentTimeMillis() - warStartTime) / 1000) + TextFormatting.WHITE + " Seconds"));
-        Avomod.getMC().player.sendMessage(new TextComponentString("Average DPS: " + String.format("%,.1f", (warWon ? maxEhp : maxEhp - previousEhp) / ((System.currentTimeMillis() - firstDamageTime) / 1000))));
+        Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "Time in War: " + TextFormatting.AQUA +
+                ((System.currentTimeMillis() - warStartTime) / 1000) + "s"));
+        Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "Average DPS: " + TextFormatting.AQUA +
+                String.format("%,.1f", (warWon ? maxEhp : maxEhp - previousEhp) / ((System.currentTimeMillis() - firstDamageTime) / 1000))));
+
+        String[] statsSplit = initialStats.split(" - ");
+        if (statsSplit.length >= 2) {
+            Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "Initial Tower Stats: " +
+                    String.join(" - ", Arrays.copyOfRange(statsSplit, 1, statsSplit.length))));
+        }
         newWar();
     }
 
@@ -161,7 +174,7 @@ public class WarDPS {
         String message = TextFormatting.getTextWithoutFormattingCodes(event.getMessage().getUnformattedText());
         if (message == null) return;
 
-        if (Avomod.getConfigBoolean("dpsInWars") && System.currentTimeMillis() - lastTimeInWar < 5000 && message.contains(previousTerritoryName)) {
+        if (Avomod.getConfigBoolean("dpsInWars") && System.currentTimeMillis() - lastTimeInWar < 5000 && message.contains(previousTerritoryName.trim())) {
             // If you saw a tower health bar less than 5 seconds ago (if you're in a war)
             if (message.startsWith("[WAR] You have taken control of ")) {
                 warEnded(true);

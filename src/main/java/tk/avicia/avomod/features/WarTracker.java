@@ -72,8 +72,6 @@ public class WarTracker {
         String newWarsString = savedWars.get("wars").getAsString() + warObject + "|";
         savedWars.addProperty("wars", newWarsString);
         warFile.writeJson(savedWars);
-
-        System.out.println("Added to JSON: " + newWarsString);
     }
 
     public static long getWars(long timeSince) {
