@@ -33,6 +33,7 @@ public class WarDPS {
     private static double dpsSinceStart = 0;
     private static double timeRemaining = 0;
     private static String initialStats = "";
+    private static String latestStats = "";
 
     public static void execute(String[] bossbarWords) {
         try {
@@ -56,6 +57,7 @@ public class WarDPS {
                 warStartTime = System.currentTimeMillis();
                 initialStats = String.join(" ", bossbarWords);
             }
+            latestStats = String.join(" ", bossbarWords);
 
             String health = Objects.requireNonNull(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 2]));
             String defense = Objects.requireNonNull(TextFormatting.getTextWithoutFormattingCodes(bossbarWords[startIndex1 + 3]))
@@ -114,6 +116,15 @@ public class WarDPS {
             Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "Initial Tower Stats: " +
                     String.join(" - ", Arrays.copyOfRange(statsSplit, 1, statsSplit.length))));
         }
+
+        if (!warWon) {
+            String[] latestStatsSplit = latestStats.split(" - ");
+            if (latestStatsSplit.length >= 2) {
+                Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "Final Tower Stats: " +
+                        String.join(" - ", Arrays.copyOfRange(latestStatsSplit, 1, latestStatsSplit.length))));
+            }
+        }
+
         newWar();
     }
 
@@ -129,6 +140,8 @@ public class WarDPS {
         maxEhp = 0;
         timeRemaining = 0;
         previousTerritoryName = "";
+        initialStats = "";
+        latestStats = "";
 
         AuraHandler.firstAura = 0;
         AuraHandler.auraTimer = 0;
