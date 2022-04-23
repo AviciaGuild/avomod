@@ -14,4 +14,8 @@ public class Keybind extends KeyBinding {
     public String getCommandToRun() {
         return this.commandToRun;
     }
+
+    public boolean isAvomodCommand() {
+        return this.getCommandToRun().startsWith("am") || this.getCommandToRun().startsWith("avomod");
+    }
 }

@@ -18,14 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class AvomodCommand extends CommandBase implements IClientCommand {
-
-    @Override
-    public boolean allowUsageWithoutPrefix(ICommandSender sender, String s) {
-        return false;
-    }
-
-    @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] params) throws CommandException {
+    public static void executeSubCommand(MinecraftServer server, ICommandSender sender, String[] params) {
         if (params.length < 1) return;
 
         if (params[0].contains("configs")) {
@@ -38,36 +31,43 @@ public class AvomodCommand extends CommandBase implements IClientCommand {
                 sender.sendMessage(textComponent);
                 e.printStackTrace();
             }
+        } else {
+            new Thread(() -> {
+                Command commandToExecute = Avomod.commands.get(params[0]);
 
-            return;
-        }
+                if (commandToExecute == null) {
+                    commandToExecute = Avomod.aliases.get(params[0]);
+                }
 
-        Thread thread = new Thread(() -> {
-            Command commandToExecute = Avomod.commands.get(params[0]);
+                if (commandToExecute != null) {
+                    try {
+                        commandToExecute.execute(server, sender, Arrays.copyOfRange(params, 1, params.length));
+                    } catch (Exception e) {
+                        TextComponentString textComponent;
 
-            if (commandToExecute == null) {
-                commandToExecute = Avomod.aliases.get(params[0]);
-            }
+                        StringWriter sw = new StringWriter();
+                        e.printStackTrace(new PrintWriter(sw));
+                        String exceptionAsString = sw.toString();
+                        textComponent = new TextComponentString(TextFormatting.RED + "Command Failed: " + exceptionAsString);
 
-            if (commandToExecute != null) {
-                try {
-                    commandToExecute.execute(server, sender, Arrays.copyOfRange(params, 1, params.length));
-                } catch (Exception e) {
-                    TextComponentString textComponent;
-
-                    StringWriter sw = new StringWriter();
-                    e.printStackTrace(new PrintWriter(sw));
-                    String exceptionAsString = sw.toString();
-                    textComponent = new TextComponentString(TextFormatting.RED + "Command Failed: " + exceptionAsString);
-
+                        sender.sendMessage(textComponent);
+                    }
+                } else {
+                    TextComponentString textComponent = new TextComponentString("That command does not exist.");
                     sender.sendMessage(textComponent);
                 }
-            } else {
-                TextComponentString textComponent = new TextComponentString("That command does not exist.");
-                sender.sendMessage(textComponent);
-            }
-        });
-        thread.start();
+            }).start();
+        }
+    }
+
+    @Override
+    public boolean allowUsageWithoutPrefix(ICommandSender sender, String s) {
+        return false;
+    }
+
+    @Override
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] params) throws CommandException {
+        executeSubCommand(server, sender, params);
     }
 
     @Override

@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class Avomod {
     public static final String MODID = "avomod";
     public static final String NAME = "avomod";
-    public static final String VERSION = "1.5.4";
+    public static final String VERSION = "1.5.5";
     public static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("help", new HelpCommand());
         put("chestcount", new ChestCountCommand());
@@ -52,6 +52,7 @@ public class Avomod {
         put("soulpoints", new SoulPointCommand());
         put("wars", new WarsCommand());
         put("locations", new LocationsCommand());
+        put("autostream", new AutoStreamCommand());
     }};
     public static Map<String, String> defaultLocations = new HashMap<String, String>() {{
         put("weeklyWars", "1,0.98,false");

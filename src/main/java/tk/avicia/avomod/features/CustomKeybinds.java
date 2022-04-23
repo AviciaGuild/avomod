@@ -7,10 +7,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.commands.AvomodCommand;
 import tk.avicia.avomod.core.structures.CustomFile;
 import tk.avicia.avomod.core.structures.Keybind;
 import tk.avicia.avomod.utils.Utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +70,15 @@ public class CustomKeybinds {
 
         for (Keybind keybind : keybinds.values()) {
             if (keybind.isPressed()) {
-                Avomod.getMC().player.sendChatMessage("/" + keybind.getCommandToRun());
+                if (keybind.isAvomodCommand()) {
+                    String[] commandWords = keybind.getCommandToRun().split(" ");
+
+                    if (commandWords.length >= 2) {
+                        AvomodCommand.executeSubCommand(Avomod.getMC().getIntegratedServer(), Avomod.getMC().player, Arrays.copyOfRange(commandWords, 1, commandWords.length));
+                    }
+                } else {
+                    Avomod.getMC().player.sendChatMessage("/" + keybind.getCommandToRun());
+                }
             }
         }
     }
