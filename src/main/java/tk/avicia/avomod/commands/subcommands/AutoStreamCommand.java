@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.core.structures.CustomFile;
@@ -60,5 +61,12 @@ public class AutoStreamCommand extends Command {
     public @Nonnull
     List<String> getAliases() {
         return Collections.singletonList("as");
+    }
+
+    @Override
+    public @Nonnull
+    List<String> getTabCompletions(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] args, BlockPos
+            targetPos) {
+        return getListOfStringsMatchingLastWord(args, "off", "on");
     }
 }
