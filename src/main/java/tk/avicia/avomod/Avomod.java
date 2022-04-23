@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import tk.avicia.avomod.commands.AvomodCommand;
 import tk.avicia.avomod.commands.Command;
-import tk.avicia.avomod.commands.subcommands.*;
+import tk.avicia.avomod.commands.InitializeCommands;
 import tk.avicia.avomod.configs.Config;
 import tk.avicia.avomod.configs.ConfigInput;
 import tk.avicia.avomod.configs.ConfigToggle;
@@ -35,25 +35,7 @@ public class Avomod {
     public static final String MODID = "avomod";
     public static final String NAME = "avomod";
     public static final String VERSION = "1.5.5";
-    public static Map<String, Command> commands = new HashMap<String, Command>() {{
-        put("help", new HelpCommand());
-        put("chestcount", new ChestCountCommand());
-        put("aliases", new AliasesCommand());
-        put("find", new FindCommand());
-        put("playerguild", new PlayerGuildCommand());
-        put("onlinemembers", new OnlineMembersCommand());
-        put("up", new UpCommand());
-        put("age", new AgeCommand());
-        put("lastseen", new LastSeenCommand());
-        put("playercount", new PlayerCountCommand());
-        put("count", new CountCommand());
-        put("keybinds", new KeybindsCommand());
-        put("configs", new ConfigsCommand());
-        put("soulpoints", new SoulPointCommand());
-        put("wars", new WarsCommand());
-        put("locations", new LocationsCommand());
-        put("autostream", new AutoStreamCommand());
-    }};
+    public static Map<String, Command> commands = new HashMap<>();
     public static Map<String, String> defaultLocations = new HashMap<String, String>() {{
         put("weeklyWars", "1,0.98,false");
         put("worldInfo", "1,0.7,false");
@@ -126,6 +108,7 @@ public class Avomod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         this.initializeConfigs();
+        InitializeCommands.init();
     }
 
     @EventHandler
