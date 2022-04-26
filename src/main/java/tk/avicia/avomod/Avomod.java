@@ -82,6 +82,7 @@ public class Avomod {
             new ConfigToggle("War", "Aura Ping", "Enabled", "auraPing"),
             new ConfigInput("War", "Aura Ping Color", "FF6F00", "[\\da-fA-F]+", "^[\\da-fA-F]{6}$", 6, "auraPingColor"),
             new ConfigToggle("War", "Display Weekly Warcount on Screen", "Disabled", "displayWeeklyWarcount"),
+            new ConfigToggle("War", "Prevent joining wars when afk", "Enabled", "afkWarProtection"),
             new ConfigToggle("Misc", "Auto /stream on World Swap", "Disabled", "autoStream"),
             new ConfigToggle("Misc", "Prevent Moving Armor/Accessories", "Disabled", "disableMovingArmor"),
             new ConfigToggle("Misc", "Make Mob Health Bars More Readable", "Enabled", "readableHealth"),
@@ -139,6 +140,7 @@ public class Avomod {
         territoryData = new TerritoryDataApi();
 
         Arrays.asList(
+                new WarJoinProtection(),
                 new AttackedTerritoryDifficulty(),
                 new AttacksMenu(),
                 new AutoStream(),
