@@ -15,7 +15,14 @@ public class WarJoinProtection {
     private static long lastAction = System.currentTimeMillis();
 
     private static boolean isAfk() {
-        return System.currentTimeMillis() - lastAction > 10000;
+        try {
+            String afkThreshold = Avomod.getConfig("afkTime");
+            int afkThresholdInt = Integer.parseInt(afkThreshold);
+            return System.currentTimeMillis() - lastAction > afkThresholdInt * 60000L;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @SubscribeEvent
