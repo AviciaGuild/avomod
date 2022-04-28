@@ -26,9 +26,9 @@ public class BombBellTracker {
     private final List<BombData> storedBombs = new ArrayList<>();
 
     public static MultipleElements getElementsToDraw(List<BombData> storedBombs) {
-        storedBombs = storedBombs.stream().filter(storedBomb -> storedBomb.getTimeLeft() > 0).collect(Collectors.toList());
+        List<BombData> bombsToRemove = storedBombs.stream().filter(storedBomb -> storedBomb.getTimeLeft() <= 0).collect(Collectors.toList());
+        storedBombs.removeAll(bombsToRemove);
         storedBombs.sort(Comparator.comparing(BombData::getTimeLeft));
-//        System.out.println(storedBombs.stream().map(e -> e.getBombType().toString() + " " + e.getTimeLeft()).collect(Collectors.toList()));
 
         final int rectangleHeight = 12;
         final float scale = 1F;
@@ -59,6 +59,11 @@ public class BombBellTracker {
         );
     }
 
+    private boolean isDuplicateBomb(BombData bomb) {
+        return storedBombs.stream().anyMatch(bombData -> bombData.getWorld().equals(bomb.getWorld()) &&
+                bombData.getBombType().equals(bomb.getBombType()));
+    }
+
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {
         if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("bombBellTracker")) return;
@@ -72,18 +77,17 @@ public class BombBellTracker {
         String bombName = matches.get(0);
         String world = matches.get(1);
         BombType bombType = BombType.getBombType(bombName);
+        BombData bombData = new BombData(world, bombType);
 
-//        Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "Avomod: " + bombType + " detected on WC" + world));
-        storedBombs.add(new BombData(world, bombType));
+        if (!isDuplicateBomb(bombData)) {
+            storedBombs.add(bombData);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void renderOverlay(RenderGameOverlayEvent.Chat event) {
         if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("bombBellTracker")) return;
 
-        // The Chat RenderGameOverlayEvent renders stuff normally, it disappears in f1, you can see it when your
-        // inventory is open and you can make stuff transparent
         getElementsToDraw(storedBombs).draw();
-//        getElementsToDraw(storedBombs);
     }
 }
