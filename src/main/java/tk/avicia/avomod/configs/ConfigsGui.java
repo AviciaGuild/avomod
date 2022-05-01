@@ -75,7 +75,7 @@ public class ConfigsGui extends GuiScreen {
 
     private void drawWithCategories() {
         ArrayList<ConfigsSection> sectionsToShow = new ArrayList<>();
-        Renderer.drawVerticalLine(this.width / 16 + 110, startingHeight - 10, this.height - 10, Color.WHITE);
+        Renderer.drawVerticalLine(this.width / 16 + 110, 1, startingHeight - 10, this.height - 10, Color.WHITE);
         sectionsToShow.addAll(totalSections.get(selectedCategory).subList(scrollSections, Math.min(scrollSections + (this.height - startingHeight) / (settingLineHeight + settingHeight), totalSections.get(selectedCategory).size())));
         for (ConfigsSection configsSection : sectionsToShow) {
             int index = sectionsToShow.indexOf(configsSection);
@@ -84,9 +84,9 @@ public class ConfigsGui extends GuiScreen {
         }
 
         if (sectionsToShow.size() < totalSections.get(selectedCategory).size()) { // if not all configs fit on screen
-            double segmentHeight = (double)((height / 16 * 15) - startingHeight) / totalSections.get(selectedCategory).size();
-            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, startingHeight, height / 16 * 15, Color.DARK_GRAY);
-            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, startingHeight + (int)(segmentHeight * scrollSections), startingHeight + (int)(segmentHeight * (scrollSections + sectionsToShow.size())), new Color(32, 110, 225));
+            double segmentHeight = (double) ((height / 16 * 15) - startingHeight) / totalSections.get(selectedCategory).size();
+            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, 3, startingHeight, height / 16 * 15, Color.DARK_GRAY);
+            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, 3, startingHeight + (int) (segmentHeight * scrollSections), startingHeight + (int) (segmentHeight * (scrollSections + sectionsToShow.size())), new Color(32, 110, 225));
         }
     }
 
@@ -106,9 +106,9 @@ public class ConfigsGui extends GuiScreen {
         }
 
         if (sectionsToShow.size() < searchSections.size()) { // if not all configs fit on screen
-            double segmentHeight = (double)((height / 16 * 15) - startingHeight) / searchSections.size();
-            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, startingHeight, height / 16 * 15, Color.DARK_GRAY);
-            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, startingHeight + (int)(segmentHeight * scrollSections), startingHeight + (int)(segmentHeight * (scrollSections + sectionsToShow.size())), new Color(32, 110, 225));
+            double segmentHeight = (double) ((height / 16 * 15) - startingHeight) / searchSections.size();
+            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, 3, startingHeight, height / 16 * 15, Color.DARK_GRAY);
+            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, 3, startingHeight + (int) (segmentHeight * scrollSections), startingHeight + (int) (segmentHeight * (scrollSections + sectionsToShow.size())), new Color(32, 110, 225));
         }
     }
 
@@ -260,7 +260,7 @@ public class ConfigsGui extends GuiScreen {
         int settingsOnScreen = (this.height - startingHeight) / configHeight;
 
         // no need to scroll if every setting fits on screen
-        if  (searchTextField.getText().length() > 0) {
+        if (searchTextField.getText().length() > 0) {
             if (settingsOnScreen > getSectionsBySearch().size()) return;
         } else {
             if (settingsOnScreen > totalSections.get(selectedCategory).size()) return;
