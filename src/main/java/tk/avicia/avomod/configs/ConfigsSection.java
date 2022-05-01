@@ -3,6 +3,9 @@ package tk.avicia.avomod.configs;
 import com.google.gson.JsonObject;
 import tk.avicia.avomod.Avomod;
 import tk.avicia.avomod.core.structures.CustomFile;
+import tk.avicia.avomod.utils.Renderer;
+
+import java.awt.*;
 
 public class ConfigsSection {
     private final CustomFile customFile;
@@ -42,5 +45,22 @@ public class ConfigsSection {
 
         Avomod.configs = configsJson;
         this.customFile.writeJson(configsJson);
+    }
+
+    public void drawSection(ConfigsGui configsGui, int x, int y, boolean drawLine) {
+        configsGui.drawString(configsGui.mc.fontRenderer, title, x, y, 0xFFFFFF);
+
+        if (button != null) {
+            button.x = x;
+            button.y = y + configsGui.settingHeight - 5;
+            configsGui.addButton(button);
+        }
+        if (textField != null) {
+            textField.x = x + 5;
+            textField.y = y + configsGui.settingHeight;
+            configsGui.addTextField(textField);
+        }
+
+        if (drawLine) Renderer.drawHorizontalLine(x, configsGui.width / 16 * 15, y + configsGui.settingLineHeight + configsGui.settingHeight - 5, Color.GRAY);
     }
 }

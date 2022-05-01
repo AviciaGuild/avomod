@@ -2,6 +2,7 @@ package tk.avicia.avomod.configs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 import tk.avicia.avomod.Avomod;
@@ -19,15 +20,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ConfigsGui extends GuiScreen {
-    private final int settingLineHeight = 27;
-    private final int startingHeight = 65;
-    private final int settingHeight = 23;
+    public final int settingLineHeight = 27;
+    public final int startingHeight = 85;
+    public final int settingHeight = 23;
     public ArrayList<ConfigsCategory> categories = new ArrayList<>();
     // buttonList exists too, doesn't need to be created
     ArrayList<ConfigsTextField> textFieldsList = new ArrayList<>();
     String selectedCategory;
     Map<String, ArrayList<ConfigsSection>> totalSections = new HashMap<>();
     int scrollSections; // the index of the first section to be displayed
+
+    GuiTextField searchTextField;
 
     public ConfigsGui() {
         super();
@@ -40,22 +43,18 @@ public class ConfigsGui extends GuiScreen {
         // Draws a shadowed string with a dark color, to make it easier to read depending on the background
         GlStateManager.pushMatrix();
         GlStateManager.scale(2.0F, 2.0F, 2.0F);
-        this.drawCenteredString(this.fontRenderer, "Avomod Configs", this.width / 4 + 1, 14, 0x444444);
-        this.drawCenteredString(this.fontRenderer, "Avomod Configs", this.width / 4, 13, 0x1B33CF);
+        this.drawCenteredString(this.fontRenderer, "Avomod Configs", this.width / 4 + 1, 11, 0x444444);
+        this.drawCenteredString(this.fontRenderer, "Avomod Configs", this.width / 4, 10, 0x1B33CF);
         GlStateManager.popMatrix();
-        Renderer.drawVerticalLine(this.width / 16 + 110, startingHeight - 10, this.height - 10, new Color(255, 255, 255));
 
-        ArrayList<ConfigsSection> sectionsToShow = new ArrayList<>();
-        sectionsToShow.addAll(totalSections.get(selectedCategory).subList(scrollSections, Math.min(scrollSections + (this.height - startingHeight) / (settingLineHeight + settingHeight), totalSections.get(selectedCategory).size())));
-        for (ConfigsSection configsSection : sectionsToShow) {
-            int y = sectionsToShow.indexOf(configsSection);
+        this.buttonList = new ArrayList<>();
+        this.textFieldsList = new ArrayList<>();
 
-            int color = 0xFFFFFF;
-
-            // Draws the actual string
-            this.drawString(this.fontRenderer, configsSection.title, this.width / 16 + 121, (y * settingLineHeight) + (y * settingHeight) + 6 + startingHeight, color);
-            if (totalSections.get(selectedCategory).indexOf(configsSection) != totalSections.get(selectedCategory).size() - 1)
-                Renderer.drawHorizontalLine(this.width / 16 + 118, this.width - (this.width / 16) - 21, (y * settingLineHeight) + ((y + 1) * settingHeight) + 23 + startingHeight, new Color(255, 255, 255));
+        if (searchTextField.getText().length() > 0) {
+            drawWithSearch();
+        } else {
+            buttonList.addAll(categories);
+            drawWithCategories();
         }
 
         // Draw all text field inputs
@@ -63,10 +62,53 @@ public class ConfigsGui extends GuiScreen {
             textField.drawTextBox();
         }
 
+        searchTextField.drawTextBox();
+        if (searchTextField.getText().length() == 0 && !searchTextField.isFocused())
+            Renderer.drawString("Type here to search...", this.width / 16 + 4, startingHeight - settingHeight - 6, Color.DARK_GRAY);
+
         try {
             super.drawScreen(mouseX, mouseY, partialTicks);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void drawWithCategories() {
+        ArrayList<ConfigsSection> sectionsToShow = new ArrayList<>();
+        Renderer.drawVerticalLine(this.width / 16 + 110, startingHeight - 10, this.height - 10, Color.WHITE);
+        sectionsToShow.addAll(totalSections.get(selectedCategory).subList(scrollSections, Math.min(scrollSections + (this.height - startingHeight) / (settingLineHeight + settingHeight), totalSections.get(selectedCategory).size())));
+        for (ConfigsSection configsSection : sectionsToShow) {
+            int index = sectionsToShow.indexOf(configsSection);
+            boolean showLine = totalSections.get(selectedCategory).indexOf(configsSection) != totalSections.get(selectedCategory).size() - 1;
+            configsSection.drawSection(this, this.width / 16 + 118, startingHeight + (settingHeight + settingLineHeight + 3) * index, showLine);
+        }
+
+        if (sectionsToShow.size() < totalSections.get(selectedCategory).size()) { // if not all configs fit on screen
+            double segmentHeight = (double)((height / 16 * 15) - startingHeight) / totalSections.get(selectedCategory).size();
+            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, startingHeight, height / 16 * 15, Color.DARK_GRAY);
+            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, startingHeight + (int)(segmentHeight * scrollSections), startingHeight + (int)(segmentHeight * (scrollSections + sectionsToShow.size())), new Color(32, 110, 225));
+        }
+    }
+
+    private void drawWithSearch() {
+        ArrayList<ConfigsSection> searchSections = getSectionsBySearch();
+        ArrayList<ConfigsSection> sectionsToShow = new ArrayList<>();
+        sectionsToShow.addAll(searchSections.subList(scrollSections, Math.min(scrollSections + (this.height - startingHeight) / (settingLineHeight + settingHeight), searchSections.size())));
+
+        for (ConfigsSection configsSection : sectionsToShow) {
+            int index = sectionsToShow.indexOf(configsSection);
+            boolean showLine = index != sectionsToShow.size() - 1;
+            configsSection.drawSection(this, this.width / 16, startingHeight + (settingHeight + settingLineHeight + 3) * index, showLine);
+        }
+
+        if (sectionsToShow.size() == 0) {
+            Renderer.drawString("[No Settings Found]", this.width / 16, startingHeight, new Color(127, 127, 127));
+        }
+
+        if (sectionsToShow.size() < searchSections.size()) { // if not all configs fit on screen
+            double segmentHeight = (double)((height / 16 * 15) - startingHeight) / searchSections.size();
+            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, startingHeight, height / 16 * 15, Color.DARK_GRAY);
+            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, startingHeight + (int)(segmentHeight * scrollSections), startingHeight + (int)(segmentHeight * (scrollSections + sectionsToShow.size())), new Color(32, 110, 225));
         }
     }
 
@@ -82,19 +124,7 @@ public class ConfigsGui extends GuiScreen {
             category.enabled = category.title.equals(title);
         }
 
-        ArrayList<ConfigsSection> sectionList = new ArrayList<>(totalSections.get(title).subList(0, Math.min(scrollSections + (this.height - startingHeight) / (settingLineHeight + settingHeight), totalSections.get(selectedCategory).size())));
-        sectionList.forEach((ConfigsSection configsSection) -> {
-            int configPlacement = sectionList.indexOf(configsSection);
-            if (configsSection.button != null) {
-                configsSection.button.y = configPlacement * settingLineHeight + startingHeight - 4 + (settingHeight * (configPlacement + 1));
-                this.buttonList.add(configsSection.button);
-            }
-
-            if (configsSection.textField != null) {
-                configsSection.textField.y = configPlacement * settingLineHeight + startingHeight + 2 + (settingHeight * (configPlacement + 1));
-                this.textFieldsList.add(configsSection.textField);
-            }
-        });
+        searchTextField = new GuiTextField(textFieldsList.size(), this.fontRenderer, width / 16, startingHeight - settingHeight - 10, 200, 17);
     }
 
     @Override
@@ -116,16 +146,15 @@ public class ConfigsGui extends GuiScreen {
         setCategory(categories.get(0).title);
     }
 
-    // Bug #1 - resizing changes category.
-    // Make tab change category
-
     @Override
     public void onResize(@Nonnull Minecraft mineIn, int w, int h) {
         String oldCategory = selectedCategory;
+        String searchText = searchTextField.getText();
 
         super.onResize(mineIn, w, h);
         this.initGui();
         setCategory(oldCategory);
+        searchTextField.setText(searchText);
     }
 
     @Override
@@ -143,6 +172,19 @@ public class ConfigsGui extends GuiScreen {
         }
     }
 
+    private ArrayList<ConfigsSection> getSectionsBySearch() {
+        String search = searchTextField.getText();
+        ArrayList<ConfigsSection> returnSections = new ArrayList<>();
+
+        ArrayList<ConfigsSection> allSections = new ArrayList<>();
+        for (String key : totalSections.keySet()) allSections.addAll(totalSections.get(key));
+        for (ConfigsSection section : allSections) {
+            if (section.title.toLowerCase().contains(search.toLowerCase())) returnSections.add(section);
+        }
+
+        return returnSections;
+    }
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -150,6 +192,7 @@ public class ConfigsGui extends GuiScreen {
         for (ConfigsTextField textField : this.textFieldsList) {
             textField.mouseClicked(mouseX, mouseY, mouseButton);
         }
+        searchTextField.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -159,6 +202,11 @@ public class ConfigsGui extends GuiScreen {
         for (ConfigsTextField textField : this.textFieldsList) {
             textField.textboxKeyTyped(typedChar, keyCode);
         }
+        searchTextField.textboxKeyTyped(typedChar, keyCode);
+
+        if (searchTextField.isFocused()) {
+            scrollSections = 0;
+        }
 
         if (keyCode == 15) {
             if (isShiftKeyDown()) {
@@ -167,6 +215,14 @@ public class ConfigsGui extends GuiScreen {
                 nextCategory();
             }
         }
+    }
+
+    public void addButton(ConfigsButton button) {
+        buttonList.add(button);
+    }
+
+    public void addTextField(ConfigsTextField textField) {
+        textFieldsList.add(textField);
     }
 
     private void nextCategory() {
@@ -202,12 +258,23 @@ public class ConfigsGui extends GuiScreen {
         if (mouseX < this.width / 16 + 100) return;
         int configHeight = settingLineHeight + settingHeight;
         int settingsOnScreen = (this.height - startingHeight) / configHeight;
-        if (settingsOnScreen > totalSections.get(selectedCategory).size()) return;
+
+        // no need to scroll if every setting fits on screen
+        if  (searchTextField.getText().length() > 0) {
+            if (settingsOnScreen > getSectionsBySearch().size()) return;
+        } else {
+            if (settingsOnScreen > totalSections.get(selectedCategory).size()) return;
+        }
 
         scrollSections += -amount;
         if (scrollSections < 0) scrollSections = 0;
-        if (scrollSections > totalSections.get(selectedCategory).size() - settingsOnScreen)
-            scrollSections = totalSections.get(selectedCategory).size() - settingsOnScreen;
+        if (searchTextField.getText().length() > 0) {
+            if (scrollSections > getSectionsBySearch().size() - settingsOnScreen)
+                scrollSections = getSectionsBySearch().size() - settingsOnScreen;
+        } else {
+            if (scrollSections > totalSections.get(selectedCategory).size() - settingsOnScreen)
+                scrollSections = totalSections.get(selectedCategory).size() - settingsOnScreen;
+        }
 
         this.buttonList = new ArrayList<>();
         this.textFieldsList = new ArrayList<>();
