@@ -73,7 +73,7 @@ public class Avomod {
             new ConfigToggle("Guild", "Filter Out All Resource Messages", "Disabled", "filterResourceMessages"),
             new ConfigToggle("Chat", "Reveal Nicknames", "Enabled", "revealNicks"),
             new ConfigToggle("Chat", "Auto Skip Quest Dialogue", "Disabled", "skipDialogue"),
-            //new ConfigToggle("Chat", "Auto GG Global Level Up Messages", "Disabled", "autogg"),
+            new ConfigInput("Chat", "Click to say congrats message", "Congrats!", ".+", "^.+$", 30, "congratsMessage"),
             new ConfigToggle("War", "Custom Attack Timers Display", "Enabled", "attacksMenu"),
             new ConfigToggle("War", "Green Beacon at Soonest War", "Enabled", "greenBeacon"),
             new ConfigToggle("War", "Announce Territory Defense in Chat", "Enabled", "terrDefenseInChat"),
