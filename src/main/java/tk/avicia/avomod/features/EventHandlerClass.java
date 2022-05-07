@@ -2,7 +2,11 @@ package tk.avicia.avomod.features;
 
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -56,20 +60,29 @@ public class EventHandlerClass {
             }).start();
         }
 
-//        if (Avomod.getConfigBoolean("autogg") && message.startsWith("[!] Congratulations")) {
-//            String[] firstSplit = message.split(" for")[0].split("to ");
-//            if (firstSplit.length <= 1) return;
-//
-//            String username = firstSplit[1];
-//            new Thread(() -> {
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                Avomod.getMC().player.sendChatMessage(String.format("/msg %s gg", username));
-//            }).start();
-//        }
+        if (message.startsWith("[!] Congratulations")) {
+            String[] firstSplit = message.split(" for")[0].split("to ");
+            if (firstSplit.length <= 1) return;
+
+            String username = firstSplit[1];
+            new Thread(() -> {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                String congratsCommand = String.format("/msg %s %s", username, Avomod.getConfig("congratsMessage"));
+                TextComponentString congratsMessage = new TextComponentString("Click to say Congratulations!");
+                congratsMessage.setStyle(new Style()
+                        .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, congratsCommand))
+                        .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(congratsCommand)))
+                        .setUnderlined(true)
+                        .setColor(TextFormatting.AQUA));
+
+                Avomod.getMC().player.sendMessage(congratsMessage);
+            }).start();
+        }
     }
 
     @SubscribeEvent
