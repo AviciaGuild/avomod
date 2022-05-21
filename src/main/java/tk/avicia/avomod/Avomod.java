@@ -169,7 +169,7 @@ public class Avomod {
     }
 
     private void initializeConfigs() {
-        CustomFile configsFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/configs.json");
+        CustomFile configsFile = new CustomFile("avomod/configs/configs.json");
         JsonObject configsJson = configsFile.readJson();
         boolean configsChanged = false;
 
@@ -187,7 +187,7 @@ public class Avomod {
         }
         Avomod.configs = configsJson;
 
-        CustomFile locationsFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/locations.json");
+        CustomFile locationsFile = new CustomFile("avomod/configs/locations.json");
         JsonObject locationsJson = locationsFile.readJson();
         boolean locationsChanged = false;
 

@@ -7,7 +7,7 @@ import tk.avicia.avomod.core.structures.render.MultipleElements;
 
 public class LocationsFile {
     public static void save(MultipleElements multipleElements) {
-        CustomFile locationsFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/locations.json");
+        CustomFile locationsFile = new CustomFile("avomod/configs/locations.json");
         JsonObject locations = locationsFile.readJson();
         locations.addProperty(multipleElements.getKey(), multipleElements.toString());
 

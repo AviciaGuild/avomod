@@ -18,7 +18,7 @@ public class ResetToDefault extends GuiButton {
 
     @Override
     public void mouseReleased(int mouseX, int mouseY) {
-        CustomFile locationsFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/locations.json");
+        CustomFile locationsFile = new CustomFile("avomod/configs/locations.json");
         JsonObject locationsJson = locationsFile.readJson();
 
         for (Map.Entry<String, String> locationData : Avomod.defaultLocations.entrySet()) {

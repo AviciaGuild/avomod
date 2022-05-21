@@ -62,7 +62,7 @@ public class WarTracker {
     }
 
     public static void addWar(WarObject warObject) {
-        CustomFile warFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/wars/wars.json");
+        CustomFile warFile = new CustomFile("avomod/wars/wars.json");
         JsonObject savedWars = warFile.readJson();
 
         if (!savedWars.has("wars")) {
@@ -75,7 +75,7 @@ public class WarTracker {
     }
 
     public static long getWars(long timeSince) {
-        CustomFile warFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/wars/wars.json");
+        CustomFile warFile = new CustomFile("avomod/wars/wars.json");
         JsonObject savedWars = warFile.readJson();
 
         if (!savedWars.has("wars")) {
@@ -88,7 +88,7 @@ public class WarTracker {
     }
 
     public static long timeOfFirstWar() {
-        CustomFile warFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/wars/wars.json");
+        CustomFile warFile = new CustomFile("avomod/wars/wars.json");
         JsonObject savedWars = warFile.readJson();
 
         if (!savedWars.has("wars")) {

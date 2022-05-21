@@ -19,7 +19,7 @@ public class ConfigsSection {
         this.configsCategory = configsCategory;
 
         this.button.setConfigsSection(this);
-        this.customFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/configs.json");
+        this.customFile = new CustomFile("avomod/configs/configs.json");
     }
 
     public ConfigsSection(String configsCategory, String title, ConfigsTextField textField, String configsKey) {
@@ -29,7 +29,7 @@ public class ConfigsSection {
         this.configsCategory = configsCategory;
 
         this.textField.setConfigsSection(this);
-        this.customFile = new CustomFile(Avomod.getMC().mcDataDir, "avomod/configs/configs.json");
+        this.customFile = new CustomFile("avomod/configs/configs.json");
     }
 
     public void updateConfigs(String newValue) {

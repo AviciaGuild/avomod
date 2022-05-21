@@ -3,12 +3,17 @@ package tk.avicia.avomod.core.structures;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import tk.avicia.avomod.Avomod;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class CustomFile extends File {
+    public CustomFile(String child) {
+        this(Avomod.getMC().mcDataDir, child);
+    }
+
     public CustomFile(File parent, String child) {
         super(parent, child);
 
