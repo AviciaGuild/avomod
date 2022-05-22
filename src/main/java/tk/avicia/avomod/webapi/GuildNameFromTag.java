@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class GuildNameFromTag {
+    private Set<Map.Entry<String, JsonElement>> guildMatches;
     private String guildName;
-    Set<Map.Entry<String, JsonElement>> guildMatches;
 
     public GuildNameFromTag(String guildTag) {
         try {
@@ -32,14 +32,14 @@ public class GuildNameFromTag {
                     response.append(inputLine);
                 }
                 in.close();
-                if(response.toString().charAt(0) == '{'){
+                if (response.toString().charAt(0) == '{') {
                     JsonObject jsonObject = new JsonParser().parse(response.toString()).getAsJsonObject();
                     guildMatches = jsonObject.entrySet();
                     for (Map.Entry<String, JsonElement> match : guildMatches) {
                         guildName = match.getValue().getAsString();
                         break;
                     }
-                } else{
+                } else {
                     guildName = new JsonParser().parse(response.toString()).getAsString();
                 }
             } else {
@@ -50,11 +50,11 @@ public class GuildNameFromTag {
         }
     }
 
-    public boolean hasMatch(){
+    public boolean hasMatch() {
         return !guildName.equals("null");
     }
 
-    public boolean hasMultipleMatches(){
+    public boolean hasMultipleMatches() {
         return guildMatches != null;
     }
 
