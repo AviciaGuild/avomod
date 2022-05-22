@@ -11,10 +11,8 @@ import tk.avicia.avomod.utils.Renderer;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,14 +21,14 @@ public class ConfigsGui extends GuiScreen {
     public final int settingLineHeight = 27;
     public final int startingHeight = 85;
     public final int settingHeight = 23;
-    public ArrayList<ConfigsCategory> categories = new ArrayList<>();
+    public List<ConfigsCategory> categories = new ArrayList<>();
     // buttonList exists too, doesn't need to be created
-    ArrayList<ConfigsTextField> textFieldsList = new ArrayList<>();
-    String selectedCategory;
-    Map<String, ArrayList<ConfigsSection>> totalSections = new HashMap<>();
-    int scrollSections; // the index of the first section to be displayed
+    public ArrayList<ConfigsTextField> textFieldsList = new ArrayList<>();
+    public String selectedCategory, savedCategory;
+    public Map<String, ArrayList<ConfigsSection>> totalSections = new HashMap<>();
+    public int scrollSections; // the index of the first section to be displayed
 
-    GuiTextField searchTextField;
+    public GuiTextField searchTextField;
 
     public ConfigsGui() {
         super();
@@ -51,10 +49,9 @@ public class ConfigsGui extends GuiScreen {
         this.textFieldsList = new ArrayList<>();
 
         if (searchTextField.getText().length() > 0) {
-            drawWithSearch();
-        } else {
-            buttonList.addAll(categories);
-            drawWithCategories();
+            drawSections(getSectionsBySearch());
+        } else if (!selectedCategory.equals("All")) {
+            drawSections(totalSections.get(selectedCategory));
         }
 
         // Draw all text field inputs
@@ -73,43 +70,27 @@ public class ConfigsGui extends GuiScreen {
         }
     }
 
-    private void drawWithCategories() {
-        ArrayList<ConfigsSection> sectionsToShow = new ArrayList<>();
+    public void drawSections(ArrayList<ConfigsSection> sectionsList) {
         Renderer.drawVerticalLine(this.width / 16 + 110, 1, startingHeight - 10, this.height - 10, Color.WHITE);
-        sectionsToShow.addAll(totalSections.get(selectedCategory).subList(scrollSections, Math.min(scrollSections + (this.height - startingHeight) / (settingLineHeight + settingHeight), totalSections.get(selectedCategory).size())));
+        ArrayList<ConfigsSection> sectionsToShow = new ArrayList<>(sectionsList.subList(scrollSections, Math.min(scrollSections + (this.height - startingHeight) / (settingLineHeight + settingHeight), sectionsList.size())));
+
         for (ConfigsSection configsSection : sectionsToShow) {
             int index = sectionsToShow.indexOf(configsSection);
-            boolean showLine = totalSections.get(selectedCategory).indexOf(configsSection) != totalSections.get(selectedCategory).size() - 1;
+            boolean showLine = sectionsList.indexOf(configsSection) != sectionsList.size() - 1;
             configsSection.drawSection(this, this.width / 16 + 118, startingHeight + (settingHeight + settingLineHeight + 3) * index, showLine);
         }
 
-        if (sectionsToShow.size() < totalSections.get(selectedCategory).size()) { // if not all configs fit on screen
-            double segmentHeight = (double) ((height / 16 * 15) - startingHeight) / totalSections.get(selectedCategory).size();
-            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, 3, startingHeight, height / 16 * 15, Color.DARK_GRAY);
-            Renderer.drawVerticalLine(this.width / 16 * 15 + 5, 3, startingHeight + (int) (segmentHeight * scrollSections), startingHeight + (int) (segmentHeight * (scrollSections + sectionsToShow.size())), new Color(32, 110, 225));
-        }
-    }
-
-    private void drawWithSearch() {
-        ArrayList<ConfigsSection> searchSections = getSectionsBySearch();
-        ArrayList<ConfigsSection> sectionsToShow = new ArrayList<>();
-        sectionsToShow.addAll(searchSections.subList(scrollSections, Math.min(scrollSections + (this.height - startingHeight) / (settingLineHeight + settingHeight), searchSections.size())));
-
-        for (ConfigsSection configsSection : sectionsToShow) {
-            int index = sectionsToShow.indexOf(configsSection);
-            boolean showLine = index != sectionsToShow.size() - 1;
-            configsSection.drawSection(this, this.width / 16, startingHeight + (settingHeight + settingLineHeight + 3) * index, showLine);
-        }
-
         if (sectionsToShow.size() == 0) {
-            Renderer.drawString("[No Settings Found]", this.width / 16, startingHeight, new Color(127, 127, 127));
+            Renderer.drawString("[No Settings Found]", this.width / 16 + 118, startingHeight, new Color(127, 127, 127));
         }
 
-        if (sectionsToShow.size() < searchSections.size()) { // if not all configs fit on screen
-            double segmentHeight = (double) ((height / 16 * 15) - startingHeight) / searchSections.size();
+        if (sectionsToShow.size() < sectionsList.size()) { // if not all configs fit on screen
+            double segmentHeight = (double) ((height / 16 * 15) - startingHeight) / sectionsList.size();
             Renderer.drawVerticalLine(this.width / 16 * 15 + 5, 3, startingHeight, height / 16 * 15, Color.DARK_GRAY);
             Renderer.drawVerticalLine(this.width / 16 * 15 + 5, 3, startingHeight + (int) (segmentHeight * scrollSections), startingHeight + (int) (segmentHeight * (scrollSections + sectionsToShow.size())), new Color(32, 110, 225));
         }
+
+        buttonList.addAll(categories);
     }
 
     // sets the selected category
@@ -119,12 +100,14 @@ public class ConfigsGui extends GuiScreen {
         this.textFieldsList = new ArrayList<>();
         buttonList.addAll(categories);
 
+        if (title.equals("All")) {
+            savedCategory = selectedCategory;
+        }
         selectedCategory = title;
+
         for (ConfigsCategory category : categories) {
             category.enabled = category.title.equals(title);
         }
-
-        searchTextField = new GuiTextField(textFieldsList.size(), this.fontRenderer, width / 16, startingHeight - settingHeight - 10, 200, 17);
     }
 
     @Override
@@ -143,18 +126,24 @@ public class ConfigsGui extends GuiScreen {
         for (Config config : Avomod.configsArray) {
             this.addSection(config);
         }
+
         setCategory(categories.get(0).title);
+        searchTextField = new SearchTextField(textFieldsList.size(), this.fontRenderer, width / 16, startingHeight - settingHeight - 10, 200, 17, this);
+        searchTextField.setFocused(true);
+        searchTextField.setCanLoseFocus(false);
     }
 
     @Override
     public void onResize(@Nonnull Minecraft mineIn, int w, int h) {
         String oldCategory = selectedCategory;
-        String searchText = searchTextField.getText();
+
+        if (oldCategory.equals("All")) {
+            oldCategory = savedCategory;
+        }
 
         super.onResize(mineIn, w, h);
         this.initGui();
         setCategory(oldCategory);
-        searchTextField.setText(searchText);
     }
 
     @Override
@@ -172,12 +161,21 @@ public class ConfigsGui extends GuiScreen {
         }
     }
 
-    private ArrayList<ConfigsSection> getSectionsBySearch() {
+    public ArrayList<ConfigsSection> getSectionsBySearch() {
+        return getSectionsBySearch(selectedCategory);
+    }
+
+    public ArrayList<ConfigsSection> getSectionsBySearch(String category) {
         String search = searchTextField.getText();
         ArrayList<ConfigsSection> returnSections = new ArrayList<>();
 
         ArrayList<ConfigsSection> allSections = new ArrayList<>();
-        for (String key : totalSections.keySet()) allSections.addAll(totalSections.get(key));
+        if (category.equals("All")) {
+            for (String key : totalSections.keySet()) allSections.addAll(totalSections.get(key));
+        } else {
+            allSections = totalSections.get(category);
+        }
+
         for (ConfigsSection section : allSections) {
             if (section.title.toLowerCase().contains(search.toLowerCase())) returnSections.add(section);
         }
@@ -342,9 +340,7 @@ public class ConfigsGui extends GuiScreen {
             }
         }
         if (!containsCategory) {
-            ConfigsCategory c = new ConfigsCategory(categories.size(), this.width / 16, startingHeight + categories.size() * settingLineHeight, config.configsCategory);
-            c.setCFGUI(this);
-            categories.add(c);
+            categories.add(new ConfigsCategory(categories.size(), this.width / 16, startingHeight + categories.size() * settingLineHeight, config.configsCategory, this));
         }
     }
 }

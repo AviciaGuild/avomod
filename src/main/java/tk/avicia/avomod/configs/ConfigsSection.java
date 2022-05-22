@@ -8,9 +8,9 @@ import tk.avicia.avomod.utils.Renderer;
 import java.awt.*;
 
 public class ConfigsSection {
+    public final String configsCategory;
     private final CustomFile customFile;
     private final String configsKey;
-    private final String configsCategory;
     public ConfigsButton button;
     public ConfigsTextField textField;
     public String title;
@@ -61,6 +61,8 @@ public class ConfigsSection {
             configsGui.addTextField(textField);
         }
 
-        if (drawLine) Renderer.drawHorizontalLine(x, configsGui.width / 16 * 15, y + configsGui.settingLineHeight + configsGui.settingHeight - 5, Color.GRAY);
+        if (drawLine) {
+            Renderer.drawHorizontalLine(x, configsGui.width / 16 * 15, y + configsGui.settingLineHeight + configsGui.settingHeight - 5, Color.GRAY);
+        }
     }
 }
