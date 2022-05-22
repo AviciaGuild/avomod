@@ -45,7 +45,6 @@ public class SearchTextField extends GuiTextField {
             cfgui.drawSections(selectionSections);
         } else if (oldText.length() != this.getText().length()) {
             cfgui.categories = cfgui.categories.stream().filter(e -> !e.title.equals("All")).collect(Collectors.toList());
-            System.out.println(cfgui.savedCategory);
             cfgui.setCategory(cfgui.savedCategory);
 
             cfgui.categories.forEach(e -> e.hasSearchItem = false);

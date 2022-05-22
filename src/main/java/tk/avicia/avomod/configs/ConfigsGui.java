@@ -29,6 +29,7 @@ public class ConfigsGui extends GuiScreen {
     public int scrollSections; // the index of the first section to be displayed
 
     public GuiTextField searchTextField;
+    public boolean textFieldIsFocused = false;
 
     public ConfigsGui() {
         super();
@@ -276,9 +277,15 @@ public class ConfigsGui extends GuiScreen {
 
         this.buttonList = new ArrayList<>();
         this.textFieldsList = new ArrayList<>();
-
         buttonList.addAll(categories);
-        ArrayList<ConfigsSection> sectionList = new ArrayList<>(totalSections.get(selectedCategory).subList(scrollSections, Math.min(scrollSections + (this.height - startingHeight) / (settingLineHeight + settingHeight), totalSections.get(selectedCategory).size())));
+
+        ArrayList<ConfigsSection> sectionList;
+        if (searchTextField.getText().length() > 0) {
+            sectionList = getSectionsBySearch();
+        } else {
+            sectionList = new ArrayList<>(totalSections.get(selectedCategory).subList(scrollSections, Math.min(scrollSections + (this.height - startingHeight) / (settingLineHeight + settingHeight), totalSections.get(selectedCategory).size())));
+        }
+
         sectionList.forEach((ConfigsSection configsSection) -> {
             int configPlacement = sectionList.indexOf(configsSection);
             if (configsSection.button != null) {
@@ -313,7 +320,7 @@ public class ConfigsGui extends GuiScreen {
             ConfigsButton configButton = new ConfigsButton(configPlacement, this.width / 16 + 121, configPlacement * settingLineHeight + startingHeight - 4 + (settingHeight * (configPlacement + 1)), width, choices, config.defaultValue);
             sectionToAdd = new ConfigsSection(config.configsCategory, config.sectionText, configButton, config.configsKey);
         } else {
-            ConfigsTextField textField = new ConfigsTextField(configPlacement, ((ConfigInput) config).allowedInputs, ((ConfigInput) config).finalValidation, Avomod.getMC().fontRenderer, this.width / 16 + 122, configPlacement * settingLineHeight + startingHeight - 2 + (settingHeight * (configPlacement + 1)), 80, 16, this.width);
+            ConfigsTextField textField = new ConfigsTextField(configPlacement, ((ConfigInput) config).allowedInputs, ((ConfigInput) config).finalValidation, Avomod.getMC().fontRenderer, this.width / 16 + 122, configPlacement * settingLineHeight + startingHeight - 2 + (settingHeight * (configPlacement + 1)), 80, 16, this);
             textField.setText(config.defaultValue);
             if (((ConfigInput) config).maxLength != 0) {
                 textField.setMaxStringLength(((ConfigInput) config).maxLength);
