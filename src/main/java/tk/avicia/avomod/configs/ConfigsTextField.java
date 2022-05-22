@@ -10,11 +10,13 @@ public class ConfigsTextField extends GuiTextField {
     public ConfigsSection configsSection;
     public String allowedInputs, finalValidation;
     public Color borderColor;
+    private ConfigsGui cfgui;
 
-    public ConfigsTextField(int componentId, String allowedInputs, String finalValidation, FontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height, int guiWidth) {
+    public ConfigsTextField(int componentId, String allowedInputs, String finalValidation, FontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height, ConfigsGui cfgui) {
         super(componentId, fontrendererObj, x + 4, y + 4, par5Width, par6Height);
         this.allowedInputs = allowedInputs;
         this.finalValidation = finalValidation;
+        this.cfgui = cfgui;
 
         this.setEnableBackgroundDrawing(false);
     }
@@ -33,6 +35,22 @@ public class ConfigsTextField extends GuiTextField {
         drawRect(modifiedX, modifiedY, modifiedX + this.width, modifiedY + this.height, -16777216);
 
         super.drawTextBox();
+    }
+
+    @Override
+    public void setFocused(boolean isFocusedIn) {
+        boolean oldFocused = this.isFocused();
+        super.setFocused(isFocusedIn);
+
+        if (oldFocused == isFocusedIn) return;
+
+        cfgui.textFieldIsFocused = cfgui.textFieldsList.stream().anyMatch(GuiTextField::isFocused);
+        if (isFocusedIn) {
+            cfgui.searchTextField.setFocused(false);
+            cfgui.textFieldIsFocused = true;
+        } else if (!cfgui.textFieldIsFocused) {
+            cfgui.searchTextField.setFocused(true);
+        }
     }
 
     @Override
