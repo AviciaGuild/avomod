@@ -205,14 +205,14 @@ public class AttacksMenu {
         int scaledMouseY = Mouse.getY() / scaleFactor;
 
         if (event.getGui() instanceof GuiChat && Mouse.getEventButtonState()) {
-            for (Map.Entry<String, ScreenCoordinates> attackCoordinates : attackCoordinates.entrySet()) {
-                if (attackCoordinates.getValue().mouseIn(scaledMouseX, screenHeight - scaledMouseY)) {
-                    Coordinates territoryLocation = Avomod.territoryData.getMiddleOfTerritory(attackCoordinates.getKey());
+            for (Map.Entry<String, ScreenCoordinates> attackCoordinate : attackCoordinates.entrySet()) {
+                if (attackCoordinate.getValue().mouseIn(scaledMouseX, screenHeight - scaledMouseY)) {
+                    Coordinates territoryLocation = Avomod.territoryData.getMiddleOfTerritory(attackCoordinate.getKey());
                     BeaconManager.compassLocation = territoryLocation;
 
                     if (BeaconManager.compassLocation != null) {
-                        Avomod.getMC().player.sendMessage(new TextComponentString("A blue beacon beam has been created in " + attackCoordinates.getKey() + " at (" + territoryLocation.getX() + ", " + territoryLocation.getZ() + ")"));
-                        BeaconManager.compassTerritory = attackCoordinates.getKey();
+                        Avomod.getMC().player.sendMessage(new TextComponentString("A blue beacon beam has been created in " + attackCoordinate.getKey() + " at (" + territoryLocation.getX() + ", " + territoryLocation.getZ() + ")"));
+                        BeaconManager.compassTerritory = attackCoordinate.getKey();
                     } else {
                         Avomod.getMC().player.sendMessage(new TextComponentString("Not a correct territory name (probably too long for the scoreboard)"));
                     }
