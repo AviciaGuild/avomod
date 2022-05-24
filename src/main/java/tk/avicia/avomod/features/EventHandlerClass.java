@@ -87,8 +87,6 @@ public class EventHandlerClass {
 
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event) {
-        if (Avomod.getConfigBoolean("disableAll")) return;
-
         if (Avomod.guiToDraw != null) {
             Avomod.getMC().displayGuiScreen(Avomod.guiToDraw);
             Avomod.guiToDraw = null;
