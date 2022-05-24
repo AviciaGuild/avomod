@@ -1,12 +1,9 @@
 # **Avomod**
 
-Welcome to avomod, a quality of life mod developed by Albb_n and newracket. Below, you'll find a list of the various
-features that this mod has.
+Welcome to avomod, a quality of life mod developed by Albb_n, Eliux, and newracket. Below, you'll find a list of the
+various features that this mod has.
 
-This mod is still relatively new, and may have bugs in it. If you find any bugs, please notify Albb_n or newracket.
-
-Every feature is tested thouroughly before being released, however, if something gets by us, and you crash, please
-notify Albb_n or newracket and provide the crash-report, so we can fix it. Thanks!
+If you find any bugs, please notify Albb_n, Eliux or newracket.
 
 ## **<span style="text-decoration:underline;">Commands:</span>**
 
@@ -40,6 +37,8 @@ notify Albb_n or newracket and provide the crash-report, so we can fix it. Thank
     * /am soulpoints
 * Gui Locations command (changes the gui locations)
     * /am locations
+* Autostream command (/stream on world switch or /class)
+    * /am autostream
 
 ## **<span style="text-decoration:underline;">Custom Keybinds:</span>**
 
@@ -83,4 +82,7 @@ Way for you to create your own chat keybinds, in which a command is executed on 
     * Green checkmark means finished sell order
     * Yellow checkmark means sell order that ran out of time
 * Guild bank keybind (opens guild bank if you're in range). Default is **Y**
-* Make mob health more readable (replaces numbers like 423,314 with 423.3k) 
+* Make mob health more readable (replaces numbers like 423,314 with 423.3k)
+* Show courage and vanish bonus on screen
+* Tracks bomb bells & displays time left on screen (champion only obv)
+* Prevent joining war when afk
