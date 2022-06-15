@@ -98,7 +98,8 @@ public class BombBellTracker {
 
     @SubscribeEvent
     public void onGuiMouseInput(GuiScreenEvent.MouseInputEvent.Pre event) {
-        if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("bombBellTracker")) return;
+        if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("bombBellTracker")
+                || !Avomod.getConfigBoolean("bombBellSwitchWorld")) return;
 
         ScaledResolution scaledResolution = new ScaledResolution(Avomod.getMC());
         int screenHeight = scaledResolution.getScaledHeight();
