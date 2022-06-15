@@ -73,6 +73,7 @@ public class Avomod {
             new ConfigToggle("Guild", "Filter Out All Resource Messages", "Disabled", "filterResourceMessages"),
             new ConfigToggle("Chat", "Reveal Nicknames", "Enabled", "revealNicks"),
             new ConfigToggle("Chat", "Auto Skip Quest Dialogue", "Disabled", "skipDialogue"),
+            new ConfigToggle("Chat", "Click to Say Congrats Message", "Enabled", "clickToSayCongrats"),
             new ConfigInput("Chat", "Click to say congrats message", "Congrats!", ".+", "^.+$", 30, "congratsMessage"),
             new ConfigToggle("War", "Custom Attack Timers Display", "Enabled", "attacksMenu"),
             new ConfigToggle("War", "Green Beacon at Soonest War", "Enabled", "greenBeacon"),
@@ -84,11 +85,13 @@ public class Avomod {
             new ConfigToggle("War", "Display Weekly Warcount on Screen", "Disabled", "displayWeeklyWarcount"),
             new ConfigToggle("War", "Prevent joining wars when afk", "Enabled", "afkWarProtection"),
             new ConfigInput("War", "Minutes until considered afk", "10", "[0-9]+", "^[0-9]+$", 3, "afkTime"),
+            new ConfigInput("War", "Territory attack confirmation threshold", "15000", "[0-9]+", "^[0-9]+$", 6, "attackConfirmation"),
             new ConfigToggle("Misc", "Auto /stream on World Swap", "Disabled", "autoStream"),
             new ConfigToggle("Misc", "Prevent Moving Armor/Accessories", "Disabled", "disableMovingArmor"),
             new ConfigToggle("Misc", "Make Mob Health Bars More Readable", "Enabled", "readableHealth"),
             new ConfigToggle("Misc", "Display Some Tab Stats on Screen", "Disabled", "tabStatusDisplay"),
-            new ConfigToggle("Misc", "Bomb Bell Tracker (REQUIRES CHAMPION)", "Enabled", "bombBellTracker")
+            new ConfigToggle("Misc", "Bomb Bell Tracker (REQUIRES CHAMPION)", "Enabled", "bombBellTracker"),
+            new ConfigToggle("Misc", "Bomb Bell Tracker - Click to Switch World", "Enabled", "bombBellSwitchWorld")
     };
     public static TerritoryDataApi territoryData;
     public static OnlinePlayers onlinePlayers;
@@ -141,8 +144,8 @@ public class Avomod {
         territoryData = new TerritoryDataApi();
 
         Arrays.asList(
-                new WarJoinProtection(),
                 new AttackedTerritoryDifficulty(),
+                new AttackProtection(),
                 new AttacksMenu(),
                 new AutoStream(),
                 new AuraHandler(),
@@ -158,6 +161,7 @@ public class Avomod {
                 new TerritoryData(),
                 new TradeMarketFeatures(),
                 new WarDPS(),
+                new WarJoinProtection(),
                 new WarTracker(),
                 new WorldInfo()
         ).forEach(MinecraftForge.EVENT_BUS::register);

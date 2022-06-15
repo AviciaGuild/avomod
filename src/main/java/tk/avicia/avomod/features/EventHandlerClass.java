@@ -60,7 +60,7 @@ public class EventHandlerClass {
             }).start();
         }
 
-        if (message.startsWith("[!] Congratulations")) {
+        if (message.startsWith("[!] Congratulations") && Avomod.getConfigBoolean("clickToSayCongrats")) {
             String[] firstSplit = message.split(" for")[0].split("to ");
             if (firstSplit.length <= 1) return;
 
