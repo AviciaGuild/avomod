@@ -55,7 +55,7 @@ public class WarJoinProtection {
             Avomod.getMC().player.sendChatMessage("/class");
             Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "Avomod: You've been /classed because you were afk right before " +
                     "a war was about to start."));
-        } else if (combatLevel > 0 && combatLevel < 100) {
+        } else if (currentTerritory.equals(matches.get(0)) && combatLevel > 0 && combatLevel < 100) {
             Avomod.getMC().player.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + "Avomod: You're in a territory about to join a war, and your combat level " +
                     "is lower than 100. Are you sure you want to join this war? Please /class or leave the territory if you don't want to join this war."));
         }
