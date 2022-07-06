@@ -86,6 +86,7 @@ public class Avomod {
             new ConfigToggle("War", "Prevent joining wars when afk", "Enabled", "afkWarProtection"),
             new ConfigInput("War", "Minutes until considered afk", "10", "[0-9]+", "^[0-9]+$", 3, "afkTime"),
             new ConfigInput("War", "Territory attack confirmation threshold", "15000", "[0-9]+", "^[0-9]+$", 6, "attackConfirmation"),
+            new ConfigToggle("War", "Send defenses from attacked territories to server (improves accuracy of timer list for guild members)", "Enabled", "storeDefs"),
             new ConfigToggle("Misc", "Auto /stream on World Swap", "Disabled", "autoStream"),
             new ConfigToggle("Misc", "Prevent Moving Armor/Accessories", "Disabled", "disableMovingArmor"),
             new ConfigToggle("Misc", "Make Mob Health Bars More Readable", "Enabled", "readableHealth"),
