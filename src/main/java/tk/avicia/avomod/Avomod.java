@@ -130,6 +130,9 @@ public class Avomod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         this.initializeConfigs();
+
+        UpdateChecker.downloadNewVersion(event.getSourceFile());
+        GuildBankKeybind.init();
     }
 
     @EventHandler

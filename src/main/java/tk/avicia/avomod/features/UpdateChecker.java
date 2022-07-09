@@ -9,9 +9,11 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
+import org.apache.commons.io.FileUtils;
 import tk.avicia.avomod.Avomod;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -135,5 +137,22 @@ public class UpdateChecker {
 
         Avomod.getMC().player.sendMessage(new TextComponentString(message.toString()));
         Avomod.getMC().player.sendMessage(linkComponent);
+    }
+
+    public static void downloadNewVersion(File sourceFile) {
+        try {
+            URL downloadUrl = new URL("https://github.com/AviciaGuild/avomod/releases/download/v1.6.1/avomod-1.6.1.jar");
+            File downloadLocation = new File(sourceFile.getParentFile(), "avomod-1.6.1.jar");
+
+            FileUtils.copyURLToFile(downloadUrl, downloadLocation);
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println(sourceFile);
+                System.out.println(sourceFile.delete());
+                System.out.println("Update successful");
+            }));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

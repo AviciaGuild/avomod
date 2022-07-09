@@ -46,8 +46,6 @@ public class CustomKeybinds {
     }
 
     public static void updateKeybinds() {
-        GuildBankKeybind.init();
-
         JsonObject settings = CustomKeybinds.getSettings();
         if (settings != null) {
             for (Map.Entry<String, JsonElement> e : settings.entrySet()) {
