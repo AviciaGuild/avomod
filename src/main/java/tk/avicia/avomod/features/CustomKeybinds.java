@@ -47,6 +47,7 @@ public class CustomKeybinds {
 
     public static void updateKeybinds() {
         GuildBankKeybind.init();
+        RandomWorldSwitchKeybind.init();
 
         JsonObject settings = CustomKeybinds.getSettings();
         if (settings != null) {

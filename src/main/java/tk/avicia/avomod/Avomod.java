@@ -164,7 +164,8 @@ public class Avomod {
                 new WarDPS(),
                 new WarJoinProtection(),
                 new WarTracker(),
-                new WorldInfo()
+                new WorldInfo(),
+                new RandomWorldSwitchKeybind()
         ).forEach(MinecraftForge.EVENT_BUS::register);
 
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
