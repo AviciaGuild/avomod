@@ -202,7 +202,7 @@ public class ChatUtils {
         return pattern.matcher(messageString).find();
     }
 
-    // Adds a clickevent to every "here" in guild chat that runs `/am find <Player>` similar to wynntils' coordindates
+    // Adds a clickevent to every "here" in guild chat that runs `/find <Player>` similar to wynntils' coordindates
     private static void makeHereRunFindCommand(ITextComponent textComponent) {
         if (checkIfGuildChat(textComponent)) {
             String fullMessage = TextFormatting.getTextWithoutFormattingCodes(textComponent.getUnformattedText());
@@ -218,7 +218,7 @@ public class ChatUtils {
                 if (!siblingText.contains(splitString) || fullMessage == null) return;
 
                 temp.appendSibling(new TextComponentString(TextFormatting.AQUA + siblingText.substring(0, siblingText.indexOf(splitString))));
-                String command = "/am find " + (fullMessage.substring(fullMessage.lastIndexOf("\u2605") == -1 ?
+                String command = "/find " + (fullMessage.substring(fullMessage.lastIndexOf("\u2605") == -1 ?
                         1 : fullMessage.lastIndexOf("\u2605") + 1, fullMessage.indexOf("]")));
                 // If the person typing "here" is nicked
                 HoverEvent hover = textComponent.getStyle().getHoverEvent();
@@ -227,7 +227,7 @@ public class ChatUtils {
                 String hoverText = hover.getValue().getUnformattedText();
                 if (hoverText.contains("real username") && hoverText.contains("Rank:")) {
                     String realName = hoverText.split(" ")[hoverText.split(" ").length - 1];
-                    command = "/am find " + realName;
+                    command = "/find " + realName;
                 }
 
                 ITextComponent hereComponent = new TextComponentString(TextFormatting.UNDERLINE + splitString + TextFormatting.RESET);
