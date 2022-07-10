@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class Avomod {
     public static final String MODID = "avomod";
     public static final String NAME = "avomod";
-    public static final String VERSION = "1.6.1";
+    public static final String VERSION = "1.6.2";
     public static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("help", new HelpCommand());
         put("chestcount", new ChestCountCommand());
@@ -158,17 +158,20 @@ public class Avomod {
                 new EventHandlerClass(),
                 new GuildBankKeybind(),
                 new MobHealthSimplifier(),
+                new RandomWorldSwitchKeybind(),
                 new TabStatusDisplay(),
                 new TerritoryData(),
                 new TradeMarketFeatures(),
                 new WarDPS(),
                 new WarJoinProtection(),
                 new WarTracker(),
-                new WorldInfo(),
-                new RandomWorldSwitchKeybind()
+                new WorldInfo()
         ).forEach(MinecraftForge.EVENT_BUS::register);
 
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
+
+        GuildBankKeybind.init();
+        RandomWorldSwitchKeybind.init();
 
         this.initializeAliases();
         CustomKeybinds.updateKeybinds();
