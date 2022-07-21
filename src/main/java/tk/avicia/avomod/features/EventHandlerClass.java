@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tk.avicia.avomod.Avomod;
 
+import java.util.Arrays;
+
 public class EventHandlerClass {
     private int tick = 0;
 
@@ -48,6 +50,18 @@ public class EventHandlerClass {
 
         if (message.startsWith("[INFO]") && message.contains("resources") && Avomod.getConfigBoolean("filterResourceMessages")) {
             event.setCanceled(true);
+        }
+
+        // shout management
+        if (message.contains(":") && message.split(":")[0].endsWith("shouts") && !message.split(":")[0].startsWith("[")) {
+            if (Avomod.getConfigBoolean("filterShoutMessages"))
+                event.setCanceled(true);
+
+            if (Avomod.getConfigBoolean("makeShoutsOrange")) {
+                String start = event.getMessage().getUnformattedText().split(":")[0] + ":";
+                String end = String.join(":", Arrays.copyOfRange(event.getMessage().getUnformattedText().split(":"), 1, event.getMessage().getUnformattedText().split(":").length));
+                event.setMessage(new TextComponentString(TextFormatting.GOLD + start + TextFormatting.YELLOW + end));
+            }
         }
 
         if (message.trim().startsWith("Loading Resource Pack...")) {

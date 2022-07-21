@@ -71,6 +71,8 @@ public class Avomod {
             new ConfigToggle("General", "Notify for avomod BETA Version (may have bugs)", "Disabled", "betaNotification"),
             new ConfigToggle("Guild", "Filter Out Bank Messages", "Disabled", "filterBankMessages"),
             new ConfigToggle("Guild", "Filter Out All Resource Messages", "Disabled", "filterResourceMessages"),
+            new ConfigToggle("Chat", "Filter Out All Shouts", "Disabled", "filterShoutMessages"),
+            new ConfigToggle("Chat", "Make Shouts Orange", "Enabled", "makeShoutsOrange"),
             new ConfigToggle("Chat", "Reveal Nicknames", "Enabled", "revealNicks"),
             new ConfigToggle("Chat", "Auto Skip Quest Dialogue", "Disabled", "skipDialogue"),
             new ConfigToggle("Chat", "Click to Say Congrats Message", "Enabled", "clickToSayCongrats"),
