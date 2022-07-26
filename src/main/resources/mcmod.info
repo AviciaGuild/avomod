@@ -1,6 +1,6 @@
 [
   {
-    "modid": "avomod",
+    "modid": "avocadomod",
     "name": "Avocado Mod",
     "description": "Avocado mod made for Avocado Guild.",
     "version": "${version}",

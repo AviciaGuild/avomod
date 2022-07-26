@@ -32,8 +32,8 @@ import java.util.concurrent.TimeUnit;
 
 @Mod(modid = Avomod.MODID, name = Avomod.NAME, version = Avomod.VERSION)
 public class Avomod {
-    public static final String MODID = "avomod";
-    public static final String NAME = "avomod";
+    public static final String MODID = "avocadomod";
+    public static final String NAME = "Avocado Mod";
     public static final String VERSION = "1.6.2";
     public static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("help", new HelpCommand());
