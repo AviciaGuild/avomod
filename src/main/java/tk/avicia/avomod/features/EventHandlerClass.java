@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tk.avicia.avomod.Avomod;
 
 public class EventHandlerClass {
-    private int tick = 0;
+    private final int tick = 0;
 
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {

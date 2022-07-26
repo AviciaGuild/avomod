@@ -11,8 +11,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class PlayerData {
-    private String playerName;
-    private JsonObject playerData;
+    private final String playerName;
+    private final JsonObject playerData;
 
     public PlayerData(String playerName) throws NoSuchFieldException {
         try {

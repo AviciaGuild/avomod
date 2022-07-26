@@ -10,7 +10,7 @@ public class ConfigsTextField extends GuiTextField {
     public ConfigsSection configsSection;
     public String allowedInputs, finalValidation;
     public Color borderColor;
-    private ConfigsGui cfgui;
+    private final ConfigsGui cfgui;
 
     public ConfigsTextField(int componentId, String allowedInputs, String finalValidation, FontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height, ConfigsGui cfgui) {
         super(componentId, fontrendererObj, x + 4, y + 4, par5Width, par6Height);

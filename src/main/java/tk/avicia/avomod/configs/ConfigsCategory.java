@@ -10,9 +10,9 @@ public class ConfigsCategory extends GuiButton {
     public String title;
     public boolean enabled;
     public boolean hasSearchItem;
-    private int x;
-    private int y;
-    private ConfigsGui cfgui;
+    private final int x;
+    private final int y;
+    private final ConfigsGui cfgui;
 
     public ConfigsCategory(int buttonId, int x, int y, String title, ConfigsGui cfgui) {
         super(buttonId, x, y, 100, 20, title);

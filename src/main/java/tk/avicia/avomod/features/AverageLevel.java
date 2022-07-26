@@ -3,7 +3,6 @@ package tk.avicia.avomod.features;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;

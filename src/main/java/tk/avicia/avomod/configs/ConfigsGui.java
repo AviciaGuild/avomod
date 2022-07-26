@@ -42,8 +42,8 @@ public class ConfigsGui extends GuiScreen {
         // Draws a shadowed string with a dark color, to make it easier to read depending on the background
         GlStateManager.pushMatrix();
         GlStateManager.scale(2.0F, 2.0F, 2.0F);
-        this.drawCenteredString(this.fontRenderer, "Avomod Configs", this.width / 4 + 1, 11, 0x444444);
-        this.drawCenteredString(this.fontRenderer, "Avomod Configs", this.width / 4, 10, 0x1B33CF);
+        this.drawCenteredString(this.fontRenderer, "Avocado Configs", this.width / 4 + 1, 11, 0x444444);
+        this.drawCenteredString(this.fontRenderer, "Avocado Configs", this.width / 4, 10, 0x1B33CF);
         GlStateManager.popMatrix();
 
         this.buttonList = new ArrayList<>();

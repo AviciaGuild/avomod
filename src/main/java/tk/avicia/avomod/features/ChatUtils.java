@@ -232,7 +232,7 @@ public class ChatUtils {
 
                 ITextComponent hereComponent = new TextComponentString(TextFormatting.UNDERLINE + splitString + TextFormatting.RESET);
                 hereComponent.getStyle().setHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)))
+                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)))
                         .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
                 temp.appendSibling(hereComponent);
                 temp.appendSibling(new TextComponentString(TextFormatting.AQUA + siblingText.substring(siblingText.indexOf(splitString) + splitString.length())));
