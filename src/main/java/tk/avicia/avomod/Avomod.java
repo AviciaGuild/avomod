@@ -53,6 +53,8 @@ public class Avomod {
         put("wars", new WarsCommand());
         put("locations", new LocationsCommand());
         put("autostream", new AutoStreamCommand());
+        put("congratulate", new CongratulateCommand());
+        put("debug", new DebugMessage());
     }};
     public static Map<String, String> defaultLocations = new HashMap<String, String>() {{
         put("weeklyWars", "1,0.98,false");
@@ -158,7 +160,6 @@ public class Avomod {
                 new EventHandlerClass(),
                 new GuildBankKeybind(),
                 new MobHealthSimplifier(),
-                new RandomWorldSwitchKeybind(),
                 new TabStatusDisplay(),
                 new TerritoryData(),
                 new TradeMarketFeatures(),
@@ -171,7 +172,6 @@ public class Avomod {
         ClientCommandHandler.instance.registerCommand(new AvomodCommand());
 
         GuildBankKeybind.init();
-        RandomWorldSwitchKeybind.init();
 
         this.initializeAliases();
         CustomKeybinds.updateKeybinds();

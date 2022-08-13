@@ -12,6 +12,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tk.avicia.avomod.Avomod;
+import tk.avicia.avomod.commands.subcommands.CongratulateCommand;
 
 public class EventHandlerClass {
     private int tick = 0;
@@ -72,14 +73,14 @@ public class EventHandlerClass {
                     e.printStackTrace();
                 }
 
-                String congratsCommand = String.format("/msg %s %s", username, Avomod.getConfig("congratsMessage"));
+                CongratulateCommand.list.add(username);
+                String congratsCommand = String.format("/avomod congratulate %s", username);
                 TextComponentString congratsMessage = new TextComponentString("Click to say Congratulations!");
                 congratsMessage.setStyle(new Style()
                         .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, congratsCommand))
                         .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(congratsCommand)))
                         .setUnderlined(true)
                         .setColor(TextFormatting.AQUA));
-
                 Avomod.getMC().player.sendMessage(congratsMessage);
             }).start();
         }
