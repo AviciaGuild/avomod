@@ -54,7 +54,6 @@ public class Avomod {
         put("locations", new LocationsCommand());
         put("autostream", new AutoStreamCommand());
         put("congratulate", new CongratulateCommand());
-        put("debug", new DebugMessage());
     }};
     public static Map<String, String> defaultLocations = new HashMap<String, String>() {{
         put("weeklyWars", "1,0.98,false");
