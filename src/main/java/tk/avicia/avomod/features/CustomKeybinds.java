@@ -20,7 +20,7 @@ public class CustomKeybinds {
     public static Map<String, Keybind> keybinds = new HashMap<>();
 
     public static JsonObject getSettings() {
-        CustomFile avomodKeybinds = new CustomFile("avomod/configs/keybinds.json");
+        CustomFile avomodKeybinds = new CustomFile(Avomod.getConfigPath("keybinds"));
 
         return avomodKeybinds.readJson();
     }
@@ -29,7 +29,7 @@ public class CustomKeybinds {
         JsonObject currentSettingsJson = getSettings();
         currentSettingsJson.addProperty(key, command);
 
-        CustomFile avomodKeybinds = new CustomFile("avomod/configs/keybinds.json");
+        CustomFile avomodKeybinds = new CustomFile(Avomod.getConfigPath("keybinds"));
         avomodKeybinds.writeJson(currentSettingsJson);
 
         updateKeybinds();
@@ -39,7 +39,7 @@ public class CustomKeybinds {
         JsonObject currentSettingsJson = getSettings();
         currentSettingsJson.remove(key);
 
-        CustomFile avomodKeybinds = new CustomFile("avomod/configs/keybinds.json");
+        CustomFile avomodKeybinds = new CustomFile(Avomod.getConfigPath("keybinds"));
         avomodKeybinds.writeJson(currentSettingsJson);
 
         updateKeybinds();

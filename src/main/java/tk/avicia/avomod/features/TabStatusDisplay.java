@@ -13,11 +13,15 @@ import tk.avicia.avomod.core.structures.render.Text;
 import tk.avicia.avomod.utils.Utils;
 
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.*;
 
 public class TabStatusDisplay {
+
+    String[] blocked = new String[]{"\u24BA", "\u24C1", "\u24B6"};
+
     public static MultipleElements getElementsToDraw(List<String> stats) {
         final float scale = 1F;
         final int rectangleHeight = 12;
@@ -66,11 +70,9 @@ public class TabStatusDisplay {
                         // Some stats have more than 2 spaces separating them, so make the space even between all of them
                         // and split it on 2 spaces
                         for (String stat : sibling.getUnformattedComponentText().trim().replaceAll("   +", "  ").split("  ")) {
-                            if (Arrays.stream(Avomod.statsFromTabToShow).anyMatch(stat::contains)) {
-                                String statKey = stat.substring(0, stat.length() - 7);
-                                statsCount.put(statKey, statsCount.containsKey(statKey) ? statsCount.get(statKey) + 1 : 1);
-                                statsTimer.put(statKey, stat.substring(stat.length() - 7));
-                            }
+                            String statKey = stat.substring(0, stat.length() - 7);
+                            statsCount.put(statKey, statsCount.containsKey(statKey) ? statsCount.get(statKey) + 1 : 1);
+                            statsTimer.put(statKey, stat.substring(stat.length() - 7));
                         }
                     }
                 }
@@ -78,6 +80,7 @@ public class TabStatusDisplay {
             List<String> stats = new ArrayList<>();
 
             for (Map.Entry<String, Integer> stat : statsCount.entrySet()) {
+                if(Arrays.stream(blocked).anyMatch(symbol -> stat.getKey().contains(symbol))) continue;
                 stats.add(stat.getKey() + statsTimer.get(stat.getKey()) + TextFormatting.AQUA + " x" + stat.getValue());
             }
 

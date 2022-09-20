@@ -73,15 +73,20 @@ public class BombBellTracker {
     public void onChatEvent(ClientChatReceivedEvent event) {
         if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("bombBellTracker")) return;
 
-        String message = TextFormatting.getTextWithoutFormattingCodes(event.getMessage().getUnformattedText());
-        if (message == null || !message.startsWith("[Bomb Bell]")) return;
+        String message = event.getMessage().getFormattedText();
+        if (!message.startsWith("§e[Bomb Bell]")) return;
+
+        message = TextFormatting.getTextWithoutFormattingCodes(event.getMessage().getUnformattedText());
 
         ArrayList<String> matches = Utils.getMatches(message, "(?<= thrown a )[a-zA-Z ]+(?= Bomb on)|(?<= on WC)\\d+");
         if (matches.size() != 2) return;
 
         String bombName = matches.get(0);
         String world = matches.get(1);
+
         BombType bombType = BombType.getBombType(bombName);
+        if(bombType == null) return;
+
         BombData bombData = new BombData(world, bombType);
 
         if (!isDuplicateBomb(bombData)) {

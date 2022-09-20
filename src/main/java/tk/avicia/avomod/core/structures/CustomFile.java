@@ -18,6 +18,7 @@ public class CustomFile extends File {
         super(parent, child);
 
         if (!super.exists()) {
+            System.out.println("Creating file " + super.getAbsolutePath() + " as it did not exist");
             try {
                 String[] split = child.split("/");
 

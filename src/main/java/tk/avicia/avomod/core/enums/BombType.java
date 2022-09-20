@@ -27,9 +27,6 @@ public enum BombType {
             case PROFESSION_SPEED:
             case DUNGEON:
                 return 600;
-            case COMBAT_XP:
-            case LOOT:
-            case PROFESSION_XP:
             default:
                 return 1200;
         }
