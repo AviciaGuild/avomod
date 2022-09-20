@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.commons.io.FileUtils;
 import tk.avicia.avomod.commands.AvomodCommand;
 import tk.avicia.avomod.commands.Command;
 import tk.avicia.avomod.commands.subcommands.*;
@@ -23,6 +24,8 @@ import tk.avicia.avomod.utils.TerritoryData;
 import tk.avicia.avomod.webapi.OnlinePlayers;
 import tk.avicia.avomod.webapi.TerritoryDataApi;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class Avomod {
     public static final String MODID = "avomod";
     public static final String NAME = "avomod";
-    public static final String VERSION = "1.6.2";
+    public static final String VERSION = "1.6.3";
     public static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("help", new HelpCommand());
         put("chestcount", new ChestCountCommand());
@@ -96,7 +99,6 @@ public class Avomod {
     };
     public static TerritoryDataApi territoryData;
     public static OnlinePlayers onlinePlayers;
-    public static String[] statsFromTabToShow = new String[]{"Damage Bonus", "Stealth Attack"};
 
     public static Minecraft getMC() {
         return Minecraft.getMinecraft();
@@ -130,11 +132,13 @@ public class Avomod {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        this.initializeConfigs();
+
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        moveConfigsIfOld();
+        this.initializeConfigs();
         Runnable worldDataUpdater = () -> {
             onlinePlayers = new OnlinePlayers();
             WorldInfo.updateWorldData();
@@ -178,7 +182,7 @@ public class Avomod {
     }
 
     private void initializeConfigs() {
-        CustomFile configsFile = new CustomFile("avomod/configs/configs.json");
+        CustomFile configsFile = new CustomFile(getConfigPath("configs"));
         JsonObject configsJson = configsFile.readJson();
         boolean configsChanged = false;
 
@@ -196,7 +200,7 @@ public class Avomod {
         }
         Avomod.configs = configsJson;
 
-        CustomFile locationsFile = new CustomFile("avomod/configs/locations.json");
+        CustomFile locationsFile = new CustomFile(getConfigPath("locations"));
         JsonObject locationsJson = locationsFile.readJson();
         boolean locationsChanged = false;
 
@@ -224,4 +228,29 @@ public class Avomod {
             }
         }
     }
+
+    public static String getConfigPath(String name) {
+        return String.format("avomod/%s/%s.json", Minecraft.getMinecraft().getSession().getPlayerID().replaceAll("-", ""), name);
+    }
+
+    public void moveConfigsIfOld() {
+        File oldConfigsFolder = new File("avomod/configs");
+        File oldWarFolder = new File("avomod/wars");
+
+        File newConfigsFolder = new File("avomod/" + Minecraft.getMinecraft().getSession().getPlayerID().replaceAll("-", ""));
+
+        if ((oldConfigsFolder.exists() || oldWarFolder.exists()) && !newConfigsFolder.exists()) {
+            try {
+                newConfigsFolder.mkdirs();
+                FileUtils.copyDirectory(oldConfigsFolder, newConfigsFolder);
+                FileUtils.copyDirectory(oldWarFolder, newConfigsFolder);
+
+                FileUtils.deleteDirectory(oldConfigsFolder);
+                FileUtils.deleteDirectory(oldWarFolder);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

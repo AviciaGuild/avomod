@@ -30,7 +30,7 @@ public class AutoStreamCommand extends Command {
             }
         }
 
-        CustomFile customFile = new CustomFile("avomod/configs/configs.json");
+        CustomFile customFile = new CustomFile(Avomod.getConfigPath("configs"));
         JsonObject configsJson = customFile.readJson();
 
         configsJson.addProperty("autoStream", autoStreamValue ? "Enabled" : "Disabled");

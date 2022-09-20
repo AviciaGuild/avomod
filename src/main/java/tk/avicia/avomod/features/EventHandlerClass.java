@@ -33,7 +33,7 @@ public class EventHandlerClass {
         }
 
         KeyBinding sneakKeyBind = Avomod.getMC().gameSettings.keyBindSneak;
-        if (message.contains("Press SHIFT to continue") && Avomod.getConfigBoolean("skipDialogue")) {
+        if ((message.contains("§7Press §r§fSHIFT §r§7to continue") || message.contains("§7Press §r§fSNEAK §r§7to continue")) && Avomod.getConfigBoolean("skipDialogue")) {
             Thread thread = new Thread(() -> {
                 try {
                     KeyBinding.setKeyBindState(sneakKeyBind.getKeyCode(), true);
