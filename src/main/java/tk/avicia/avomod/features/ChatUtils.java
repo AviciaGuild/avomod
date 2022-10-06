@@ -63,7 +63,7 @@ public class ChatUtils {
         }
     }
 
-    private static boolean checkIfNickHover(ITextComponent textComponent) {
+    public static boolean checkIfNickHover(ITextComponent textComponent) {
         HoverEvent hover = textComponent.getStyle().getHoverEvent();
         boolean res;
 //        res = textComponent.getUnformattedText().contains("\u00A7o");

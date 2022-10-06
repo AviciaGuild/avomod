@@ -25,6 +25,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import static tk.avicia.avomod.features.ChatUtils.checkIfNickHover;
+
 public class BombBellTracker {
     private static final HashMap<String, ScreenCoordinates> bombBellCoordinates = new HashMap<>();
     private final List<BombData> storedBombs = new ArrayList<>();
@@ -72,13 +74,12 @@ public class BombBellTracker {
     @SubscribeEvent
     public void onChatEvent(ClientChatReceivedEvent event) {
         if (Avomod.getConfigBoolean("disableAll") || !Avomod.getConfigBoolean("bombBellTracker")) return;
+        if (checkIfNickHover(event.getMessage())) return; // Prevent people from nicking as "Bomb Bell" and messaging fake bombs
 
-        String message = event.getMessage().getFormattedText();
-        if (!message.startsWith("§e[Bomb Bell]")) return;
+        String message = TextFormatting.getTextWithoutFormattingCodes(event.getMessage().getUnformattedText());
+        if (message == null || !message.startsWith("[Bomb Bell]")) return;
 
-        message = TextFormatting.getTextWithoutFormattingCodes(event.getMessage().getUnformattedText());
-
-        ArrayList<String> matches = Utils.getMatches(message, "(?<= thrown a )[a-zA-Z ]+(?= Bomb on)|(?<= on WC)\\d+");
+        ArrayList<String> matches = Utils.getMatches(message, "(?<= thrown a )[a-zA-Z ]+(?= Bomb on)|(?<= on WC)\\d{1,4}");
         if (matches.size() != 2) return;
 
         String bombName = matches.get(0);
